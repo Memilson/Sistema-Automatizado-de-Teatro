@@ -3,7 +3,7 @@
 > - 🚨Atenção todos os colaboradores abaixo participaram efetivamente da parte de Desenvolvimento, Analise e Testador do Sistema
 - **Angelo Augusto**: Gerente de Portifolio,
 - **Jarbas Benedito**:  Scrum Master
-- **Guilherme Xavier**: 
+- **Guilherme Xavier**: Consultor de Projetos
 - **Kalleb Mendes**: Documentador de Sistemas
 
 ## Software
