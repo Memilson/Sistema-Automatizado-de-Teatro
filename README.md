@@ -2,7 +2,7 @@
 
 # Sistema de Venda de Ingressos de Teatro
 
-Este repositório contém o código fonte e documentação do projeto de um sistema de venda de ingressos para um teatro fictício, desenvolvido como parte do Projeto Integrador do curso de Análise e Desenvolvimento de Sistemas/Engenharia de Software da Faculdade SENAI FATESG.
+Este repositório contém o código fonte e documentação do projeto de um sistema de venda de ingressos para um teatro fictício, desenvolvido como parte do Projeto Integrador do curso de Análise e Desenvolvimento de Sistemas da Faculdade SENAI FATESG.
 
 ## Sobre o Projeto
 
