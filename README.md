@@ -1,4 +1,10 @@
-# Projeto-Integrador
+# Projeto-Integrador - 2024
+## Colaboradores:
+> - 🚨Atenção todos os colaboradores abaixo participaram efetivamente da parte de Desenvolvimento, Analise e Testador do Sistema
+- **Angelo Augusto**: Gerente de Portifolio,
+- **Jarbas Benedito**:  Scrum Master
+- **Guilherme Xavier**: 
+- **Kalleb Mendes**: Documentador de Sistemas
 
 ## Software
 
@@ -10,3 +16,6 @@
 - **Repositório:** GitHub
 - **Gerenciamento de Projeto:** Discord
 - **Reunião:** Presencial e Discord
+
+
+
