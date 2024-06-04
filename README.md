@@ -2,7 +2,7 @@
 
 ## Software
 
-- **IDE:** IntelliJ e Apache Netbeans
+- **IDE:** IntelliJ, Apache Netbeans, VSCODE
 - **Linguagem:** Java 17
 - **Interface Gráfica:** Terminal
 - **Banco de Dados:** Terminal/Armazenado na memória
