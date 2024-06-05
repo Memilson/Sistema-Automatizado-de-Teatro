@@ -2,7 +2,7 @@
 
 # Sistema de Venda de Ingressos de Teatro
 
-Este repositório contém o código fonte e documentação do projeto de um sistema de venda de ingressos para um teatro fictício, desenvolvido como parte do Projeto Integrador do curso de Análise e Desenvolvimento de Sistemas da Faculdade SENAI FATESG.
+Este repositório contém o código fonte e documentação do projeto de um sistema de venda de ingressos para um sistema simulado de um teatro, desenvolvido para o Projeto Integrador do curso de Análise e Desenvolvimento de Sistemas da Faculdade SENAI FATESG.
 
 ## Sobre o Projeto
 
@@ -15,6 +15,9 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
 - **Impressão de Ingressos:** Após a compra, os clientes têm a opção de imprimir o comprovante de ingresso diretamente na plataforma.
 
 - **Estatísticas de Vendas:** O sistema gera relatórios detalhados sobre o desempenho das vendas, incluindo análises sobre popularidade de peças, ocupação de poltronas, lucratividade por sessão e peça.
+
+## Metodologias
+- **Scrum:** O objetivo do Scrum é facilitar o desenvolvimento ágil de software através de ciclos curtos e iterativos (sprints), promovendo transparência, colaboração intensa e adaptação contínua às mudanças, para entregar valor de forma rápida e eficaz aos clientes.
 
   ---
 
