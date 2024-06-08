@@ -125,39 +125,58 @@ class Relatorio {
 // Classe ValidadorCPF
 class ValidadorCPF {
     public static boolean validar(String cpf) {
-        if (cpf == null) {
-            return false;
-        }
-
         cpf = cpf.replaceAll("[^0-9]", "");
 
         if (cpf.length() != 11) {
             return false;
         }
-        
 
-        if ("00000000000".equals(cpf) ||
-            "11111111111".equals(cpf) ||
-            "22222222222".equals(cpf) ||
-            "33333333333".equals(cpf) ||
-            "44444444444".equals(cpf) ||
-            "55555555555".equals(cpf) ||
-            "66666666666".equals(cpf) ||
-            "77777777777".equals(cpf) ||
-            "88888888888".equals(cpf) ||
-            "99999999999".equals(cpf)) {
+        int num1, num2, num3, num4, num5, num6, num7, num8, num9, num10, num11;
+        int soma1, soma2;
+        double resto1, resto2;
+
+        num1 = Character.getNumericValue(cpf.charAt(0));
+        num2 = Character.getNumericValue(cpf.charAt(1));
+        num3 = Character.getNumericValue(cpf.charAt(2));
+        num4 = Character.getNumericValue(cpf.charAt(3));
+        num5 = Character.getNumericValue(cpf.charAt(4));
+        num6 = Character.getNumericValue(cpf.charAt(5));
+        num7 = Character.getNumericValue(cpf.charAt(6));
+        num8 = Character.getNumericValue(cpf.charAt(7));
+        num9 = Character.getNumericValue(cpf.charAt(8));
+        num10 = Character.getNumericValue(cpf.charAt(9));
+        num11 = Character.getNumericValue(cpf.charAt(10));
+
+        if (num1 == num2 && num2 == num3 && num3 == num4 && num4 == num5 &&
+                num5 == num6 && num6 == num7 && num7 == num8 && num8 == num9 &&
+                num9 == num10 && num10 == num11) {
             return false;
+        } else {
+            soma1 = num1 * 10 + num2 * 9 + num3 * 8 + num4 * 7 + num5 * 6 +
+                    num6 * 5 + num7 * 4 + num8 * 3 + num9 * 2;
+
+            resto1 = (soma1 * 10) % 11;
+
+            if (resto1 == 10) {
+                resto1 = 0;
+            }
+
+            soma2 = num1 * 11 + num2 * 10 + num3 * 9 + num4 * 8 + num5 * 7 +
+                    num6 * 6 + num7 * 5 + num8 * 4 + num9 * 3 + num10 * 2;
+
+            resto2 = (soma2 * 10) % 11;
+
+            if (resto1 == num10 && resto2 == num11) {
+                return true;
+            } else {
+                return false;
+            }
         }
-
-        // Adicione aqui a lógica completa de validação de CPF, se necessário
-
-        return true;
     }
 }
 
 // Classe Principal VendaIngressos
-public class ProjetoIntegrador {
-    // Variáveis globais para armazenar ingressos vendidos, teatro e scanner
+public class ValidadorCPFTeste {
     private static List<Ingresso> ingressos = new ArrayList<>();
     private static Teatro teatro = new Teatro();
     private static Scanner scanner = new Scanner(System.in);
@@ -167,8 +186,8 @@ public class ProjetoIntegrador {
             System.out.println("1. Comprar Ingresso");
             System.out.println("2. Gerar Relatório");
             System.out.println("3. Sair");
-            int opcao = scanner.nextInt();
-            scanner.nextLine();  // Consome a nova linha
+
+            int opcao = lerInteiro("Escolha uma opção: ");
 
             switch (opcao) {
                 case 1:
@@ -178,7 +197,7 @@ public class ProjetoIntegrador {
                     Relatorio.gerarRelatorio(ingressos);
                     break;
                 case 3:
-                    scanner.close(); // Fecha o Scanner antes de sair
+                    scanner.close(); // Fechar o scanner antes de sair
                     System.exit(0);
                     break;
                 default:
@@ -187,22 +206,34 @@ public class ProjetoIntegrador {
         }
     }
 
-    // Método para realizar a compra do ingresso
+    private static int lerInteiro(String mensagem) {
+        while (true) {
+            try {
+                System.out.print(mensagem);
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, digite um número válido.");
+            }
+        }
+    }
+
     private static void comprarIngresso() {
         System.out.print("Digite o CPF: ");
         String cpf = scanner.nextLine();
+
         if (!ValidadorCPF.validar(cpf)) {
             System.out.println("CPF inválido.");
             return;
         }
 
-        System.out.println("Escolha o setor:");
         List<Setor> setores = teatro.getSetores();
+        System.out.println("Escolha o setor:");
+
         for (int i = 0; i < setores.size(); i++) {
             System.out.println((i + 1) + ". " + setores.get(i).getNome());
         }
-        int setorEscolhido = scanner.nextInt();
-        scanner.nextLine();  // Consome a nova linha
+
+        int setorEscolhido = lerInteiro("Escolha um setor: ");
 
         if (setorEscolhido < 1 || setorEscolhido > setores.size()) {
             System.out.println("Setor inválido.");
@@ -210,25 +241,34 @@ public class ProjetoIntegrador {
         }
 
         Setor setor = setores.get(setorEscolhido - 1);
+        List<Assento> assentosDisponiveis = new ArrayList<>();
 
-        System.out.println("Escolha o assento:");
-        List<Assento> assentos = setor.getAssentos();
-        for (Assento assento : assentos) {
+        for (Assento assento : setor.getAssentos()) {
             if (!assento.isOcupado()) {
-                System.out.print(assento.getNumero() + " ");
+                assentosDisponiveis.add(assento);
             }
         }
-        System.out.println();
 
-        int assentoEscolhido = scanner.nextInt();
-        scanner.nextLine();  // Consome a nova linha
-
-        if (assentoEscolhido < 1 || assentoEscolhido > assentos.size()) {
-            System.out.println("Assento inválido.");
+        if (assentosDisponiveis.isEmpty()) {
+            System.out.println("Não há assentos disponíveis neste setor.");
             return;
         }
 
-        Assento assento = setor.getAssento(assentoEscolhido);
+        System.out.println("Assentos disponíveis:");
+
+        for (Assento assento : assentosDisponiveis) {
+            System.out.print(assento.getNumero() + " ");
+        }
+
+        System.out.println();
+
+        int assentoEscolhido = lerInteiro("Escolha um assento: ");
+
+        if (assentoEscolhido < 1 || assentoEscolhido > assentosDisponiveis.size()) {
+            System.out.println("Assento inválido.");
+            return;
+        }
+        Assento assento = assentosDisponiveis.get(assentoEscolhido - 1);
 
         if (assento.isOcupado()) {
             System.out.println("Assento já ocupado.");
@@ -237,6 +277,17 @@ public class ProjetoIntegrador {
             Ingresso ingresso = new Ingresso(cpf, setor, assento);
             ingressos.add(ingresso);
             System.out.println("Ingresso comprado com sucesso: " + ingresso);
+        }
+    }
+
+    private static int lerInteiro(String mensagem) {
+        while (true) {
+            try {
+                System.out.print(mensagem);
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, digite um número válido.");
+            }
         }
     }
 }
