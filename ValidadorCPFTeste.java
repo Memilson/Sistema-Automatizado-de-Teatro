@@ -2,76 +2,121 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// Classe representando um Assento
 class Assento {
-    private int numero;
-    private boolean ocupado;
+    private int numero; // Número do assento
+    private boolean ocupado; // Status do assento: true se estiver ocupado, false caso contrário
 
+    // Construtor que inicializa o assento com um número e define como desocupado
     public Assento(int numero) {
         this.numero = numero;
         this.ocupado = false;
     }
 
+    // Método para obter o número do assento
     public int getNumero() {
         return numero;
     }
 
+    // Método para verificar se o assento está ocupado
     public boolean isOcupado() {
         return ocupado;
     }
 
+    // Método para marcar o assento como ocupado
     public void ocupar() {
         this.ocupado = true;
     }
+
+    // Método para desocupar o assento
+    public void desocupar() {
+        this.ocupado = false;
+    }
 }
 
+// Classe representando um Setor
 class Setor {
-    private String nome;
-    private List<Assento> assentos;
+    private String nome; // Nome do setor
+    private Assento[][] assentos; // Matriz de assentos no setor
 
-    public Setor(String nome, int quantidadeAssentos) {
+    // Construtor que inicializa o setor com um nome e uma quantidade de assentos
+    public Setor(String nome, int linhas, int colunas) {
         this.nome = nome;
-        this.assentos = new ArrayList<>();
-        for (int i = 1; i <= quantidadeAssentos; i++) {
-            assentos.add(new Assento(i));
+        this.assentos = new Assento[linhas][colunas];
+        int numeroAssento = 1;
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                assentos[i][j] = new Assento(numeroAssento++);
+            }
         }
     }
 
+    // Método para obter o nome do setor
     public String getNome() {
         return nome;
     }
 
-    public List<Assento> getAssentos() {
+    // Método para obter a matriz de assentos do setor
+    public Assento[][] getAssentos() {
         return assentos;
     }
 
+    // Método para obter um assento específico pelo seu número
     public Assento getAssento(int numero) {
-        return assentos.get(numero - 1);
+        for (int i = 0; i < assentos.length; i++) {
+            for (int j = 0; j < assentos[i].length; j++) {
+                if (assentos[i][j].getNumero() == numero) {
+                    return assentos[i][j];
+                }
+            }
+        }
+        return null; // Se não encontrar o assento
+    }
+
+    // Método para imprimir a matriz de assentos
+    public void mostrarAssentos() {
+        for (int i = 0; i < assentos.length; i++) {
+            for (int j = 0; j < assentos[i].length; j++) {
+                if (assentos[i][j].isOcupado()) {
+                    System.out.print("[X] "); // Assento ocupado
+                } else {
+                    System.out.print("[ ] "); // Assento disponível
+                }
+            }
+            System.out.println();
+        }
     }
 }
 
+// Classe representando um Ingresso
 class Ingresso {
-    private String cpf;
-    private Setor setor;
-    private Assento assento;
+    private String cpf; // CPF do comprador
+    private Setor setor; // Setor do ingresso
+    private Assento assento; // Assento do ingresso
 
+    // Construtor que inicializa o ingresso com CPF, setor e assento
     public Ingresso(String cpf, Setor setor, Assento assento) {
         this.cpf = cpf;
         this.setor = setor;
         this.assento = assento;
     }
 
+    // Método para obter o CPF do comprador
     public String getCpf() {
         return cpf;
     }
 
+    // Método para obter o setor do ingresso
     public Setor getSetor() {
         return setor;
     }
 
+    // Método para obter o assento do ingresso
     public Assento getAssento() {
         return assento;
     }
 
+    // Método toString para representar o ingresso como uma string
     @Override
     public String toString() {
         return "Ingresso{" +
@@ -82,22 +127,26 @@ class Ingresso {
     }
 }
 
+// Classe representando o Teatro
 class Teatro {
-    private List<Setor> setores;
+    private List<Setor> setores; // Lista de setores no teatro
 
+    // Construtor que inicializa o teatro com vários setores e seus respectivos assentos
     public Teatro() {
         setores = new ArrayList<>();
-        setores.add(new Setor("Camarote", 10));
-        setores.add(new Setor("Plateia A", 50));
-        setores.add(new Setor("Plateia B", 50));
-        setores.add(new Setor("Frisa", 30));
-        setores.add(new Setor("Balcão Nobre", 20));
+        setores.add(new Setor("Camarote", 2, 5)); // 2 linhas, 5 colunas
+        setores.add(new Setor("Plateia A", 5, 10)); // 5 linhas, 10 colunas
+        setores.add(new Setor("Plateia B", 5, 10)); // 5 linhas, 10 colunas
+        setores.add(new Setor("Frisa", 3, 10)); // 3 linhas, 10 colunas
+        setores.add(new Setor("Balcão Nobre", 2, 10)); // 2 linhas, 10 colunas
     }
 
+    // Método para obter a lista de setores do teatro
     public List<Setor> getSetores() {
         return setores;
     }
 
+    // Método para obter um setor específico pelo seu nome
     public Setor getSetor(String nome) {
         for (Setor setor : setores) {
             if (setor.getNome().equalsIgnoreCase(nome)) {
@@ -108,7 +157,9 @@ class Teatro {
     }
 }
 
+// Classe para gerar Relatório
 class Relatorio {
+    // Método estático para gerar um relatório de vendas dos ingressos
     public static void gerarRelatorio(List<Ingresso> ingressos) {
         System.out.println("Relatório de Vendas:");
         for (Ingresso ingresso : ingressos) {
@@ -117,107 +168,80 @@ class Relatorio {
     }
 }
 
+// Classe para validar CPF
 class ValidadorCPF {
+    // Método para validar o CPF
     public static boolean validar(String cpf) {
-        if (cpf == null) {
-            return false;
-        }
-        cpf = cpf.replaceAll("[^0-9]", "");
+        cpf = cpf.replaceAll("[^0-9]", ""); // Remove caracteres não numéricos
+
         if (cpf.length() != 11) {
+            return false; // CPF deve ter 11 dígitos
+        }
+
+        // Calcula o primeiro dígito verificador
+        int soma = 0;
+        for (int i = 0; i < 9; i++) {
+            soma += (cpf.charAt(i) - '0') * (10 - i);
+        }
+        int digito1 = 11 - (soma % 11);
+        if (digito1 == 10 || digito1 == 11) {
+            digito1 = 0;
+        }
+        if (digito1 != cpf.charAt(9) - '0') {
             return false;
         }
-        if ("00000000000".equals(cpf) ||
-            "11111111111".equals(cpf) ||
-            "22222222222".equals(cpf) ||
-            "33333333333".equals(cpf) ||
-            "44444444444".equals(cpf) ||
-            "55555555555".equals(cpf) ||
-            "66666666666".equals(cpf) ||
-            "77777777777".equals(cpf) ||
-            "88888888888".equals(cpf) ||
-            "99999999999".equals(cpf)) {
+
+        // Calcula o segundo dígito verificador
+        soma = 0;
+        for (int i = 0; i < 10; i++) {
+            soma += (cpf.charAt(i) - '0') * (11 - i);
+        }
+        int digito2 = 11 - (soma % 11);
+        if (digito2 == 10 || digito2 == 11) {
+            digito2 = 0;
+        }
+        if (digito2 != cpf.charAt(10) - '0') {
             return false;
         }
+
         return true;
     }
 }
 
-class Venda {
-    private String cpf;
-    private String peca;
-    private String sessao;
-    private String area;
-    private double valor;
-
-    public Venda(String cpf, String peca, String sessao, String area, double valor) {
-        this.cpf = cpf;
-        this.peca = peca;
-        this.sessao = sessao;
-        this.area = area;
-        this.valor = valor;
-    }
-
-    @Override
-    public String toString() {
-        return "Venda{" +
-                "cpf='" + cpf + '\'' +
-                ", peca='" + peca + '\'' +
-                ", sessao='" + sessao + '\'' +
-                ", area='" + area + '\'' +
-                ", valor=" + valor +
-                '}';
-    }
-}
-
-public class ProjetoIntegrador {
+// Classe principal para Venda de Ingressos
+public class ValidadorCPFTeste {
+    // Variáveis globais
     private static List<Ingresso> ingressos = new ArrayList<>();
     private static Teatro teatro = new Teatro();
     private static Scanner scanner = new Scanner(System.in);
-    
-    private static final String[] PECAS = {"Peça 1", "Peça 2", "Peça 3"};
-    private static final String[] SESSOES = {"Manhã", "Tarde", "Noite"};
-    private static final String[] AREAS = {"Plateia A", "Plateia B", "Frisa", "Camarote", "Balcão Nobre"};
-    private static final double[] PRECOS_AREAS = {40.00, 60.00, 120.00, 80.00, 250.00};
-    private static final boolean[][][] POLTRONAS_OCUPADAS = new boolean[PECAS.length][SESSOES.length][AREAS.length];
-    private static final List<Venda> VENDAS = new ArrayList<>();
 
+    // Método principal
     public static void main(String[] args) {
         while (true) {
-            System.out.println("\n\nSistema de Venda de Ingressos Teatro ABC");
-            System.out.println("-----------------------------------------");
             System.out.println("1. Comprar Ingresso");
-            System.out.println("2. Imprimir Ingresso");
-            System.out.println("3. Consultar Estatísticas de Vendas");
-            System.out.println("4. Gerar Relatório");
-            System.out.println("5. Sair");
-            System.out.print("Digite sua opção: ");
-
+            System.out.println("2. Gerar Relatório");
+            System.out.println("3. Sair");
             int opcao = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine();  // Consome a nova linha
 
             switch (opcao) {
                 case 1:
                     comprarIngresso();
                     break;
                 case 2:
-                    imprimirIngresso();
-                    break;
-                case 3:
-                    gerarEstatisticasVendas();
-                    break;
-                case 4:
                     Relatorio.gerarRelatorio(ingressos);
                     break;
-                case 5:
-                    System.out.println("Saindo do sistema...");
-                    scanner.close();
+                case 3:
+                    scanner.close(); // Fecha o Scanner antes de sair
                     System.exit(0);
+                    break;
                 default:
                     System.out.println("Opção inválida.");
             }
         }
     }
 
+    // Método para realizar a compra do ingresso
     private static void comprarIngresso() {
         System.out.print("Digite o CPF: ");
         String cpf = scanner.nextLine();
@@ -226,67 +250,48 @@ public class ProjetoIntegrador {
             return;
         }
 
-        System.out.println("Escolha a peça:");
-        for (int i = 0; i < PECAS.length; i++) {
-            System.out.println((i + 1) + ". " + PECAS[i]);
+        // Exibe os setores disponíveis
+        System.out.println("Escolha o setor:");
+        List<Setor> setores = teatro.getSetores();
+        for (int i = 0; i < setores.size(); i++) {
+            System.out.println((i + 1) + ". " + setores.get(i).getNome());
         }
-        int pecaEscolhida = scanner.nextInt();
-        scanner.nextLine();
-        if (pecaEscolhida < 1 || pecaEscolhida > PECAS.length) {
-            System.out.println("Peça inválida.");
+        int opcaoSetor = scanner.nextInt();
+        scanner.nextLine();  // Consome a nova linha
+
+        // Verifica se a opção do setor escolhido é válida
+        if (opcaoSetor < 1 || opcaoSetor > setores.size()) {
+            System.out.println("Opção de setor inválida.");
             return;
         }
 
-        System.out.println("Escolha a sessão:");
-        for (int i = 0; i < SESSOES.length; i++) {
-            System.out.println((i + 1) + ". " + SESSOES[i]);
-        }
-        int sessaoEscolhida = scanner.nextInt();
-        scanner.nextLine();
-        if (sessaoEscolhida < 1 || sessaoEscolhida > SESSOES.length) {
-            System.out.println("Sessão inválida.");
+        Setor setorEscolhido = setores.get(opcaoSetor - 1);
+
+        // Exibe os assentos disponíveis no setor escolhido
+        setorEscolhido.mostrarAssentos();
+
+        // Pede ao usuário para escolher o número do assento
+        System.out.print("Escolha o assento (número): ");
+        int numeroAssento = scanner.nextInt();
+        scanner.nextLine();  // Consome a nova linha
+
+        // Obtém o assento escolhido
+        Assento assentoEscolhido = setorEscolhido.getAssento(numeroAssento);
+
+        // Verifica se o assento escolhido é válido
+        if (assentoEscolhido == null || assentoEscolhido.isOcupado()) {
+            System.out.println("Assento inválido ou já ocupado.");
             return;
         }
 
-        System.out.println("Escolha a área:");
-        for (int i = 0; i < AREAS.length; i++) {
-            System.out.println((i + 1) + ". " + AREAS[i] + " - R$" + PRECOS_AREAS[i]);
-        }
-        int areaEscolhida = scanner.nextInt();
-        scanner.nextLine();
-        if (areaEscolhida < 1 || areaEscolhida > AREAS.length) {
-            System.out.println("Área inválida.");
-            return;
-        }
+        // Marca o assento como ocupado
+        assentoEscolhido.ocupar();
 
-        if (POLTRONAS_OCUPADAS[pecaEscolhida - 1][sessaoEscolhida - 1][areaEscolhida - 1]) {
-            System.out.println("Todas as poltronas desta área estão ocupadas.");
-            return;
-        }
+        // Cria o ingresso e adiciona à lista de ingressos vendidos
+        Ingresso ingresso = new Ingresso(cpf, setorEscolhido, assentoEscolhido);
+        ingressos.add(ingresso);
 
-        Venda venda = new Venda(cpf, PECAS[pecaEscolhida - 1], SESSOES[sessaoEscolhida - 1], AREAS[areaEscolhida - 1], PRECOS_AREAS[areaEscolhida - 1]);
-        VENDAS.add(venda);
-        POLTRONAS_OCUPADAS[pecaEscolhida - 1][sessaoEscolhida - 1][areaEscolhida - 1] = true;
-
-        System.out.println("Ingresso comprado com sucesso: " + venda);
-    }
-
-    private static void imprimirIngresso() {
-        // TODO: Implementar a função de impressão de ingresso
-        System.out.println("Funcionalidade não implementada.");
-    }
-
-    private static void gerarEstatisticasVendas() {
-        double totalVendas = 0;
-        int totalIngressos = 0;
-
-        for (Venda venda : VENDAS) {
-            totalVendas += venda.valor;
-            totalIngressos++;
-        }
-
-        System.out.println("Estatísticas de Vendas:");
-        System.out.println("Total de ingressos vendidos: " + totalIngressos);
-        System.out.println("Total arrecadado: R$" + totalVendas);
+        // Confirmação da compra
+        System.out.println("Ingresso comprado com sucesso: " + ingresso);
     }
 }

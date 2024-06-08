@@ -221,7 +221,7 @@ class ValidadorCPF {
 }
 
 // Classe principal para Venda de Ingressos
-public class ProjetoIntegrador {
+public class Main {
     // Variáveis globais
     private static List<Ingresso> ingressos = new ArrayList<>();
     private static Teatro teatro = new Teatro();
