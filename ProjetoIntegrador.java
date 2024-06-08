@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// Classe representando um Assento
 class Assento {
     private int numero; // Número do assento
     private boolean ocupado; // Status do assento: true se estiver ocupado, false caso contrário
@@ -28,6 +29,7 @@ class Assento {
     }
 }
 
+// Classe representando um Setor
 class Setor {
     private String nome; // Nome do setor
     private List<Assento> assentos; // Lista de assentos no setor
@@ -57,6 +59,7 @@ class Setor {
     }
 }
 
+// Classe representando um Ingresso
 class Ingresso {
     private String cpf; // CPF do comprador
     private Setor setor; // Setor do ingresso
@@ -95,6 +98,7 @@ class Ingresso {
     }
 }
 
+// Classe representando o Teatro
 class Teatro {
     private List<Setor> setores; // Lista de setores no teatro
 
@@ -124,7 +128,7 @@ class Teatro {
     }
 }
 
-// Classe Relatorio
+// Classe para gerar Relatório
 class Relatorio {
     // Método estático para gerar um relatório de vendas dos ingressos
     public static void gerarRelatorio(List<Ingresso> ingressos) {
@@ -135,49 +139,69 @@ class Relatorio {
     }
 }
 
-// Classe ValidadorCPF
+// Classe para validar CPF
 class ValidadorCPF {
-    // Método estático para validar um CPF
+    // Método para validar o CPF
     public static boolean validar(String cpf) {
-        if (cpf == null) {
-            return false;
-        }
+        cpf = cpf.replaceAll("[^0-9]", ""); // Remove caracteres não numéricos
 
-        // Remove caracteres não numéricos do CPF
-        cpf = cpf.replaceAll("[^0-9]", "");
-
-        // Verifica se o CPF tem 11 dígitos
         if (cpf.length() != 11) {
-            return false;
-        }
-        
-
-        // Verifica se todos os dígitos são iguais (o que invalida o CPF)
-        if ("00000000000".equals(cpf) ||
-            "11111111111".equals(cpf) ||
-            "22222222222".equals(cpf) ||
-            "33333333333".equals(cpf) ||
-            "44444444444".equals(cpf) ||
-            "55555555555".equals(cpf) ||
-            "66666666666".equals(cpf) ||
-            "77777777777".equals(cpf) ||
-            "88888888888".equals(cpf) ||
-            "99999999999".equals(cpf)) {
-            return false;
+            return false; // CPF deve ter 11 dígitos
         }
 
+        int num1, num2, num3, num4, num5, num6, num7, num8, num9, num10, num11;
+        int soma1, soma2;
+        double resto1, resto2;
 
-        return true; // Retorna true se passar por todas as verificações
+        num1 = Character.getNumericValue(cpf.charAt(0));
+        num2 = Character.getNumericValue(cpf.charAt(1));
+        num3 = Character.getNumericValue(cpf.charAt(2));
+        num4 = Character.getNumericValue(cpf.charAt(3));
+        num5 = Character.getNumericValue(cpf.charAt(4));
+        num6 = Character.getNumericValue(cpf.charAt(5));
+        num7 = Character.getNumericValue(cpf.charAt(6));
+        num8 = Character.getNumericValue(cpf.charAt(7));
+        num9 = Character.getNumericValue(cpf.charAt(8));
+        num10 = Character.getNumericValue(cpf.charAt(9));
+        num11 = Character.getNumericValue(cpf.charAt(10));
+
+        // Verifica se todos os números são iguais
+        if (num1 == num2 && num2 == num3 && num3 == num4 && num4 == num5 &&
+                num5 == num6 && num6 == num7 && num7 == num8 && num8 == num9 &&
+                num9 == num10 && num10 == num11) {
+            return false;
+        } else {
+            soma1 = num1 * 10 + num2 * 9 + num3 * 8 + num4 * 7 + num5 * 6 +
+                    num6 * 5 + num7 * 4 + num8 * 3 + num9 * 2;
+
+            resto1 = (soma1 * 10) % 11;
+
+            if (resto1 == 10) {
+                resto1 = 0;
+            }
+
+            soma2 = num1 * 11 + num2 * 10 + num3 * 9 + num4 * 8 + num5 * 7 +
+                    num6 * 6 + num7 * 5 + num8 * 4 + num9 * 3 + num10 * 2;
+
+            resto2 = (soma2 * 10) % 11;
+
+            if (resto1 == num10 && resto2 == num11) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }
 
-// Classe Principal VendaIngressos
+// Classe principal para Venda de Ingressos
 public class ProjetoIntegrador {
-    // Variáveis globais para armazenar ingressos vendidos, teatro e scanner
+    // Variáveis globais
     private static List<Ingresso> ingressos = new ArrayList<>();
     private static Teatro teatro = new Teatro();
     private static Scanner scanner = new Scanner(System.in);
 
+    // Método principal
     public static void main(String[] args) {
         while (true) {
             System.out.println("1. Comprar Ingresso");

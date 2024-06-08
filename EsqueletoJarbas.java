@@ -47,43 +47,64 @@ public class EsqueletoJarbas {
         }
     }
 
-    public static boolean validar(String cpf) {
-        if (cpf == null) {
-            return false;
+    // Classe ValidadorCPF
+    static class ValidadorCPF {
+        public static boolean validar(String cpf) {
+            cpf = cpf.replaceAll("[^0-9]", "");
+
+            if (cpf.length() != 11) {
+                return false;
+            }
+
+            int num1, num2, num3, num4, num5, num6, num7, num8, num9, num10, num11;
+            int soma1, soma2;
+            double resto1, resto2;
+
+            num1 = Character.getNumericValue(cpf.charAt(0));
+            num2 = Character.getNumericValue(cpf.charAt(1));
+            num3 = Character.getNumericValue(cpf.charAt(2));
+            num4 = Character.getNumericValue(cpf.charAt(3));
+            num5 = Character.getNumericValue(cpf.charAt(4));
+            num6 = Character.getNumericValue(cpf.charAt(5));
+            num7 = Character.getNumericValue(cpf.charAt(6));
+            num8 = Character.getNumericValue(cpf.charAt(7));
+            num9 = Character.getNumericValue(cpf.charAt(8));
+            num10 = Character.getNumericValue(cpf.charAt(9));
+            num11 = Character.getNumericValue(cpf.charAt(10));
+
+            if (num1 == num2 && num2 == num3 && num3 == num4 && num4 == num5 &&
+                    num5 == num6 && num6 == num7 && num7 == num8 && num8 == num9 &&
+                    num9 == num10 && num10 == num11) {
+                return false;
+            } else {
+                soma1 = num1 * 10 + num2 * 9 + num3 * 8 + num4 * 7 + num5 * 6 +
+                        num6 * 5 + num7 * 4 + num8 * 3 + num9 * 2;
+
+                resto1 = (soma1 * 10) % 11;
+
+                if (resto1 == 10) {
+                    resto1 = 0;
+                }
+
+                soma2 = num1 * 11 + num2 * 10 + num3 * 9 + num4 * 8 + num5 * 7 +
+                        num6 * 6 + num7 * 5 + num8 * 4 + num9 * 3 + num10 * 2;
+
+                resto2 = (soma2 * 10) % 11;
+
+                if (resto1 == num10 && resto2 == num11) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
-
-        // Remove caracteres não numéricos do CPF
-        cpf = cpf.replaceAll("[^0-9]", "");
-
-        // Verifica se o CPF tem 11 dígitos
-        if (cpf.length() != 11) {
-            return false;
-        }
-
-        // Verifica se todos os dígitos são iguais (o que invalida o CPF)
-        if ("00000000000".equals(cpf) ||
-            "11111111111".equals(cpf) ||
-            "22222222222".equals(cpf) ||
-            "33333333333".equals(cpf) ||
-            "44444444444".equals(cpf) ||
-            "55555555555".equals(cpf) ||
-            "66666666666".equals(cpf) ||
-            "77777777777".equals(cpf) ||
-            "88888888888".equals(cpf) ||
-            "99999999999".equals(cpf)) {
-            return false;
-        }
-
-        // TODO: Adicionar a validação dos dígitos verificadores do CPF
-
-        return true; // Retorna true se passar por todas as verificações
     }
 
     // Funcionalidades do sistema
     private static void comprarIngresso(Scanner ler) {
         System.out.print("Digite o CPF: ");
         String cpf = ler.nextLine();
-        if (!validar(cpf)) {
+        if (!ValidadorCPF.validar(cpf)) {
             System.out.println("CPF inválido.");
             return;
         }
