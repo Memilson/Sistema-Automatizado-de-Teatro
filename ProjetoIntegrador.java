@@ -166,7 +166,6 @@ class ValidadorCPF {
             return false;
         }
 
-        // Adicione aqui a lógica completa de validação de CPF, se necessário
 
         return true; // Retorna true se passar por todas as verificações
     }
