@@ -125,13 +125,38 @@ class Relatorio {
 // Classe ValidadorCPF
 class ValidadorCPF {
     public static boolean validar(String cpf) {
-        // Implementação simples para validar CPF (exemplo simplificado)
-        return cpf != null && cpf.matches("\\d{11}");
+        if (cpf == null) {
+            return false;
+        }
+
+        cpf = cpf.replaceAll("[^0-9]", "");
+
+        if (cpf.length() != 11) {
+            return false;
+        }
+
+        if ("00000000000".equals(cpf) ||
+            "11111111111".equals(cpf) ||
+            "22222222222".equals(cpf) ||
+            "33333333333".equals(cpf) ||
+            "44444444444".equals(cpf) ||
+            "55555555555".equals(cpf) ||
+            "66666666666".equals(cpf) ||
+            "77777777777".equals(cpf) ||
+            "88888888888".equals(cpf) ||
+            "99999999999".equals(cpf)) {
+            return false;
+        }
+
+        // Adicione aqui a lógica completa de validação de CPF, se necessário
+
+        return true;
     }
 }
 
 // Classe Principal VendaIngressos
-public class VendaIngressos {
+public class ProjetoIntegrador {
+    // Variáveis globais para armazenar ingressos vendidos, teatro e scanner
     private static List<Ingresso> ingressos = new ArrayList<>();
     private static Teatro teatro = new Teatro();
     private static Scanner scanner = new Scanner(System.in);
@@ -142,6 +167,7 @@ public class VendaIngressos {
             System.out.println("2. Gerar Relatório");
             System.out.println("3. Sair");
             int opcao = scanner.nextInt();
+            scanner.nextLine();  // Consome a nova linha
 
             switch (opcao) {
                 case 1:
@@ -151,6 +177,7 @@ public class VendaIngressos {
                     Relatorio.gerarRelatorio(ingressos);
                     break;
                 case 3:
+                    scanner.close(); // Fecha o Scanner antes de sair
                     System.exit(0);
                     break;
                 default:
@@ -159,9 +186,10 @@ public class VendaIngressos {
         }
     }
 
+    // Método para realizar a compra do ingresso
     private static void comprarIngresso() {
         System.out.print("Digite o CPF: ");
-        String cpf = scanner.next();
+        String cpf = scanner.nextLine();
         if (!ValidadorCPF.validar(cpf)) {
             System.out.println("CPF inválido.");
             return;
@@ -173,6 +201,13 @@ public class VendaIngressos {
             System.out.println((i + 1) + ". " + setores.get(i).getNome());
         }
         int setorEscolhido = scanner.nextInt();
+        scanner.nextLine();  // Consome a nova linha
+
+        if (setorEscolhido < 1 || setorEscolhido > setores.size()) {
+            System.out.println("Setor inválido.");
+            return;
+        }
+
         Setor setor = setores.get(setorEscolhido - 1);
 
         System.out.println("Escolha o assento:");
@@ -183,7 +218,15 @@ public class VendaIngressos {
             }
         }
         System.out.println();
+
         int assentoEscolhido = scanner.nextInt();
+        scanner.nextLine();  // Consome a nova linha
+
+        if (assentoEscolhido < 1 || assentoEscolhido > assentos.size()) {
+            System.out.println("Assento inválido.");
+            return;
+        }
+
         Assento assento = setor.getAssento(assentoEscolhido);
 
         if (assento.isOcupado()) {
@@ -193,6 +236,6 @@ public class VendaIngressos {
             Ingresso ingresso = new Ingresso(cpf, setor, assento);
             ingressos.add(ingresso);
             System.out.println("Ingresso comprado com sucesso: " + ingresso);
-        }
-    }
+        }
+    }
 }
