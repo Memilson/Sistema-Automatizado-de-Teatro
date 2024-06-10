@@ -75,7 +75,7 @@ class Setor {
                 if (assentos[i][j].isOcupado()) {
                     System.out.print("[X] "); // Assento ocupado
                 } else {
-                    System.out.print("[ ] "); // Assento disponível
+                    System.out.print("[" + assentos[i][j].getNumero() + "] "); // Número do assento
                 }
             }
             System.out.println();
@@ -150,6 +150,56 @@ class Teatro {
         }
         return null;
     }
+
+    // Método para contar assentos ocupados em um setor específico
+    public int assentosOcupadosPorSetor(Setor setor) {
+        int ocupados = 0;
+        Assento[][] assentos = setor.getAssentos();
+        for (int i = 0; i < assentos.length; i++) {
+            for (int j = 0; j < assentos[i].length; j++) {
+                if (assentos[i][j].isOcupado()) {
+                    ocupados++;
+                }
+            }
+        }
+        return ocupados;
+    }
+
+    // Método para identificar a sessão com maior e menor ocupação de poltronas
+    public void ocupacaoMaximaMinimaPorSessao() {
+        List<Setor> setores = getSetores();
+        int maxOcupacao = Integer.MIN_VALUE;
+        int minOcupacao = Integer.MAX_VALUE;
+        Setor maxSetor = null;
+        Setor minSetor = null;
+
+        for (Setor setor : setores) {
+            int ocupacao = assentosOcupadosPorSetor(setor);
+            if (ocupacao > maxOcupacao) {
+                maxOcupacao = ocupacao;
+                maxSetor = setor;
+            }
+            if (ocupacao < minOcupacao) {
+                minOcupacao = ocupacao;
+                minSetor = setor;
+            }
+        }
+
+        if (maxSetor != null && minSetor != null) {
+            System.out.println("Setor com maior ocupação: " + maxSetor.getNome() + " (" + maxOcupacao + " assentos ocupados)");
+            System.out.println("Setor com menor ocupação: " + minSetor.getNome() + " (" + minOcupacao + " assentos ocupados)");
+        }
+    }
+
+    // Método para calcular lucro por sessão
+    public void lucroPorSessao() {
+        List<Setor> setores = getSetores();
+        for (Setor setor : setores) {
+            int ingressosVendidos = assentosOcupadosPorSetor(setor);
+            int lucro = ingressosVendidos * 50; // Assumindo preço fixo de R$50 por ingresso
+            System.out.println("Lucro para " + setor.getNome() + ": R$" + lucro);
+        }
+    }
 }
 
 // Classe para gerar Relatório
@@ -160,6 +210,59 @@ class Relatorio {
         for (Ingresso ingresso : ingressos) {
             System.out.println(ingresso);
         }
+    }
+
+    // Método para listar todos os assentos ocupados
+    public static void assentosOcupados(List<Ingresso> ingressos) {
+        System.out.println("Assentos ocupados:");
+        for (Ingresso ingresso : ingressos) {
+            System.out.println("Setor: " + ingresso.getSetor().getNome() + ", Assento: " + ingresso.getAssento().getNumero());
+        }
+    }
+
+    // Método para identificar a peça com mais e menos ingressos vendidos
+    public static void ingressosPorPeca(List<Ingresso> ingressos) {
+        // Contagem de ingressos por setor
+        int[] ingressosPorSetor = new int[5]; // Cada índice representa um setor (0 a 4)
+
+        for (Ingresso ingresso : ingressos) {
+            Setor setor = ingresso.getSetor();
+            int indexSetor = getIndexSetor(setor); // Função auxiliar para obter o índice do setor
+            ingressosPorSetor[indexSetor]++;
+        }
+
+        // Encontrar setor com mais e menos ingressos
+        int maxIngressos = Integer.MIN_VALUE;
+        int minIngressos = Integer.MAX_VALUE;
+        int indexMax = 0;
+        int indexMin = 0;
+
+        for (int i = 0; i < ingressosPorSetor.length; i++) {
+            if (ingressosPorSetor[i] > maxIngressos) {
+                maxIngressos = ingressosPorSetor[i];
+                indexMax = i;
+            }
+            if (ingressosPorSetor[i] < minIngressos && ingressosPorSetor[i] > 0) {
+                minIngressos = ingressosPorSetor[i];
+                indexMin = i;
+            }
+        }
+
+        // Mostrar resultados
+        List<Setor> setores = new Teatro().getSetores(); // Obter todos os setores do teatro
+        System.out.println("Setor com mais ingressos vendidos: " + setores.get(indexMax).getNome() + " (" + maxIngressos + " ingressos)");
+        System.out.println("Setor com menos ingressos vendidos: " + setores.get(indexMin).getNome() + " (" + minIngressos + " ingressos)");
+    }
+
+    // Método auxiliar para obter o índice do setor
+    private static int getIndexSetor(Setor setor) {
+        List<Setor> setores = new Teatro().getSetores();
+        for (int i = 0; i < setores.size(); i++) {
+            if (setores.get(i).getNome().equals(setor.getNome())) {
+                return i;
+            }
+        }
+        return -1; // Caso não encontre
     }
 }
 
@@ -221,7 +324,7 @@ class ValidadorCPF {
 }
 
 // Classe principal para Venda de Ingressos
-public class ProjetoIntegrador {
+public class mamador1 {
     // Variáveis globais
     private static List<Ingresso> ingressos = new ArrayList<>();
     private static Teatro teatro = new Teatro();
@@ -241,7 +344,7 @@ public class ProjetoIntegrador {
                     comprarIngresso();
                     break;
                 case 2:
-                    Relatorio.gerarRelatorio(ingressos);
+                    mostrarMenuRelatorio();
                     break;
                 case 3:
                     scanner.close(); // Fecha o Scanner antes de sair
@@ -303,4 +406,37 @@ public class ProjetoIntegrador {
             System.out.println("Ingresso comprado com sucesso: " + ingresso);
         }
     }
+
+    // Método para exibir o menu de relatórios
+    private static void mostrarMenuRelatorio() {
+        System.out.println("Escolha o relatório:");
+        System.out.println("1. Relatório de Vendas");
+        System.out.println("2. Assentos Ocupados");
+        System.out.println("3. Peça com Mais e Menos Ingressos Vendidos");
+        System.out.println("4. Ocupação Máxima e Mínima por Sessão");
+        System.out.println("5. Lucro por Sessão");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();  // Consome a nova linha
+
+        switch (opcao) {
+            case 1:
+            Relatorio.gerarRelatorio(ingressos);
+            break;
+        case 2:
+            Relatorio.assentosOcupados(ingressos);
+            break;
+        case 3:
+            Relatorio.ingressosPorPeca(ingressos);
+            break;
+        case 4:
+            teatro.ocupacaoMaximaMinimaPorSessao();
+            break;
+        case 5:
+            teatro.lucroPorSessao();
+            break;
+        default:
+            System.out.println("Opção inválida.");
+    }
 }
+}
+
