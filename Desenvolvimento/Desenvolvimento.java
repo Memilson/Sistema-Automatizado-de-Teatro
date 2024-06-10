@@ -1,3 +1,5 @@
+package Desenvolvimento;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -32,11 +34,13 @@ class Assento {
 // Classe representando um Setor
 class Setor {
     private String nome; // Nome do setor
+    private List<String> sessoes; // Lista de sessões disponíveis para o setor
     private Assento[][] assentos; // Matriz de assentos no setor
 
-    // Construtor que inicializa o setor com um nome e uma quantidade de assentos
-    public Setor(String nome, int linhas, int colunas) {
+    // Construtor que inicializa o setor com um nome, sessões e uma quantidade de assentos
+    public Setor(String nome, List<String> sessoes, int linhas, int colunas) {
         this.nome = nome;
+        this.sessoes = sessoes;
         this.assentos = new Assento[linhas][colunas];
         int numeroAssento = 1;
         for (int i = 0; i < linhas; i++) {
@@ -46,14 +50,18 @@ class Setor {
         }
     }
 
-    // Método para obter o nome do setor
+    // Métodos getters para nome do setor e matriz de assentos
     public String getNome() {
         return nome;
     }
 
-    // Método para obter a matriz de assentos do setor
     public Assento[][] getAssentos() {
         return assentos;
+    }
+
+    // Método para obter as sessões disponíveis para o setor
+    public List<String> getSessoes() {
+        return sessoes;
     }
 
     // Método para obter um assento específico pelo seu número
@@ -125,20 +133,30 @@ class Ingresso {
 // Classe representando o Teatro
 class Teatro {
     private List<Setor> setores; // Lista de setores no teatro
+    private List<String> sessoes; // Lista de sessões disponíveis no teatro
 
     // Construtor que inicializa o teatro com vários setores e seus respectivos assentos
     public Teatro() {
         setores = new ArrayList<>();
-        setores.add(new Setor("Camarote", 2, 5)); // 2 linhas, 5 colunas
-        setores.add(new Setor("Plateia A", 5, 10)); // 5 linhas, 10 colunas
-        setores.add(new Setor("Plateia B", 5, 10)); // 5 linhas, 10 colunas
-        setores.add(new Setor("Frisa", 3, 10)); // 3 linhas, 10 colunas
-        setores.add(new Setor("Balcão Nobre", 2, 10)); // 2 linhas, 10 colunas
+        sessoes = new ArrayList<>();
+        sessoes.add("Manhã");
+        sessoes.add("Tarde");
+        sessoes.add("Noite");
+
+        setores.add(new Setor("Camarote", sessoes, 2, 5)); // 2 linhas, 5 colunas
+        setores.add(new Setor("Plateia A", sessoes, 5, 10)); // 5 linhas, 10 colunas
+        setores.add(new Setor("Plateia B", sessoes, 5, 10)); // 5 linhas, 10 colunas
+        setores.add(new Setor("Frisa", sessoes, 3, 10)); // 3 linhas, 10 colunas
+        setores.add(new Setor("Balcão Nobre", sessoes, 2, 10)); // 2 linhas, 10 colunas
     }
 
-    // Método para obter a lista de setores do teatro
+    // Métodos getters para lista de setores e sessões
     public List<Setor> getSetores() {
         return setores;
+    }
+
+    public List<String> getSessoes() {
+        return sessoes;
     }
 
     // Método para obter um setor específico pelo seu nome
@@ -164,6 +182,8 @@ class Teatro {
         }
         return ocupados;
     }
+
+    // Métodos adicionais para ocupação máxima e mínima por sessão, lucro por sessão, etc.
 
     // Método para identificar a sessão com maior e menor ocupação de poltronas
     public void ocupacaoMaximaMinimaPorSessao() {
@@ -324,7 +344,7 @@ class ValidadorCPF {
 }
 
 // Classe principal para Venda de Ingressos
-public class mamador1 {
+public class Desenvolvimento {
     // Variáveis globais
     private static List<Ingresso> ingressos = new ArrayList<>();
     private static Teatro teatro = new Teatro();
@@ -366,8 +386,8 @@ public class mamador1 {
         }
 
         // Exibe os setores disponíveis
-        System.out.println("Escolha o setor:");
         List<Setor> setores = teatro.getSetores();
+        System.out.println("Escolha o setor:");
         for (int i = 0; i < setores.size(); i++) {
             System.out.println((i + 1) + ". " + setores.get(i).getNome());
         }
@@ -382,7 +402,24 @@ public class mamador1 {
 
         Setor setor = setores.get(setorEscolhido - 1);
 
-        // Exibe a matriz de assentos disponíveis no setor escolhido
+        // Exibe as sessões disponíveis para o setor escolhido
+        List<String> sessoes = setor.getSessoes();
+        System.out.println("Sessões disponíveis para " + setor.getNome() + ":");
+        for (int i = 0; i < sessoes.size(); i++) {
+            System.out.println((i + 1) + ". " + sessoes.get(i));
+        }
+        int sessaoEscolhida = scanner.nextInt();
+        scanner.nextLine();  // Consome a nova linha
+
+        // Verifica se a sessão escolhida é válida
+        if (sessaoEscolhida < 1 || sessaoEscolhida > sessoes.size()) {
+            System.out.println("Sessão inválida.");
+            return;
+        }
+
+        String sessao = sessoes.get(sessaoEscolhida - 1);
+
+        // Exibe a matriz de assentos disponíveis na sessão e setor escolhidos
         setor.mostrarAssentos();
 
         System.out.println("Escolha o assento (número):");
@@ -420,23 +457,23 @@ public class mamador1 {
 
         switch (opcao) {
             case 1:
-            Relatorio.gerarRelatorio(ingressos);
-            break;
-        case 2:
-            Relatorio.assentosOcupados(ingressos);
-            break;
-        case 3:
-            Relatorio.ingressosPorPeca(ingressos);
-            break;
-        case 4:
-            teatro.ocupacaoMaximaMinimaPorSessao();
-            break;
-        case 5:
-            teatro.lucroPorSessao();
-            break;
-        default:
-            System.out.println("Opção inválida.");
+                Relatorio.gerarRelatorio(ingressos);
+                break;
+            case 2:
+                Relatorio.assentosOcupados(ingressos);
+                break;
+            case 3:
+                Relatorio.ingressosPorPeca(ingressos);
+                break;
+            case 4:
+                teatro.ocupacaoMaximaMinimaPorSessao();
+                break;
+            case 5:
+                teatro.lucroPorSessao();
+                break;
+            default:
+                System.out.println("Opção inválida.");
+        }
     }
-}
 }
 
