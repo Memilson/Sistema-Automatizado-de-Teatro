@@ -400,8 +400,6 @@ public class SistemaTeatro {
     }
 
     private static void mostrarAssentos(Teatro teatro, Scanner scanner) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mostrarAssentos'");
     }
 
     private static void comprarIngresso(Teatro teatro, Scanner scanner) {
