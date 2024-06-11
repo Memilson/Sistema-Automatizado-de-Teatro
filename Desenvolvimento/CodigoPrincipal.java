@@ -1,7 +1,9 @@
 package Desenvolvimento;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 // Classe representando um Assento
@@ -251,7 +253,8 @@ class Teatro {
 
 // Classe para gerar Relatório
 class Relatorio {
-    // Método estático para gerar um relatório de vendas dos ingressos
+
+    // Método para gerar o relatório de vendas
     public static void gerarRelatorio(List<Ingresso> ingressos) {
         System.out.println("Relatório de Vendas:");
         for (Ingresso ingresso : ingressos) {
@@ -259,57 +262,152 @@ class Relatorio {
         }
     }
 
-    // Método para listar todos os assentos ocupados
+    // Método para contar os assentos ocupados
     public static void assentosOcupados(List<Ingresso> ingressos) {
-        System.out.println("Assentos ocupados:");
+        Map<String, Integer> ocupacaoPorSetor = new HashMap<>();
+
         for (Ingresso ingresso : ingressos) {
-            System.out.println("Setor: " + ingresso.getSetor().getNome() + ", Assento: " + ingresso.getAssento().getNumero());
+            String setorNome = ingresso.getSetor().getNome();
+            ocupacaoPorSetor.put(setorNome, ocupacaoPorSetor.getOrDefault(setorNome, 0) + 1);
+        }
+
+        System.out.println("Assentos Ocupados:");
+        for (Map.Entry<String, Integer> entry : ocupacaoPorSetor.entrySet()) {
+            System.out.println("Setor " + entry.getKey() + ": " + entry.getValue() + " assentos ocupados");
         }
     }
 
-    // Método para identificar a peça com mais e menos ingressos vendidos
+    // Método para encontrar a peça com mais e menos ingressos vendidos
     public static void ingressosPorPeca(List<Ingresso> ingressos) {
-        // Contagem de ingressos por setor
-        int[] ingressosPorSetor = new int[5]; // Cada índice representa um setor (0 a 4)
+        Map<String, Integer> ingressosPorPeca = new HashMap<>();
 
         for (Ingresso ingresso : ingressos) {
-            Setor setor = ingresso.getSetor();
-            int indexSetor = getIndexSetor(setor); // Função auxiliar para obter o índice do setor
-            ingressosPorSetor[indexSetor]++;
+            String pecaNome = ingresso.getPeca().getNome();
+            ingressosPorPeca.put(pecaNome, ingressosPorPeca.getOrDefault(pecaNome, 0) + 1);
         }
 
-        // Encontrar setor com mais e menos ingressos
+        String pecaMaisVendida = null;
+        String pecaMenosVendida = null;
         int maxIngressos = Integer.MIN_VALUE;
         int minIngressos = Integer.MAX_VALUE;
-        int indexMax = 0;
-        int indexMin = 0;
 
-        for (int i = 0; i < ingressosPorSetor.length; i++) {
-            if (ingressosPorSetor[i] > maxIngressos) {
-                maxIngressos = ingressosPorSetor[i];
-                indexMax = i;
+        for (Map.Entry<String, Integer> entry : ingressosPorPeca.entrySet()) {
+            if (entry.getValue() > maxIngressos) {
+                maxIngressos = entry.getValue();
+                pecaMaisVendida = entry.getKey();
             }
-            if (ingressosPorSetor[i] < minIngressos && ingressosPorSetor[i] > 0) {
-                minIngressos = ingressosPorSetor[i];
-                indexMin = i;
+            if (entry.getValue() < minIngressos) {
+                minIngressos = entry.getValue();
+                pecaMenosVendida = entry.getKey();
             }
         }
 
-        // Mostrar resultados
-        List<Setor> setores = new Teatro().getSetores(); // Obter todos os setores do teatro
-        System.out.println("Setor com mais ingressos vendidos: " + setores.get(indexMax).getNome() + " (" + maxIngressos + " ingressos)");
-        System.out.println("Setor com menos ingressos vendidos: " + setores.get(indexMin).getNome() + " (" + minIngressos + " ingressos)");
+        System.out.println("Peça com mais ingressos vendidos: " + pecaMaisVendida + " (" + maxIngressos + " ingressos)");
+        System.out.println("Peça com menos ingressos vendidos: " + pecaMenosVendida + " (" + minIngressos + " ingressos)");
     }
 
-    // Método auxiliar para obter o índice do setor
-    private static int getIndexSetor(Setor setor) {
-        List<Setor> setores = new Teatro().getSetores();
-        for (int i = 0; i < setores.size(); i++) {
-            if (setores.get(i).getNome().equals(setor.getNome())) {
-                return i;
+    // Método para identificar a sessão com maior e menor ocupação de poltronas
+    public static void ocupacaoMaximaMinimaPorSessao(List<Ingresso> ingressos) {
+        Map<String, Integer> ocupacaoPorSessao = new HashMap<>();
+
+        for (Ingresso ingresso : ingressos) {
+            String sessaoNome = ingresso.getSessao();
+            ocupacaoPorSessao.put(sessaoNome, ocupacaoPorSessao.getOrDefault(sessaoNome, 0) + 1);
+        }
+
+        String sessaoMaisOcupada = null;
+        String sessaoMenosOcupada = null;
+        int maxOcupacao = Integer.MIN_VALUE;
+        int minOcupacao = Integer.MAX_VALUE;
+
+        for (Map.Entry<String, Integer> entry : ocupacaoPorSessao.entrySet()) {
+            if (entry.getValue() > maxOcupacao) {
+                maxOcupacao = entry.getValue();
+                sessaoMaisOcupada = entry.getKey();
+            }
+            if (entry.getValue() < minOcupacao) {
+                minOcupacao = entry.getValue();
+                sessaoMenosOcupada = entry.getKey();
             }
         }
-        return -1; // Caso não encontre
+
+        System.out.println("Sessão com maior ocupação: " + sessaoMaisOcupada + " (" + maxOcupacao + " poltronas ocupadas)");
+        System.out.println("Sessão com menor ocupação: " + sessaoMenosOcupada + " (" + minOcupacao + " poltronas ocupadas)");
+    }
+
+    // Método para identificar a peça e a sessão mais e menos lucrativas
+    public static void lucroPorPecaSessao(List<Ingresso> ingressos) {
+        Map<String, Integer> lucroPorPeca = new HashMap<>();
+        Map<String, Integer> lucroPorSessao = new HashMap<>();
+
+        for (Ingresso ingresso : ingressos) {
+            String pecaNome = ingresso.getPeca().getNome();
+            String sessaoNome = ingresso.getSessao();
+            int preco = 50; // Preço fixo de R$50 por ingresso
+
+            lucroPorPeca.put(pecaNome, lucroPorPeca.getOrDefault(pecaNome, 0) + preco);
+            lucroPorSessao.put(sessaoNome, lucroPorSessao.getOrDefault(sessaoNome, 0) + preco);
+        }
+
+        String pecaMaisLucrativa = null;
+        String pecaMenosLucrativa = null;
+        String sessaoMaisLucrativa = null;
+        String sessaoMenosLucrativa = null;
+        int maxLucroPeca = Integer.MIN_VALUE;
+        int minLucroPeca = Integer.MAX_VALUE;
+        int maxLucroSessao = Integer.MIN_VALUE;
+        int minLucroSessao = Integer.MAX_VALUE;
+
+        for (Map.Entry<String, Integer> entry : lucroPorPeca.entrySet()) {
+            if (entry.getValue() > maxLucroPeca) {
+                maxLucroPeca = entry.getValue();
+                pecaMaisLucrativa = entry.getKey();
+            }
+            if (entry.getValue() < minLucroPeca) {
+                minLucroPeca = entry.getValue();
+                pecaMenosLucrativa = entry.getKey();
+            }
+        }
+
+        for (Map.Entry<String, Integer> entry : lucroPorSessao.entrySet()) {
+            if (entry.getValue() > maxLucroSessao) {
+                maxLucroSessao = entry.getValue();
+                sessaoMaisLucrativa = entry.getKey();
+            }
+            if (entry.getValue() < minLucroSessao) {
+                minLucroSessao = entry.getValue();
+                sessaoMenosLucrativa = entry.getKey();
+            }
+        }
+
+        System.out.println("Peça mais lucrativa: " + pecaMaisLucrativa + " (R$" + maxLucroPeca + ")");
+        System.out.println("Peça menos lucrativa: " + pecaMenosLucrativa + " (R$" + minLucroPeca + ")");
+        System.out.println("Sessão mais lucrativa: " + sessaoMaisLucrativa + " (R$" + maxLucroSessao + ")");
+        System.out.println("Sessão menos lucrativa: " + sessaoMenosLucrativa + " (R$" + minLucroSessao + ")");
+    }
+
+    // Método para calcular o lucro médio do teatro com todas as áreas por peças
+    public static void lucroMedioPorPeca(List<Ingresso> ingressos) {
+        Map<String, Integer> lucroPorPeca = new HashMap<>();
+        Map<String, Integer> ingressosPorPeca = new HashMap<>();
+
+        for (Ingresso ingresso : ingressos) {
+            String pecaNome = ingresso.getPeca().getNome();
+            int preco = 50; // Preço fixo de R$50 por ingresso
+
+            lucroPorPeca.put(pecaNome, lucroPorPeca.getOrDefault(pecaNome, 0) + preco);
+            ingressosPorPeca.put(pecaNome, ingressosPorPeca.getOrDefault(pecaNome, 0) + 1);
+        }
+
+        System.out.println("Lucro Médio por Peça:");
+        for (Map.Entry<String, Integer> entry : lucroPorPeca.entrySet()) {
+            String pecaNome = entry.getKey();
+            int totalLucro = entry.getValue();
+            int totalIngressos = ingressosPorPeca.get(pecaNome);
+            double lucroMedio = (double) totalLucro / totalIngressos;
+
+            System.out.println("Peça " + pecaNome + ": R$" + String.format("%.2f", lucroMedio) + " por ingresso");
+        }
     }
 }
 
@@ -504,11 +602,14 @@ public class CodigoPrincipal {
     private static void mostrarMenuRelatorio() {
         System.out.println("1. Relatório de Vendas");
         System.out.println("2. Assentos Ocupados");
-        System.out.println("3. Peça com Mais Ingressos Vendidos");
-        System.out.println("4. Sair");
+        System.out.println("3. Peça com Mais e Menos Ingressos Vendidos");
+        System.out.println("4. Sessão com Maior e Menor Ocupação de Poltronas");
+        System.out.println("5. Peça e Sessão Mais e Menos Lucrativas");
+        System.out.println("6. Lucro Médio do Teatro com Todas as Áreas por Peças");
+        System.out.println("7. Sair");
         int opcao = scanner.nextInt();
         scanner.nextLine();  // Consome a nova linha
-
+    
         switch (opcao) {
             case 1:
                 Relatorio.gerarRelatorio(ingressos);
@@ -520,6 +621,15 @@ public class CodigoPrincipal {
                 Relatorio.ingressosPorPeca(ingressos);
                 break;
             case 4:
+                Relatorio.ocupacaoMaximaMinimaPorSessao(ingressos);
+                break;
+            case 5:
+                Relatorio.lucroPorPecaSessao(ingressos);
+                break;
+            case 6:
+                Relatorio.lucroMedioPorPeca(ingressos);
+                break;
+            case 7:
                 return;
             default:
                 System.out.println("Opção inválida.");
