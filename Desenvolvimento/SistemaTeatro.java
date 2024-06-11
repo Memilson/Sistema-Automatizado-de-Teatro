@@ -393,39 +393,18 @@ public class SistemaTeatro {
         }
     }
 
-        // Método para visualizar assentos disponíveis por setor
-        private static void visualizarAssentos(Teatro teatro, Scanner scanner) {
-            System.out.println("\nSelecione o setor:");
-            List<Setor> setores = teatro.getSetores();
-            for (int i = 0; i < setores.size(); i++) {
-                System.out.println((i + 1) + ". " + setores.get(i).getNome());
-            }
-            int escolhaSetor = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha
-            Setor setor = setores.get(escolhaSetor - 1);
-    
-            System.out.println("Assentos no setor " + setor.getNome() + ":");
-            setor.mostrarAssentos();
-    
-            // Continuação do método para permitir ao usuário escolher outra ação após visualizar os assentos
-            System.out.println("\nO que você deseja fazer em seguida?");
-            System.out.println("1. Comprar Ingresso");
-            System.out.println("2. Voltar ao Menu Principal");
-    
-            int escolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha
-    
-            switch (escolha) {
-                case 1:
-                    comprarIngresso(teatro, scanner);
-                    break;
-                case 2:
-                    // Voltar ao menu principal
-                    break;
-                default:
-                    System.out.println("Opção inválida. Voltando ao menu principal.");
-                    break;
-            }
+    // Método para visualizar assentos disponíveis por setor
+    private static void visualizarAssentos(Teatro teatro, Scanner scanner) {
+        System.out.println("\nSelecione o setor:");
+        List<Setor> setores = teatro.getSetores();
+        for (int i = 0; i < setores.size(); i++) {
+            System.out.println((i + 1) + ". " + setores.get(i).getNome());
         }
+        int escolhaSetor = scanner.nextInt();
+        scanner.nextLine(); // Consumir a nova linha
+        Setor setor = setores.get(escolhaSetor - 1);
+
+        System.out.println("Assentos no setor " + setor.getNome() + ":");
+        setor.mostrarAssentos();
     }
-    
+}
