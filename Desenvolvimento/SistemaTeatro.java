@@ -376,7 +376,7 @@ public class SistemaTeatro {
                     comprarIngresso(teatro, scanner);
                     break;
                 case 2:
-                    visualizarAssentos(teatro, scanner);
+                    mostrarAssentos(teatro, scanner);
                     break;
                 case 3:
                     Relatorio.gerarRelatorio(ingressos);
@@ -399,8 +399,20 @@ public class SistemaTeatro {
         scanner.close();
     }
 
-    // Método para comprar um ingresso
+    private static void mostrarAssentos(Teatro teatro, Scanner scanner) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'mostrarAssentos'");
+    }
+
     private static void comprarIngresso(Teatro teatro, Scanner scanner) {
+        System.out.print("Digite o CPF: ");
+        String cpf = scanner.nextLine();
+        while (!ValidadorCPF.validar(cpf)) {
+            System.out.println("CPF inválido.");
+            System.out.print("Digite o CPF novamente: ");
+            cpf = scanner.nextLine();
+        }
+
         System.out.println("\nSelecione a peça:");
         List<Peca> pecas = teatro.getPecas();
         for (int i = 0; i < pecas.size(); i++) {
@@ -437,13 +449,6 @@ public class SistemaTeatro {
         Assento assento = setor.getAssento(numeroAssento);
         if (assento != null && !assento.isOcupado()) {
             assento.ocupar();
-            System.out.print("Digite o CPF: ");
-            String cpf = scanner.nextLine();
-            if (!ValidadorCPF.validar(cpf)) {
-                System.out.println("CPF inválido.");
-                System.out.print("Digite o CPF: ");
-                cpf = scanner.nextLine();
-            }
             Ingresso ingresso = new Ingresso(cpf, setor, assento, sessao, peca);
             ingressos.add(ingresso);
             System.out.println("Ingresso comprado com sucesso!");
@@ -451,20 +456,5 @@ public class SistemaTeatro {
         } else {
             System.out.println("Assento indisponível. Tente novamente.");
         }
-    }
-
-    // Método para visualizar assentos disponíveis por setor
-    private static void visualizarAssentos(Teatro teatro, Scanner scanner) {
-        System.out.println("\nSelecione o setor:");
-        List<Setor> setores = teatro.getSetores();
-        for (int i = 0; i < setores.size(); i++) {
-            System.out.println((i + 1) + ". " + setores.get(i).getNome());
-        }
-        int escolhaSetor = scanner.nextInt();
-        scanner.nextLine(); // Consumir a nova linha
-        Setor setor = setores.get(escolhaSetor - 1);
-
-        System.out.println("Assentos no setor " + setor.getNome() + ":");
-        setor.mostrarAssentos();
     }
 }
