@@ -307,7 +307,8 @@ class Teatro {
         List<Setor> setores = getSetores();
         for (Setor setor : setores) {
             int ingressosVendidos = assentosOcupadosPorSetor(setor);
-            int lucro = ingressosVendidos * 50; // Assumindo preço fixo de R$50 por ingresso
+            double precoPorIngresso = setor.getPreco();
+            double lucro = ingressosVendidos * precoPorIngresso;
             System.out.println("Lucro para " + setor.getNome() + ": R$" + lucro);
         }
     }
