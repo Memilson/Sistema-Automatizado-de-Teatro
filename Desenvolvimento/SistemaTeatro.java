@@ -441,7 +441,8 @@ public class SistemaTeatro {
             String cpf = scanner.nextLine();
             if (!ValidadorCPF.validar(cpf)) {
                 System.out.println("CPF inválido.");
-                return;
+                System.out.print("Digite o CPF: ");
+                cpf = scanner.nextLine();
             }
             Ingresso ingresso = new Ingresso(cpf, setor, assento, sessao, peca);
             ingressos.add(ingresso);
