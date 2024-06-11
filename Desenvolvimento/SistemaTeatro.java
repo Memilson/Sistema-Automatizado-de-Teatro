@@ -420,6 +420,7 @@ public class SistemaTeatro {
     
     private static void comprarIngresso(Teatro teatro, Scanner scanner) {
         System.out.print("Digite o CPF: ");
+        System.out.println("");
         String cpf = scanner.nextLine();
         while (!ValidadorCPF.validar(cpf)) {
             System.out.println("CPF inválido.");
@@ -428,22 +429,27 @@ public class SistemaTeatro {
         }
     
         System.out.println("\nSelecione a peça:");
+        System.out.println("");
         List<Peca> pecas = teatro.getPecas();
         for (int i = 0; i < pecas.size(); i++) {
             System.out.println((i + 1) + ". " + pecas.get(i).getNome());
         }
         int escolhaPeca = pedirInteiro(scanner, "Escolha a peça: ", 1, pecas.size());
         Peca peca = pecas.get(escolhaPeca - 1);
+        System.out.println("");
     
         System.out.println("Selecione a sessão:");
+        System.out.println("");
         List<String> sessoes = teatro.getSessoes();
         for (int i = 0; i < sessoes.size(); i++) {
             System.out.println((i + 1) + ". " + sessoes.get(i));
         }
         int escolhaSessao = pedirInteiro(scanner, "Escolha a sessão: ", 1, sessoes.size());
         String sessao = sessoes.get(escolhaSessao - 1);
+        System.out.println("");
     
         System.out.println("Selecione o setor:");
+        System.out.println("");
         List<Setor> setores = teatro.getSetores();
         for (int i = 0; i < setores.size(); i++) {
             Setor setor = setores.get(i);
@@ -451,6 +457,7 @@ public class SistemaTeatro {
         }
         int escolhaSetor = pedirInteiro(scanner, "Escolha o setor: ", 1, setores.size());
         Setor setor = setores.get(escolhaSetor - 1);
+        System.out.println("");
     
         // Mostrar assentos disponíveis para o setor escolhido
         System.out.println("Assentos disponíveis:");
@@ -458,6 +465,7 @@ public class SistemaTeatro {
     
         // Pedir ao usuário o número do assento
         int numeroAssento = pedirInteiro(scanner, "Escolha o número do assento: ", 1, setor.getAssentos().length * setor.getAssentos()[0].length);
+        System.out.println("");
     
         Assento assento = setor.getAssento(numeroAssento);
         if (assento != null && !assento.isOcupado()) {
