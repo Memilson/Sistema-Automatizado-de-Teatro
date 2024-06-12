@@ -1,497 +1,253 @@
-package Desenvolvimento;
+run:
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+2
 
-// Classe representando um Assento
-class Assento {
-    private int numero; // Número do assento
-    private boolean ocupado; // Status do assento: true se estiver ocupado, false caso contrário
+Assentos dispon�veis por setor:
+Setor: Camarote1
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Construtor que inicializa o assento com um número e define como desocupado
-    public Assento(int numero) {
-        this.numero = numero;
-        this.ocupado = false;
-    }
+Setor: Camarote2
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método para obter o número do assento
-    public int getNumero() {
-        return numero;
-    }
+Setor: Camarote3
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método para verificar se o assento está ocupado
-    public boolean isOcupado() {
-        return ocupado;
-    }
+Setor: Camarote4
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método para marcar o assento como ocupado
-    public void ocupar() {
-        this.ocupado = true;
-    }
-}
+Setor: Camarote5
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-// Classe representando um Setor
-class Setor {
-    private String nome;
-    private List<String> sessoes;
-    private Assento[][] assentos;
-    private double preco; // Novo campo para preço do ingresso
+Setor: Plateia A
+[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] 
+[11] [12] [13] [14] [15] [16] [17] [18] [19] [20] 
+[21] [22] [23] [24] [25] [26] [27] [28] [29] [30] 
+[31] [32] [33] [34] [35] [36] [37] [38] [39] [40] 
+[41] [42] [43] [44] [45] [46] [47] [48] [49] [50] 
 
-    public Setor(String nome, List<String> sessoes, int linhas, int colunas, double preco) {
-        this.nome = nome;
-        this.sessoes = sessoes;
-        this.assentos = new Assento[linhas][colunas];
-        this.preco = preco; // Inicializa o preço do ingresso
-        int numeroAssento = 1;
-        for (int i = 0; i < linhas; i++) {
-            for (int j = 0; j < colunas; j++) {
-                assentos[i][j] = new Assento(numeroAssento++);
-            }
-        }
-    }
+Setor: Plateia B
+[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] 
+[11] [12] [13] [14] [15] [16] [17] [18] [19] [20] 
+[21] [22] [23] [24] [25] [26] [27] [28] [29] [30] 
+[31] [32] [33] [34] [35] [36] [37] [38] [39] [40] 
+[41] [42] [43] [44] [45] [46] [47] [48] [49] [50] 
 
-    public double getPreco() {
-        return preco;
-    }
+Setor: Frisa1
+[1] [2] [3] [4] [5] 
 
-    // Métodos getters para nome do setor e matriz de assentos
-    public String getNome() {
-        return nome;
-    }
+Setor: Frisa2
+[1] [2] [3] [4] [5] 
 
-    public Assento[][] getAssentos() {
-        return assentos;
-    }
+Setor: Frisa3
+[1] [2] [3] [4] [5] 
 
-    // Método para obter as sessões disponíveis para o setor
-    public List<String> getSessoes() {
-        return sessoes;
-    }
+Setor: Frisa4
+[1] [2] [3] [4] [5] 
 
-    // Método para obter um assento específico pelo seu número
-    public Assento getAssento(int numero) {
-        for (int i = 0; i < assentos.length; i++) {
-            for (int j = 0; j < assentos[i].length; j++) {
-                if (assentos[i][j].getNumero() == numero) {
-                    return assentos[i][j];
-                }
-            }
-        }
-        return null; // Se não encontrar o assento
-    }
+Setor: Frisa5
+[1] [2] [3] [4] [5] 
 
-    // Método para imprimir a matriz de assentos
-    public void mostrarAssentos() {
-        for (int i = 0; i < assentos.length; i++) {
-            for (int j = 0; j < assentos[i].length; j++) {
-                if (assentos[i][j].isOcupado()) {
-                    System.out.print("[X] "); // Assento ocupado
-                } else {
-                    System.out.print("[" + assentos[i][j].getNumero() + "] "); // Número do assento
-                }
-            }
-            System.out.println();
-        }
-    }
-}
+Setor: Frisa6
+[1] [2] [3] [4] [5] 
 
-class ValidadorCPF {
-    // Método para validar o CPF
-    public static boolean validar(String cpf) {
-        cpf = cpf.replaceAll("[^0-9]", ""); // Remove caracteres não numéricos
+Setor: Balc�o Nobre
+[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] 
+[11] [12] [13] [14] [15] [16] [17] [18] [19] [20] 
 
-        if (cpf.length() != 11) {
-            return false; // CPF deve ter 11 dígitos
-        }
 
-        int num1, num2, num3, num4, num5, num6, num7, num8, num9, num10, num11;
-        int soma1, soma2;
-        int resto1, resto2;
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+1
+Digite o CPF: 
+96655682215
 
-        num1 = Character.getNumericValue(cpf.charAt(0));
-        num2 = Character.getNumericValue(cpf.charAt(1));
-        num3 = Character.getNumericValue(cpf.charAt(2));
-        num4 = Character.getNumericValue(cpf.charAt(3));
-        num5 = Character.getNumericValue(cpf.charAt(4));
-        num6 = Character.getNumericValue(cpf.charAt(5));
-        num7 = Character.getNumericValue(cpf.charAt(6));
-        num8 = Character.getNumericValue(cpf.charAt(7));
-        num9 = Character.getNumericValue(cpf.charAt(8));
-        num10 = Character.getNumericValue(cpf.charAt(9));
-        num11 = Character.getNumericValue(cpf.charAt(10));
+Selecione a pe�a:
 
-        // Verifica se todos os números são iguais
-        if (num1 == num2 && num2 == num3 && num3 == num4 && num4 == num5 &&
-                num5 == num6 && num6 == num7 && num7 == num8 && num8 == num9 &&
-                num9 == num10 && num10 == num11) {
-            return false;
-        } else {
-            soma1 = num1 * 10 + num2 * 9 + num3 * 8 + num4 * 7 + num5 * 6 +
-                    num6 * 5 + num7 * 4 + num8 * 3 + num9 * 2;
+1. Hamlet
+2. Othello
+3. Macbeth
+Escolha a pe�a: 1
 
-            resto1 = (soma1 * 10) % 11;
-            if (resto1 == 10) {
-                resto1 = 0;
-            }
+Selecione a sess�o:
 
-            if (resto1 != num10) {
-                return false;
-            }
+1. Manh�
+2. Tarde
+3. Noite
+Escolha a sess�o: 2
 
-            soma2 = num1 * 11 + num2 * 10 + num3 * 9 + num4 * 8 + num5 * 7 +
-                    num6 * 6 + num7 * 5 + num8 * 4 + num9 * 3 + num10 * 2;
+Selecione o setor:
 
-            resto2 = (soma2 * 10) % 11;
-            if (resto2 == 10) {
-                resto2 = 0;
-            }
+1. Camarote1 - R$80.0
+2. Camarote2 - R$80.0
+3. Camarote3 - R$80.0
+4. Camarote4 - R$80.0
+5. Camarote5 - R$80.0
+6. Plateia A - R$40.0
+7. Plateia B - R$60.0
+8. Frisa1 - R$120.0
+9. Frisa2 - R$120.0
+10. Frisa3 - R$120.0
+11. Frisa4 - R$120.0
+12. Frisa5 - R$120.0
+13. Frisa6 - R$120.0
+14. Balc�o Nobre - R$250.0
+Escolha o setor: 12
 
-            return resto2 == num11;
-        }
-    }
-}
+Assentos dispon�veis:
+[1] [2] [3] [4] [5] 
+Escolha o n�mero do assento: 1
 
-// Classe representando um Ingresso
-class Ingresso {
-    private String cpf; // CPF do comprador
-    private Setor setor; // Setor do ingresso
-    private Assento assento; // Assento do ingresso
-    private String sessao; // Sessão do ingresso
-    private Peca peca; // Peça do ingresso
+Ingresso comprado com sucesso!
+Ingresso{cpf='96655682215', setor=Frisa5, assento=1, sessao='Tarde', pe�a='Hamlet'}
+Valor total: R$120.0
 
-    // Construtor que inicializa o ingresso com CPF, setor, assento, sessão e peça
-    public Ingresso(String cpf, Setor setor, Assento assento, String sessao, Peca peca) {
-        this.cpf = cpf;
-        this.setor = setor;
-        this.assento = assento;
-        this.sessao = sessao;
-        this.peca = peca;
-    }
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+2
 
-    // Método para obter o CPF do comprador
-    public String getCpf() {
-        return cpf;
-    }
+Assentos dispon�veis por setor:
+Setor: Camarote1
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método para obter o setor do ingresso
-    public Setor getSetor() {
-        return setor;
-    }
+Setor: Camarote2
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método para obter o assento do ingresso
-    public Assento getAssento() {
-        return assento;
-    }
+Setor: Camarote3
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método para obter a sessão do ingresso
-    public String getSessao() {
-        return sessao;
-    }
+Setor: Camarote4
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método para obter a peça do ingresso
-    public Peca getPeca() {
-        return peca;
-    }
+Setor: Camarote5
+[1] [2] [3] [4] [5] 
+[6] [7] [8] [9] [10] 
 
-    // Método toString para representar o ingresso como uma string
-    @Override
-    public String toString() {
-        return "Ingresso{" +
-                "cpf='" + cpf + '\'' +
-                ", setor=" + setor.getNome() +
-                ", assento=" + assento.getNumero() +
-                ", sessao='" + sessao + '\'' +
-                ", peça='" + peca.getNome() + '\'' +
-                '}';
-    }
-}
+Setor: Plateia A
+[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] 
+[11] [12] [13] [14] [15] [16] [17] [18] [19] [20] 
+[21] [22] [23] [24] [25] [26] [27] [28] [29] [30] 
+[31] [32] [33] [34] [35] [36] [37] [38] [39] [40] 
+[41] [42] [43] [44] [45] [46] [47] [48] [49] [50] 
 
-// Classe representando o Teatro
-class Teatro {
-    private List<Setor> setores; // Lista de setores no teatro
-    private List<String> sessoes; // Lista de sessões disponíveis no teatro
-    private List<Peca> pecas; // Lista de peças disponíveis no teatro
+Setor: Plateia B
+[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] 
+[11] [12] [13] [14] [15] [16] [17] [18] [19] [20] 
+[21] [22] [23] [24] [25] [26] [27] [28] [29] [30] 
+[31] [32] [33] [34] [35] [36] [37] [38] [39] [40] 
+[41] [42] [43] [44] [45] [46] [47] [48] [49] [50] 
 
-    // Construtor que inicializa o teatro com vários setores e seus respectivos
-    // assentos
-    public Teatro() {
-        setores = new ArrayList<>();
-        sessoes = new ArrayList<>();
-        pecas = new ArrayList<>();
+Setor: Frisa1
+[1] [2] [3] [4] [5] 
 
-        sessoes.add("Manhã");
-        sessoes.add("Tarde");
-        sessoes.add("Noite");
+Setor: Frisa2
+[1] [2] [3] [4] [5] 
 
-        pecas.add(new Peca("Hamlet"));
-        pecas.add(new Peca("Othello"));
-        pecas.add(new Peca("Macbeth"));
+Setor: Frisa3
+[1] [2] [3] [4] [5] 
 
-        setores.add(new Setor("Camarote", sessoes, 2, 5, 80.0)); // Adiciona o preço ao criar o Setor
-        setores.add(new Setor("Plateia A", sessoes, 5, 10, 40.0));
-        setores.add(new Setor("Plateia B", sessoes, 5, 10, 60.0));
-        setores.add(new Setor("Frisa", sessoes, 3, 10, 120.0));
-        setores.add(new Setor("Balcão Nobre", sessoes, 2, 10, 250.0));
-    }
+Setor: Frisa4
+[1] [2] [3] [4] [5] 
 
-    // Métodos getters para lista de setores, sessões e peças
-    public List<Setor> getSetores() {
-        return setores;
-    }
+Setor: Frisa5
+[X] [2] [3] [4] [5] 
 
-    public List<String> getSessoes() {
-        return sessoes;
-    }
+Setor: Frisa6
+[1] [2] [3] [4] [5] 
 
-    public List<Peca> getPecas() {
-        return pecas;
-    }
+Setor: Balc�o Nobre
+[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] 
+[11] [12] [13] [14] [15] [16] [17] [18] [19] [20] 
 
-    // Método para obter um setor específico pelo seu nome
-    public Setor getSetor(String nome) {
-        for (Setor setor : setores) {
-            if (setor.getNome().equalsIgnoreCase(nome)) {
-                return setor;
-            }
-        }
-        return null;
-    }
 
-    // Método para contar assentos ocupados em um setor específico
-    public int assentosOcupadosPorSetor(Setor setor) {
-        int ocupados = 0;
-        Assento[][] assentos = setor.getAssentos();
-        for (int i = 0; i < assentos.length; i++) {
-            for (int j = 0; j < assentos[i].length; j++) {
-                if (assentos[i][j].isOcupado()) {
-                    ocupados++;
-                }
-            }
-        }
-        return ocupados;
-    }
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+3
+Relat�rio de Vendas:
+Vendas por Setor:
+Frisa5: 1 ingressos vendidos
+Vendas por Pe�a:
+Hamlet: 1 ingressos vendidos
 
-    // Método para identificar a sessão com maior e menor ocupação de poltronas
-    public void ocupacaoMaximaMinimaPorSessao() {
-        List<Setor> setores = getSetores();
-        int maxOcupacao = Integer.MIN_VALUE;
-        int minOcupacao = Integer.MAX_VALUE;
-        Setor maxSetor = null;
-        Setor minSetor = null;
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+4
+Setor com maior ocupa��o: Frisa5 (1 assentos ocupados)
+Setor com menor ocupa��o: Camarote1 (0 assentos ocupados)
 
-        for (Setor setor : setores) {
-            int ocupacao = assentosOcupadosPorSetor(setor);
-            if (ocupacao > maxOcupacao) {
-                maxOcupacao = ocupacao;
-                maxSetor = setor;
-            }
-            if (ocupacao < minOcupacao) {
-                minOcupacao = ocupacao;
-                minSetor = setor;
-            }
-        }
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+56
+Escolha inv�lida. Tente novamente.
 
-        if (maxSetor != null && minSetor != null) {
-            System.out.println(
-                    "Setor com maior ocupação: " + maxSetor.getNome() + " (" + maxOcupacao + " assentos ocupados)");
-            System.out.println(
-                    "Setor com menor ocupação: " + minSetor.getNome() + " (" + minOcupacao + " assentos ocupados)");
-        }
-    }
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+5
+Lucro para Camarote1: R$0.0
+Lucro para Camarote2: R$0.0
+Lucro para Camarote3: R$0.0
+Lucro para Camarote4: R$0.0
+Lucro para Camarote5: R$0.0
+Lucro para Plateia A: R$0.0
+Lucro para Plateia B: R$0.0
+Lucro para Frisa1: R$0.0
+Lucro para Frisa2: R$0.0
+Lucro para Frisa3: R$0.0
+Lucro para Frisa4: R$0.0
+Lucro para Frisa5: R$120.0
+Lucro para Frisa6: R$0.0
+Lucro para Balc�o Nobre: R$0.0
 
-    // Método para calcular lucro por sessão
-    public void lucroPorSessao() {
-        List<Setor> setores = getSetores();
-        for (Setor setor : setores) {
-            int ingressosVendidos = assentosOcupadosPorSetor(setor);
-            double precoPorIngresso = setor.getPreco();
-            double lucro = ingressosVendidos * precoPorIngresso;
-            System.out.println("Lucro para " + setor.getNome() + ": R$" + lucro);
-        }
-    }
-}
-
-// Classe para gerar Relatório
-class Relatorio {
-
-    // Método para gerar o relatório de vendas
-    public static void gerarRelatorio(List<Ingresso> ingressos) {
-        Map<String, Integer> vendasPorSetor = new HashMap<>();
-        Map<String, Integer> vendasPorPeca = new HashMap<>();
-
-        for (Ingresso ingresso : ingressos) {
-            String nomeSetor = ingresso.getSetor().getNome();
-            String nomePeca = ingresso.getPeca().getNome();
-
-            vendasPorSetor.put(nomeSetor, vendasPorSetor.getOrDefault(nomeSetor, 0) + 1);
-            vendasPorPeca.put(nomePeca, vendasPorPeca.getOrDefault(nomePeca, 0) + 1);
-        }
-
-        System.out.println("Relatório de Vendas:");
-        System.out.println("Vendas por Setor:");
-        for (Map.Entry<String, Integer> entry : vendasPorSetor.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue() + " ingressos vendidos");
-        }
-
-        System.out.println("Vendas por Peça:");
-        for (Map.Entry<String, Integer> entry : vendasPorPeca.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue() + " ingressos vendidos");
-        }
-    }
-}
-
-// Classe representando uma Peça
-class Peca {
-    private String nome; // Nome da peça
-
-    // Construtor que inicializa a peça com um nome
-    public Peca(String nome) {
-        this.nome = nome;
-    }
-
-    // Método para obter o nome da peça
-    public String getNome() {
-        return nome;
-    }
-}
-
-// Classe principal
-public class SistemaTeatro {
-    private static List<Ingresso> ingressos = new ArrayList<>(); // Lista de ingressos vendidos
-
-    public static void main(String[] args) {
-        Teatro teatro = new Teatro();
-        Scanner scanner = new Scanner(System.in);
-        boolean continuar = true;
-
-        while (continuar) {
-            System.out.println("\nBem-vindo ao Sistema de Venda de Ingressos do Teatro!");
-            System.out.println("1. Comprar Ingresso");
-            System.out.println("2. Visualizar Assentos por Setor");
-            System.out.println("3. Gerar Relatório de Vendas");
-            System.out.println("4. Ocupação máxima e mínima por sessão");
-            System.out.println("5. Lucro por sessão");
-            System.out.println("6. Sair");
-
-            int escolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha
-
-            switch (escolha) {
-                case 1:
-                    comprarIngresso(teatro, scanner);
-                    break;
-                case 2:
-                    mostrarAssentos(teatro, scanner);
-                    break;
-                case 3:
-                    Relatorio.gerarRelatorio(ingressos);
-                    break;
-                case 4:
-                    teatro.ocupacaoMaximaMinimaPorSessao();
-                    break;
-                case 5:
-                    teatro.lucroPorSessao();
-                    break;
-                case 6:
-                    continuar = false;
-                    System.out.println("Saindo do sistema. Obrigado!");
-                    break;
-                default:
-                    System.out.println("Escolha inválida. Tente novamente.");
-                    break;
-            }
-        }
-        scanner.close();
-    }
-
-    private static void mostrarAssentos(Teatro teatro, Scanner scanner) {
-        List<Setor> setores = teatro.getSetores();
-    
-        System.out.println("\nAssentos disponíveis por setor:");
-        for (Setor setor : setores) {
-            System.out.println("Setor: " + setor.getNome());
-            setor.mostrarAssentos(); // Chama o método mostrarAssentos de Setor
-            System.out.println(); // Linha em branco para separar os setores
-        }
-    }
-    
-    private static void comprarIngresso(Teatro teatro, Scanner scanner) {
-        System.out.print("Digite o CPF: ");
-        System.out.println("");
-        String cpf = scanner.nextLine();
-        while (!ValidadorCPF.validar(cpf)) {
-            System.out.println("CPF inválido.");
-            System.out.print("Digite o CPF novamente: ");
-            cpf = scanner.nextLine();
-        }
-    
-        System.out.println("\nSelecione a peça:");
-        System.out.println("");
-        List<Peca> pecas = teatro.getPecas();
-        for (int i = 0; i < pecas.size(); i++) {
-            System.out.println((i + 1) + ". " + pecas.get(i).getNome());
-        }
-        int escolhaPeca = pedirInteiro(scanner, "Escolha a peça: ", 1, pecas.size());
-        Peca peca = pecas.get(escolhaPeca - 1);
-        System.out.println("");
-    
-        System.out.println("Selecione a sessão:");
-        System.out.println("");
-        List<String> sessoes = teatro.getSessoes();
-        for (int i = 0; i < sessoes.size(); i++) {
-            System.out.println((i + 1) + ". " + sessoes.get(i));
-        }
-        int escolhaSessao = pedirInteiro(scanner, "Escolha a sessão: ", 1, sessoes.size());
-        String sessao = sessoes.get(escolhaSessao - 1);
-        System.out.println("");
-    
-        System.out.println("Selecione o setor:");
-        System.out.println("");
-        List<Setor> setores = teatro.getSetores();
-        for (int i = 0; i < setores.size(); i++) {
-            Setor setor = setores.get(i);
-            System.out.println((i + 1) + ". " + setor.getNome() + " - R$" + setor.getPreco());
-        }
-        int escolhaSetor = pedirInteiro(scanner, "Escolha o setor: ", 1, setores.size());
-        Setor setor = setores.get(escolhaSetor - 1);
-        System.out.println("");
-    
-        // Mostrar assentos disponíveis para o setor escolhido
-        System.out.println("Assentos disponíveis:");
-        setor.mostrarAssentos();
-    
-        // Pedir ao usuário o número do assento
-        int numeroAssento = pedirInteiro(scanner, "Escolha o número do assento: ", 1, setor.getAssentos().length * setor.getAssentos()[0].length);
-        System.out.println("");
-    
-        Assento assento = setor.getAssento(numeroAssento);
-        if (assento != null && !assento.isOcupado()) {
-            assento.ocupar();
-            Ingresso ingresso = new Ingresso(cpf, setor, assento, sessao, peca);
-            ingressos.add(ingresso);
-            System.out.println("Ingresso comprado com sucesso!");
-            System.out.println(ingresso);
-            System.out.println("Valor total: R$" + setor.getPreco()); // Exibe o valor total pago
-        } else {
-            System.out.println("Assento indisponível. Tente novamente.");
-        }
-    }
-    
-    // Método utilitário para pedir um número inteiro dentro de um intervalo específico
-    private static int pedirInteiro(Scanner scanner, String mensagem, int min, int max) {
-        int escolha;
-        do {
-            System.out.print(mensagem);
-            while (!scanner.hasNextInt()) {
-                System.out.print("Escolha inválida. " + mensagem);
-                scanner.next(); // Consumir entrada inválida
-            }
-            escolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha após o número inteiro
-        } while (escolha < min || escolha > max);
-        return escolha;
-    }
-}
+Bem-vindo ao Sistema de Venda de Ingressos do Teatro!
+1. Comprar Ingresso
+2. Visualizar Assentos por Setor
+3. Gerar Relat�rio de Vendas
+4. Ocupa��o m�xima e m�nima por sess�o
+5. Lucro por sess�o
+6. Sair
+BUILD STOPPED (total time: 1 minute 42 seconds)
