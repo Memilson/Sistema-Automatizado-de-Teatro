@@ -37,60 +37,74 @@ class Assento {
 class Setor {
     private String nome;
     private List<String> sessoes;
-    private Assento[][] assentos;
-    private double preco; // Novo campo para preço do ingresso
+    private Map<String, Assento[][]> assentos; // Mapa de matrizes de assentos por sessão
+    private double preco;
+    
 
     public Setor(String nome, List<String> sessoes, int linhas, int colunas, double preco) {
         this.nome = nome;
         this.sessoes = sessoes;
-        this.assentos = new Assento[linhas][colunas];
-        this.preco = preco; // Inicializa o preço do ingresso
-        int numeroAssento = 1;
-        for (int i = 0; i < linhas; i++) {
-            for (int j = 0; j < colunas; j++) {
-                assentos[i][j] = new Assento(numeroAssento++);
+        this.assentos = new HashMap<>();
+        this.preco = preco;
+
+        // Inicializar matrizes de assentos para cada sessão
+        for (String sessao : sessoes) {
+            Assento[][] matrizAssentos = new Assento[linhas][colunas];
+            int numeroAssento = 1;
+            for (int i = 0; i < linhas; i++) {
+                for (int j = 0; j < colunas; j++) {
+                    matrizAssentos[i][j] = new Assento(numeroAssento++);
+                }
             }
+            assentos.put(sessao, matrizAssentos);
         }
+    }
+
+    public Assento[][] getAssentos(String sessao) {
+        return assentos.get(sessao);
     }
 
     public double getPreco() {
         return preco;
     }
 
-    // Métodos getters para nome do setor e matriz de assentos
+    // Métodos getters para nome do setor e sessões
     public String getNome() {
         return nome;
     }
 
-    public Assento[][] getAssentos() {
-        return assentos;
-    }
-
-    // Método para obter as sessões disponíveis para o setor
     public List<String> getSessoes() {
         return sessoes;
     }
 
     // Método para obter um assento específico pelo seu número
     public Assento getAssento(int numero) {
-        for (int i = 0; i < assentos.length; i++) {
-            for (int j = 0; j < assentos[i].length; j++) {
-                if (assentos[i][j].getNumero() == numero) {
-                    return assentos[i][j];
+        for (Assento[][] matrizAssentos : assentos.values()) {
+            for (int i = 0; i < matrizAssentos.length; i++) {
+                for (int j = 0; j < matrizAssentos[i].length; j++) {
+                    if (matrizAssentos[i][j].getNumero() == numero) {
+                        return matrizAssentos[i][j];
+                    }
                 }
             }
         }
         return null; // Se não encontrar o assento
     }
 
-    // Método para imprimir a matriz de assentos
-    public void mostrarAssentos() {
-        for (int i = 0; i < assentos.length; i++) {
-            for (int j = 0; j < assentos[i].length; j++) {
-                if (assentos[i][j].isOcupado()) {
+    // Método para imprimir a matriz de assentos de uma sessão específica
+    public void mostrarAssentos(String sessao) {
+        Assento[][] matrizAssentos = assentos.get(sessao);
+        if (matrizAssentos == null) {
+            System.out.println("Sessão não encontrada para este setor.");
+            return;
+        }
+
+        for (int i = 0; i < matrizAssentos.length; i++) {
+            for (int j = 0; j < matrizAssentos[i].length; j++) {
+                if (matrizAssentos[i][j].isOcupado()) {
                     System.out.print("[X] "); // Assento ocupado
                 } else {
-                    System.out.print("[" + assentos[i][j].getNumero() + "] "); // Número do assento
+                    System.out.print("[" + matrizAssentos[i][j].getNumero() + "] "); // Número do assento
                 }
             }
             System.out.println();
@@ -230,10 +244,19 @@ class Teatro {
         pecas.add(new Peca("Othello"));
         pecas.add(new Peca("Macbeth"));
 
-        setores.add(new Setor("Camarote", sessoes, 2, 5, 80.0)); // Adiciona o preço ao criar o Setor
+        setores.add(new Setor("Camarote1", sessoes, 2, 5, 80.0));
+        setores.add(new Setor("Camarote2", sessoes, 2, 5, 80.0));
+        setores.add(new Setor("Camarote3", sessoes, 2, 5, 80.0));
+        setores.add(new Setor("Camarote4", sessoes, 2, 5, 80.0));
+        setores.add(new Setor("Camarote5", sessoes, 2, 5, 80.0));
         setores.add(new Setor("Plateia A", sessoes, 5, 10, 40.0));
         setores.add(new Setor("Plateia B", sessoes, 5, 10, 60.0));
-        setores.add(new Setor("Frisa", sessoes, 3, 10, 120.0));
+        setores.add(new Setor("Frisa1", sessoes, 1, 5, 120.0));
+        setores.add(new Setor("Frisa2", sessoes, 1, 5, 120));
+        setores.add(new Setor("Frisa3", sessoes, 1, 5, 120.0));
+        setores.add(new Setor("Frisa4", sessoes, 1, 5, 120.0));
+        setores.add(new Setor("Frisa5", sessoes, 1, 5, 120.0));
+        setores.add(new Setor("Frisa6", sessoes, 1, 5, 120.0));
         setores.add(new Setor("Balcão Nobre", sessoes, 2, 10, 250.0));
     }
 
@@ -249,6 +272,22 @@ class Teatro {
     public List<Peca> getPecas() {
         return pecas;
     }
+    public void definirSessoesParaSetores() {
+        for (Setor setor : setores) {
+            setor.getSessoes().addAll(sessoes); // Adiciona as sessões disponíveis a cada setor
+        }
+    }
+
+    // Método para definir sessões para um setor específico
+    public void definirSessoesParaSetor(String nomeSetor, List<String> novasSessoes) {
+        Setor setor = getSetor(nomeSetor);
+        if (setor != null) {
+            setor.getSessoes().clear();
+            setor.getSessoes().addAll(novasSessoes);
+        } else {
+            System.out.println("Setor não encontrado.");
+        }
+    }
 
     // Método para obter um setor específico pelo seu nome
     public Setor getSetor(String nome) {
@@ -263,14 +302,23 @@ class Teatro {
     // Método para contar assentos ocupados em um setor específico
     public int assentosOcupadosPorSetor(Setor setor) {
         int ocupados = 0;
-        Assento[][] assentos = setor.getAssentos();
-        for (int i = 0; i < assentos.length; i++) {
-            for (int j = 0; j < assentos[i].length; j++) {
-                if (assentos[i][j].isOcupado()) {
-                    ocupados++;
+        
+        // Suponha que você queira contar os assentos ocupados para a primeira sessão disponível
+        List<String> sessoes = setor.getSessoes();
+        if (!sessoes.isEmpty()) {
+            String primeiraSessao = sessoes.get(0);
+            Assento[][] assentos = setor.getAssentos(primeiraSessao);
+            
+            // Agora percorra a matriz de assentos da sessão escolhida
+            for (int i = 0; i < assentos.length; i++) {
+                for (int j = 0; j < assentos[i].length; j++) {
+                    if (assentos[i][j].isOcupado()) {
+                        ocupados++;
+                    }
                 }
             }
         }
+        
         return ocupados;
     }
 
@@ -407,80 +455,111 @@ public class SistemaTeatro {
         scanner.close();
     }
 
+    // Método para mostrar os assentos de todas as sessões do setor
     private static void mostrarAssentos(Teatro teatro, Scanner scanner) {
-        List<Setor> setores = teatro.getSetores();
-    
-        System.out.println("\nAssentos disponíveis por setor:");
-        for (Setor setor : setores) {
-            System.out.println("Setor: " + setor.getNome());
-            setor.mostrarAssentos(); // Chama o método mostrarAssentos de Setor
-            System.out.println(); // Linha em branco para separar os setores
-        }
+    List<Setor> setores = teatro.getSetores();
+
+    System.out.println("\nVisualizar Assentos por Setor");
+    System.out.println("1. Manhã");
+    System.out.println("2. Tarde");
+    System.out.println("3. Noite");
+
+    int escolha = pedirInteiro(scanner, "Escolha a sessão: ", 1, 3);
+    String sessaoEscolhida;
+
+    switch (escolha) {
+        case 1:
+            sessaoEscolhida = "Manhã";
+            break;
+        case 2:
+            sessaoEscolhida = "Tarde";
+            break;
+        case 3:
+            sessaoEscolhida = "Noite";
+            break;
+        default:
+            System.out.println("Opção inválida.");
+            return;
     }
-    
+
+    System.out.println("\nAssentos disponíveis por setor na sessão " + sessaoEscolhida + ":");
+    for (Setor setor : setores) {
+        System.out.println("\nSetor: " + setor.getNome());
+        setor.mostrarAssentos(sessaoEscolhida); // Chama o método mostrarAssentos de Setor passando a sessão escolhida como argumento
+    }
+}
+
+
     private static void comprarIngresso(Teatro teatro, Scanner scanner) {
-        System.out.print("Digite o CPF: ");
-        System.out.println("");
-        String cpf = scanner.nextLine();
-        while (!ValidadorCPF.validar(cpf)) {
-            System.out.println("CPF inválido.");
-            System.out.print("Digite o CPF novamente: ");
-            cpf = scanner.nextLine();
-        }
-    
-        System.out.println("\nSelecione a peça:");
-        System.out.println("");
-        List<Peca> pecas = teatro.getPecas();
-        for (int i = 0; i < pecas.size(); i++) {
-            System.out.println((i + 1) + ". " + pecas.get(i).getNome());
-        }
-        int escolhaPeca = pedirInteiro(scanner, "Escolha a peça: ", 1, pecas.size());
-        Peca peca = pecas.get(escolhaPeca - 1);
-        System.out.println("");
-    
-        System.out.println("Selecione a sessão:");
-        System.out.println("");
-        List<String> sessoes = teatro.getSessoes();
-        for (int i = 0; i < sessoes.size(); i++) {
-            System.out.println((i + 1) + ". " + sessoes.get(i));
-        }
-        int escolhaSessao = pedirInteiro(scanner, "Escolha a sessão: ", 1, sessoes.size());
-        String sessao = sessoes.get(escolhaSessao - 1);
-        System.out.println("");
-    
-        System.out.println("Selecione o setor:");
-        System.out.println("");
-        List<Setor> setores = teatro.getSetores();
-        for (int i = 0; i < setores.size(); i++) {
-            Setor setor = setores.get(i);
-            System.out.println((i + 1) + ". " + setor.getNome() + " - R$" + setor.getPreco());
-        }
-        int escolhaSetor = pedirInteiro(scanner, "Escolha o setor: ", 1, setores.size());
-        Setor setor = setores.get(escolhaSetor - 1);
-        System.out.println("");
-    
-        // Mostrar assentos disponíveis para o setor escolhido
-        System.out.println("Assentos disponíveis:");
-        setor.mostrarAssentos();
-    
-        // Pedir ao usuário o número do assento
-        int numeroAssento = pedirInteiro(scanner, "Escolha o número do assento: ", 1, setor.getAssentos().length * setor.getAssentos()[0].length);
-        System.out.println("");
-    
-        Assento assento = setor.getAssento(numeroAssento);
-        if (assento != null && !assento.isOcupado()) {
-            assento.ocupar();
-            Ingresso ingresso = new Ingresso(cpf, setor, assento, sessao, peca);
-            ingressos.add(ingresso);
-            System.out.println("Ingresso comprado com sucesso!");
-            System.out.println(ingresso);
-            System.out.println("Valor total: R$" + setor.getPreco()); // Exibe o valor total pago
-        } else {
-            System.out.println("Assento indisponível. Tente novamente.");
-        }
+    System.out.print("Digite o CPF: ");
+    String cpf = scanner.nextLine();
+    while (!ValidadorCPF.validar(cpf)) {
+        System.out.println("CPF inválido.");
+        System.out.print("Digite o CPF novamente: ");
+        cpf = scanner.nextLine();
     }
+
+    System.out.println("\nSelecione a peça:");
+    List<Peca> pecas = teatro.getPecas();
+    for (int i = 0; i < pecas.size(); i++) {
+        System.out.println((i + 1) + ". " + pecas.get(i).getNome());
+    }
+    int escolhaPeca = pedirInteiro(scanner, "Escolha a peça: ", 1, pecas.size());
+    Peca peca = pecas.get(escolhaPeca - 1);
+
+    System.out.println("\nSelecione a sessão:");
+    List<String> sessoes = teatro.getSessoes();
+    for (int i = 0; i < sessoes.size(); i++) {
+        System.out.println((i + 1) + ". " + sessoes.get(i));
+    }
+    int escolhaSessao = pedirInteiro(scanner, "Escolha a sessão: ", 1, sessoes.size());
+    String sessaoEscolhida = sessoes.get(escolhaSessao - 1);
+
+    System.out.println("\nSelecione o setor:");
+    List<Setor> setores = teatro.getSetores();
+    for (int i = 0; i < setores.size(); i++) {
+        Setor setor = setores.get(i);
+        System.out.println((i + 1) + ". " + setor.getNome() + " - R$" + setor.getPreco());
+    }
+    int escolhaSetor = pedirInteiro(scanner, "Escolha o setor: ", 1, setores.size());
+    Setor setorEscolhido = setores.get(escolhaSetor - 1);
+
+    // Mostrar assentos disponíveis para o setor e sessão escolhidos
+    Assento[][] assentosDisponiveis = setorEscolhido.getAssentos(sessaoEscolhida);
+    System.out.println("\nAssentos disponíveis para " + setorEscolhido.getNome() + " na sessão " + sessaoEscolhida + ":");
+    for (int i = 0; i < assentosDisponiveis.length; i++) {
+        for (int j = 0; j < assentosDisponiveis[i].length; j++) {
+            if (assentosDisponiveis[i][j].isOcupado()) {
+                System.out.print("[X] ");
+            } else {
+                System.out.print("[" + assentosDisponiveis[i][j].getNumero() + "] ");
+            }
+        }
+        System.out.println();
+    }
+
+    // Pedir ao usuário o número do assento
+    int numeroAssento = pedirInteiro(scanner, "Escolha o número do assento: ", 1,
+            assentosDisponiveis.length * assentosDisponiveis[0].length);
+
+    Assento assento = assentosDisponiveis[(numeroAssento - 1) / assentosDisponiveis[0].length][(numeroAssento - 1)
+            % assentosDisponiveis[0].length];
+    if (assento != null && !assento.isOcupado()) {
+        assento.ocupar();
+        Ingresso ingresso = new Ingresso(cpf, setorEscolhido, assento, sessaoEscolhida, peca);
+        ingressos.add(ingresso);
+        System.out.println("\nIngresso comprado com sucesso!");
+        System.out.println(ingresso);
+        System.out.println("Valor total: R$" + setorEscolhido.getPreco()); // Exibe o valor total pago
+    } else {
+        System.out.println("\nAssento indisponível. Tente novamente.");
+    }
+}
+
     
-    // Método utilitário para pedir um número inteiro dentro de um intervalo específico
+
+    // Método utilitário para pedir um número inteiro dentro de um intervalo
+    // específico
     private static int pedirInteiro(Scanner scanner, String mensagem, int min, int max) {
         int escolha;
         do {
