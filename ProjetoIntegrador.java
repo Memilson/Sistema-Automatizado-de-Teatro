@@ -241,9 +241,9 @@ class Teatro {
         
         pecas = new ArrayList<>();
                 
-        pecas.add(new Peca("Hamlet"));
-        pecas.add(new Peca("Othello"));
-        pecas.add(new Peca("Macbeth"));
+        pecas.add(new Peca("A"));
+        pecas.add(new Peca("B"));
+        pecas.add(new Peca("C"));
         
        
         setores.add(new Setor("Camarote1", sessoes, 2, 5, 80.0));
