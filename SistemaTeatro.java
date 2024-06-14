@@ -410,7 +410,7 @@ public class SistemaTeatro {
 
     public static void main(String[] args) {
         Teatro teatro = new Teatro();
-        Scanner scanner = new Scanner(System.in);
+        Scanner ler = new Scanner(System.in);
         boolean continuar = true;
 
         while (continuar) {
@@ -422,15 +422,15 @@ public class SistemaTeatro {
             System.out.println("5. Lucro por sessão");
             System.out.println("6. Sair");
 
-            int escolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha
+            int escolha = ler.nextInt();
+            ler.nextLine(); // Consumir a nova linha
 
             switch (escolha) {
                 case 1:
-                    comprarIngresso(teatro, scanner);
+                    comprarIngresso(teatro, ler);
                     break;
                 case 2:
-                    mostrarAssentos(teatro, scanner);
+                    mostrarAssentos(teatro, ler);
                     break;
                 case 3:
                     Relatorio.gerarRelatorio(ingressos);
@@ -450,11 +450,11 @@ public class SistemaTeatro {
                     break;
             }
         }
-        scanner.close();
+        ler.close();
     }
 
     // Método para mostrar os assentos de todas as sessões do setor
-    private static void mostrarAssentos(Teatro teatro, Scanner scanner) {
+    private static void mostrarAssentos(Teatro teatro, Scanner ler) {
     List<Setor> setores = teatro.getSetores();
 
     System.out.println("\nVisualizar Assentos por Setor");
@@ -462,7 +462,7 @@ public class SistemaTeatro {
     System.out.println("2. Tarde");
     System.out.println("3. Noite");
 
-    int escolha = pedirInteiro(scanner, "Escolha a sessão: ", 1, 3);
+    int escolha = pedirInteiro(ler, "Escolha a sessão: ", 1, 3);
     String sessaoEscolhida;
 
     switch (escolha) {
@@ -488,13 +488,13 @@ public class SistemaTeatro {
 }
 
 
-    private static void comprarIngresso(Teatro teatro, Scanner scanner) {
+    private static void comprarIngresso(Teatro teatro, Scanner ler) {
     System.out.print("Digite o CPF: ");
-    String cpf = scanner.nextLine();
+    String cpf = ler.nextLine();
     while (!ValidadorCPF.validar(cpf)) {
         System.out.println("CPF inválido.");
         System.out.print("Digite o CPF novamente: ");
-        cpf = scanner.nextLine();
+        cpf = ler.nextLine();
     }
 
     System.out.println("\nSelecione a peça:");
@@ -502,7 +502,7 @@ public class SistemaTeatro {
     for (int i = 0; i < pecas.size(); i++) {
         System.out.println((i + 1) + ". " + pecas.get(i).getNome());
     }
-    int escolhaPeca = pedirInteiro(scanner, "Escolha a peça: ", 1, pecas.size());
+    int escolhaPeca = pedirInteiro(ler, "Escolha a peça: ", 1, pecas.size());
     Peca peca = pecas.get(escolhaPeca - 1);
 
     System.out.println("\nSelecione a sessão:");
@@ -510,7 +510,7 @@ public class SistemaTeatro {
     for (int i = 0; i < sessoes.size(); i++) {
         System.out.println((i + 1) + ". " + sessoes.get(i));
     }
-    int escolhaSessao = pedirInteiro(scanner, "Escolha a sessão: ", 1, sessoes.size());
+    int escolhaSessao = pedirInteiro(ler, "Escolha a sessão: ", 1, sessoes.size());
     String sessaoEscolhida = sessoes.get(escolhaSessao - 1);
 
     System.out.println("\nSelecione o setor:");
@@ -519,7 +519,7 @@ public class SistemaTeatro {
         Setor setor = setores.get(i);
         System.out.println((i + 1) + ". " + setor.getNome() + " - R$" + setor.getPreco());
     }
-    int escolhaSetor = pedirInteiro(scanner, "Escolha o setor: ", 1, setores.size());
+    int escolhaSetor = pedirInteiro(ler, "Escolha o setor: ", 1, setores.size());
     Setor setorEscolhido = setores.get(escolhaSetor - 1);
 
     // Mostrar assentos disponíveis para o setor e sessão escolhidos
@@ -537,7 +537,7 @@ public class SistemaTeatro {
     }
 
     // Pedir ao usuário o número do assento
-    int numeroAssento = pedirInteiro(scanner, "Escolha o número do assento: ", 1,
+    int numeroAssento = pedirInteiro(ler, "Escolha o número do assento: ", 1,
             assentosDisponiveis.length * assentosDisponiveis[0].length);
 
     Assento assento = assentosDisponiveis[(numeroAssento - 1) / assentosDisponiveis[0].length][(numeroAssento - 1)
@@ -558,16 +558,16 @@ public class SistemaTeatro {
 
     // Método utilitário para pedir um número inteiro dentro de um intervalo
     // específico
-    private static int pedirInteiro(Scanner scanner, String mensagem, int min, int max) {
+    private static int pedirInteiro(Scanner ler, String mensagem, int min, int max) {
         int escolha;
         do {
             System.out.print(mensagem);
-            while (!scanner.hasNextInt()) {
+            while (!ler.hasNextInt()) {
                 System.out.print("Escolha inválida. " + mensagem);
-                scanner.next(); // Consumir entrada inválida
+                ler.next(); // Consumir entrada inválida
             }
-            escolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha após o número inteiro
+            escolha = ler.nextInt();
+            ler.nextLine(); // Consumir a nova linha após o número inteiro
         } while (escolha < min || escolha > max);
         return escolha;
     }
