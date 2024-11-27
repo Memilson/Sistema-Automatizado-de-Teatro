@@ -17,8 +17,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class TelaLogin extends JFrame {
-    private JTextField campoUsuario;
-    private JPasswordField campoSenha;
+    private final JTextField campoUsuario;
+    private final JPasswordField campoSenha;
 
     public TelaLogin() {
         setTitle("Login");
