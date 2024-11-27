@@ -2,7 +2,6 @@ package com.mycompany.mavenproject3;
 
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,7 +31,7 @@ public class TelaPrincipal extends JFrame {
 
         // Botão para Ver Assentos Livres
         JButton btnVerAssentos = new JButton("Ver Assentos Livres");
-        btnVerAssentos.addActionListener(e -> JOptionPane.showMessageDialog(this, "Tela de assentos livres não implementada ainda."));
+        btnVerAssentos.addActionListener(e -> abrirTelaAssentosLivres(nomeUsuario));
         add(btnVerAssentos);
 
         // Botão para Relatório
@@ -71,6 +70,12 @@ public class TelaPrincipal extends JFrame {
         // Abre a tela de login
         TelaLogin telaLogin = new TelaLogin();
         telaLogin.setVisible(true);
+        this.dispose();  // Fecha a tela principal
+    }
+    private void abrirTelaAssentosLivres(String nomeUsuario) {
+        // Abre a tela de login
+        TelaAssentosLivres telaAssentosLivres = new TelaAssentosLivres(nomeUsuario);
+        telaAssentosLivres.setVisible(true);
         this.dispose();  // Fecha a tela principal
     }
 

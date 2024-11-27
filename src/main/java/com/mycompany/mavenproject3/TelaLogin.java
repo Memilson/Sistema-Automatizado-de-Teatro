@@ -67,6 +67,8 @@ public class TelaLogin extends JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao ler o arquivo de usuários: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
         return false;  }
+
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             TelaLogin telaLogin = new TelaLogin();

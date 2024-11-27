@@ -6,18 +6,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TelaCompraIngresso extends JFrame {
+public class TelaAssentosLivres extends JFrame {
     private String nomeUsuario;
     private String cpfUsuario;
     private JPanel panelPoltronas;
     private JComboBox<String> comboPeca, comboSessao, comboArea;
-    private JButton btnComprar;
 
     private Map<String, Boolean[]> poltronasMap = new HashMap<>();
 
@@ -28,11 +25,11 @@ public class TelaCompraIngresso extends JFrame {
     private static final int BALCAO_NOBRE = 50;
 
     // Construtor da tela com nome do usuário
-    public TelaCompraIngresso(String nomeUsuario) {
+    public TelaAssentosLivres(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
-        this.cpfUsuario = carregarCpfDoArquivo(nomeUsuario);  // Carregar CPF do arquivo
+        this.cpfUsuario = carregarCpfDoArquivo(nomeUsuario);
 
-        setTitle("Compra de Ingresso");
+        setTitle("Ver Assentos Livres");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -41,7 +38,7 @@ public class TelaCompraIngresso extends JFrame {
         JPanel panelInfo = new JPanel();
         panelInfo.setLayout(new GridLayout(2, 1));
 
-        JLabel titulo = new JLabel("Compra de Ingresso - " + nomeUsuario, SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Assentos Livres - " + nomeUsuario, SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 16));
         panelInfo.add(titulo);
 
@@ -78,16 +75,7 @@ public class TelaCompraIngresso extends JFrame {
         panelPoltronas.setLayout(new GridLayout(0, 10, 5, 5));
         add(panelPoltronas, BorderLayout.CENTER);
 
-        btnComprar = new JButton("Comprar");
-        btnComprar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                comprarIngresso();
-            }
-        });
-        add(btnComprar, BorderLayout.SOUTH);
-
-        carregarPoltronasExcel();
+        carregarPoltronasExcel(); // Carregar os assentos ocupados do arquivo de vendas
     }
 
     private String carregarCpfDoArquivo(String nomeUsuario) {
@@ -101,7 +89,7 @@ public class TelaCompraIngresso extends JFrame {
                 for (Row row : sheet) {
                     String nome = row.getCell(0).getStringCellValue();  // Nome do usuário na primeira coluna
                     if (nome.equals(nomeUsuario)) {
-                        return row.getCell(3).getStringCellValue();  // Retorna o CPF da segunda coluna
+                        return row.getCell(3).getStringCellValue();  // Retorna o CPF da terceira coluna
                     }
                 }
             } catch (IOException e) {
@@ -126,7 +114,7 @@ public class TelaCompraIngresso extends JFrame {
             int numPoltronas = obterNumeroPoltronas(area);
             Boolean[] poltronas = new Boolean[numPoltronas];
             for (int i = 0; i < numPoltronas; i++) {
-                poltronas[i] = false;
+                poltronas[i] = false; // Por padrão, todos os assentos são livres
             }
             poltronasMap.put(chave, poltronas);
         }
@@ -137,26 +125,16 @@ public class TelaCompraIngresso extends JFrame {
 
         for (int i = 0; i < poltronas.length; i++) {
             String poltronaNumero = gerarNumeroPoltrona(i);
-            JToggleButton btnPoltrona = new JToggleButton(poltronaNumero);
+            JButton btnPoltrona = new JButton(poltronaNumero);
             btnPoltrona.setFont(new Font("Arial", Font.PLAIN, 12));
 
             if (poltronas[i]) {
                 btnPoltrona.setText("Ocupada");
-                btnPoltrona.setEnabled(false);
+                btnPoltrona.setEnabled(false); // Desabilitar botão para assento ocupado
             } else {
                 btnPoltrona.setText("Livre");
+                btnPoltrona.setEnabled(true); // Permitir interação para assento livre
             }
-
-            int finalI = i;
-            btnPoltrona.addActionListener(e -> {
-                poltronas[finalI] = !poltronas[finalI];
-                if (poltronas[finalI]) {
-                    btnPoltrona.setText("Ocupada");
-                    btnPoltrona.setEnabled(false);
-                } else {
-                    btnPoltrona.setText("Livre");
-                }
-            });
 
             panelPoltronas.add(btnPoltrona);
         }
@@ -172,6 +150,7 @@ public class TelaCompraIngresso extends JFrame {
     }
 
     private int obterNumeroPoltronas(String area) {
+        // Retorna o número de poltronas dependendo da área selecionada
         switch (area) {
             case "Plateia A":
                 return PLATEIA_A;
@@ -196,7 +175,7 @@ public class TelaCompraIngresso extends JFrame {
                 Sheet sheet = workbook.getSheet("Vendas");
 
                 for (Row row : sheet) {
-                    if (row.getRowNum() == 0) continue;
+                    if (row.getRowNum() == 0) continue; // Ignorar cabeçalho
                     String peca = row.getCell(0).getStringCellValue();
                     String sessao = row.getCell(1).getStringCellValue();
                     String area = row.getCell(2).getStringCellValue();
@@ -218,97 +197,9 @@ public class TelaCompraIngresso extends JFrame {
         }
     }
 
-    private void comprarIngresso() {
-        String peca = (String) comboPeca.getSelectedItem();
-        String sessao = (String) comboSessao.getSelectedItem();
-        String area = (String) comboArea.getSelectedItem();
-
-        String chave = peca + "-" + sessao + "-" + area;
-        Boolean[] poltronas = poltronasMap.get(chave);
-
-        if (poltronas == null) {
-            JOptionPane.showMessageDialog(this, "Seleção inválida.");
-            return;
-        }
-
-        boolean poltronaEncontrada = false;
-
-        for (int i = 0; i < poltronas.length; i++) {
-            if (!poltronas[i]) {
-                poltronas[i] = true;
-                poltronaEncontrada = true;
-                gerarIngresso(peca, sessao, area, i);
-                break;
-            }
-        }
-
-        if (!poltronaEncontrada) {
-            JOptionPane.showMessageDialog(this, "Não há assentos disponíveis nesta seleção.");
-            return;
-        }
-
-        mostrarPoltronas(area, sessao, peca);
-        salvarVendasExcel();
-    }
-
-    private void gerarIngresso(String peca, String sessao, String area, int poltronaIndex) {
-        String poltrona = gerarNumeroPoltrona(poltronaIndex);
-
-        String ingresso = "Ingresso Comprado\n" +
-                "Usuário: " + nomeUsuario + "\n" +
-                "CPF: " + cpfUsuario + "\n" +
-                "Peça: " + peca + "\n" +
-                "Sessão: " + sessao + "\n" +
-                "Área: " + area + "\n" +
-                "Poltrona: " + poltrona;
-
-        JOptionPane.showMessageDialog(this, ingresso, "Ingresso", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void salvarVendasExcel() {
-        try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Vendas");
-
-            Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("Peça");
-            headerRow.createCell(1).setCellValue("Sessão");
-            headerRow.createCell(2).setCellValue("Área");
-            headerRow.createCell(3).setCellValue("Poltronas");
-
-            int rowNum = 1;
-
-            for (Map.Entry<String, Boolean[]> entry : poltronasMap.entrySet()) {
-                String chave = entry.getKey();
-                Boolean[] poltronas = entry.getValue();
-
-                String[] chaveParts = chave.split("-");
-
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(chaveParts[0]);
-                row.createCell(1).setCellValue(chaveParts[1]);
-                row.createCell(2).setCellValue(chaveParts[2]);
-
-                StringBuilder poltronasEstado = new StringBuilder();
-                for (Boolean ocupado : poltronas) {
-                    poltronasEstado.append(ocupado ? "Ocupada " : "Livre ");
-                }
-                row.createCell(3).setCellValue(poltronasEstado.toString().trim());
-            }
-
-            try (FileOutputStream fileOut = new FileOutputStream(new File("vendas.xlsx"))) {
-                workbook.write(fileOut);
-            }
-
-            JOptionPane.showMessageDialog(this, "Vendas salvas com sucesso!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao salvar vendas.");
-        }
-    }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            TelaCompraIngresso tela = new TelaCompraIngresso("Usuário Teste");
+            TelaAssentosLivres tela = new TelaAssentosLivres("Usuário Teste");
             tela.setVisible(true);
         });
     }
