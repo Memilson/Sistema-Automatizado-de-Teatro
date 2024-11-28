@@ -1,4 +1,4 @@
-package com.mycompany.mavenproject3.Teste;
+package com.mycompany.mavenproject3;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.swing.*;

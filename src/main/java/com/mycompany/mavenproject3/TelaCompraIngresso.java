@@ -1,4 +1,4 @@
-package com.mycompany.mavenproject3.Teste;
+package com.mycompany.mavenproject3;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -17,7 +17,7 @@ public class TelaCompraIngresso extends JFrame {
     private JButton btnComprar;
     private JLabel lblPreco;
     private Map<String, Boolean[]> poltronasMap = new HashMap<>();
-    private static final Map<String, Double> PRECOS_AREA = new HashMap<>();
+    public static final Map<String, Double> PRECOS_AREA = new HashMap<>();
     private JToggleButton[] botoesPoltronas; // Array para armazenar os botões das poltronas
     private int poltronaSelecionada = -1; // Índice da poltrona selecionada
 

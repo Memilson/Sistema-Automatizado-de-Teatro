@@ -1,4 +1,4 @@
-package com.mycompany.mavenproject3.Teste;
+package com.mycompany.mavenproject3;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;

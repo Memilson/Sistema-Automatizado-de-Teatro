@@ -1,4 +1,4 @@
-package com.mycompany.mavenproject3.Teste;
+package com.mycompany.mavenproject3;
 class ValidadorCPF {
     public static boolean validar(String cpf) {
         cpf = cpf.replaceAll("[^0-9]", "");

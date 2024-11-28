@@ -1,4 +1,4 @@
-package com.mycompany.mavenproject3.Teste;
+package com.mycompany.mavenproject3;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -42,7 +42,7 @@ public class TelaPrincipal extends JFrame {
 
         // Botão para Relatório
         JButton btnRelatorio = new JButton("Relatório");
-        btnRelatorio.addActionListener(e -> JOptionPane.showMessageDialog(this, "Tela de relatório não implementada ainda."));
+        btnRelatorio.addActionListener(e -> abrirTelaRelatorio(nomeUsuario)); // Abre a tela de relatorio
         add(btnRelatorio);
 
         // Exibe botões adicionais somente se for "Usuário Exemplo"
@@ -87,6 +87,11 @@ public class TelaPrincipal extends JFrame {
         TelaAssentosLivres telaAssentosLivres = new TelaAssentosLivres(nomeUsuario);
         telaAssentosLivres.setVisible(true);
         this.dispose(); // Fecha a tela principal
+    }
+    private void abrirTelaRelatorio(String nomeUsuario) {
+        TelaRelatorio telaRelatorio = new TelaRelatorio(nomeUsuario);
+        telaRelatorio.setVisible(true);
+        this.dispose();
     }
 
     public static void main(String[] args) {
