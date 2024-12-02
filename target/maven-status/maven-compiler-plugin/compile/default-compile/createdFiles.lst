@@ -1,0 +1,16 @@
+com\mycompany\mavenproject3\TelaLogin.class
+com\mycompany\mavenproject3\TelaRegistro.class
+com\mycompany\mavenproject3\TelaPrincipal.class
+com\mycompany\mavenproject3\XSSFWorkbook.class
+com\mycompany\legacy\SistemaTeatro.class
+com\mycompany\legacy\ValidadorCPF.class
+com\mycompany\legacy\Ingresso.class
+com\mycompany\legacy\Teatro.class
+com\mycompany\mavenproject3\TelaAssentosLivres.class
+com\mycompany\mavenproject3\TelaCompraIngresso.class
+com\mycompany\mavenproject3\ValidadorCPF.class
+com\mycompany\legacy\Assento.class
+com\mycompany\legacy\Setor.class
+com\mycompany\legacy\Relatorio.class
+com\mycompany\mavenproject3\TelaRelatorio.class
+com\mycompany\legacy\Peca.class

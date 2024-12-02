@@ -1,18 +1,25 @@
 package com.mycompany.mavenproject3;
 
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 public class TelaRelatorio extends JFrame {
 
     private static String nomeUsuario;
+
     private JTextArea textArea;
 
     public TelaRelatorio(String nomeUsuario) {
@@ -61,14 +68,14 @@ public class TelaRelatorio extends JFrame {
             relatorio.append("Relatório de Vendas\n\n");
 
             // Peça com mais e menos ingressos vendidos
-            String pecaMaisVendida = vendasPorPeca.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
-            String pecaMenosVendida = vendasPorPeca.entrySet().stream().min(Map.Entry.comparingByValue()).get().getKey();
+            String pecaMaisVendida = vendasPorPeca.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("Nenhuma");
+            String pecaMenosVendida = vendasPorPeca.entrySet().stream().min(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("Nenhuma");
             relatorio.append("Peça com mais ingressos vendidos: ").append(pecaMaisVendida).append("\n");
             relatorio.append("Peça com menos ingressos vendidos: ").append(pecaMenosVendida).append("\n\n");
 
             // Sessão com maior e menor ocupação
-            String sessaoMaisOcupada = ocupacaoPorSessao.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
-            String sessaoMenosOcupada = ocupacaoPorSessao.entrySet().stream().min(Map.Entry.comparingByValue()).get().getKey();
+            String sessaoMaisOcupada = ocupacaoPorSessao.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("Nenhuma");
+            String sessaoMenosOcupada = ocupacaoPorSessao.entrySet().stream().min(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse("Nenhuma");
             relatorio.append("Sessão com maior ocupação: ").append(sessaoMaisOcupada).append("\n");
             relatorio.append("Sessão com menor ocupação: ").append(sessaoMenosOcupada).append("\n\n");
 

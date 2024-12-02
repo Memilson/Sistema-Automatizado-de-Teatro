@@ -2,10 +2,10 @@ package com.mycompany.mavenproject3;
 
 import java.awt.Font;
 import java.awt.GridLayout;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -71,7 +71,6 @@ public class TelaPrincipal extends JFrame {
         telaAssentosLivres.setVisible(true);
         this.dispose();
     }
-    // Abre a tela de relatório de vendas
     private void abrirTelaRelatorio(String nomeUsuario) {
         TelaRelatorio telaRelatorio = new TelaRelatorio(nomeUsuario);
         telaRelatorio.setVisible(true);
@@ -79,7 +78,7 @@ public class TelaPrincipal extends JFrame {
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            String nomeUsuario = "Usuário Exemplo"; // Nome do usuário logado
+            String nomeUsuario = "Usuário Exemplo";
             TelaPrincipal telaPrincipal = new TelaPrincipal(nomeUsuario);
             telaPrincipal.setVisible(true);
         });
