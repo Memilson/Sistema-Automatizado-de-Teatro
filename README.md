@@ -41,13 +41,6 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
 - **Reunião:** Presencial e Discord
 
 ---
-# Sistema de Venda de Ingressos para Teatro
-
-O projeto é um sistema que permite gerenciar a venda de ingressos de teatro, incluindo funcionalidades como compra de ingressos, visualização de assentos, relatórios de vendas e estatísticas.
-
----
-
-## Diagrama de Fluxo do Sistema
 
 ```mermaid
 graph TD
@@ -63,3 +56,4 @@ graph TD
 
     style A fill:#f9f,stroke:#333,stroke-width:4px
     style J fill:#f66,stroke:#333,stroke-width:2px
+```
