@@ -41,4 +41,56 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
 - **Reunião:** Presencial e Discord
 
 ---
+'''mermaid
+classDiagram
+    class Assento {
+        -boolean ocupado
+        +ocupar()
+        +liberar()
+    }
 
+    class Setor {
+        -String nome
+        -int capacidade
+        -double preco
+        -Assento[][] assentos
+        +calcularOcupacao()
+        +calcularLucro()
+    }
+
+    class Peca {
+        -String titulo
+        -String diretor
+        -String elenco
+        +getDetalhes()
+    }
+
+    class Sessao {
+        -String horario
+        -Setor[] setores
+        +getDisponibilidade()
+    }
+
+    class Ingresso {
+        -String cpf
+        -Peca peca
+        -Sessao sessao
+        -Setor setor
+        -Assento assento
+    }
+
+    class Teatro {
+        -Setor[] setores
+        -Sessao[] sessoes
+        -Peca[] pecas
+        +gerarRelatorio()
+        +calcularLucroTotal()
+    }
+
+    Assento --> Setor
+    Setor --> Sessao
+    Sessao --> Peca
+    Sessao --> Ingresso
+    Teatro --> Sessao
+    Teatro --> Peca
+'''
