@@ -41,56 +41,25 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
 - **Reunião:** Presencial e Discord
 
 ---
-'''mermaid
-classDiagram
-    class Assento {
-        -boolean ocupado
-        +ocupar()
-        +liberar()
-    }
+# Sistema de Venda de Ingressos para Teatro
 
-    class Setor {
-        -String nome
-        -int capacidade
-        -double preco
-        -Assento[][] assentos
-        +calcularOcupacao()
-        +calcularLucro()
-    }
+O projeto é um sistema que permite gerenciar a venda de ingressos de teatro, incluindo funcionalidades como compra de ingressos, visualização de assentos, relatórios de vendas e estatísticas.
 
-    class Peca {
-        -String titulo
-        -String diretor
-        -String elenco
-        +getDetalhes()
-    }
+---
 
-    class Sessao {
-        -String horario
-        -Setor[] setores
-        +getDisponibilidade()
-    }
+## Diagrama de Fluxo do Sistema
 
-    class Ingresso {
-        -String cpf
-        -Peca peca
-        -Sessao sessao
-        -Setor setor
-        -Assento assento
-    }
+```mermaid
+graph TD
+    A[Início] -->|Usuário acessa o sistema| B[Menu Principal]
+    B -->|1. Comprar Ingresso| C[Escolher Sessão e Assento]
+    C -->|Validação de CPF| D[Confirmar Pagamento]
+    D -->|Pagamento aprovado| E[Emitir Ingresso]
+    B -->|2. Visualizar Assentos| F[Exibir Matriz de Assentos]
+    B -->|3. Relatórios| G[Gerar Relatório de Vendas]
+    B -->|4. Estatísticas| H[Exibir Estatísticas de Ocupação]
+    B -->|5. Lucro Total| I[Calcular Lucro]
+    B -->|6. Sair| J[Fim]
 
-    class Teatro {
-        -Setor[] setores
-        -Sessao[] sessoes
-        -Peca[] pecas
-        +gerarRelatorio()
-        +calcularLucroTotal()
-    }
-
-    Assento --> Setor
-    Setor --> Sessao
-    Sessao --> Peca
-    Sessao --> Ingresso
-    Teatro --> Sessao
-    Teatro --> Peca
-'''
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style J fill:#f66,stroke:#333,stroke-width:2px
