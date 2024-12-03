@@ -42,18 +42,3 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
 
 ---
 
-```mermaid
-graph TD
-    A[Início] -->|Usuário acessa o sistema| B[Menu Principal]
-    B -->|1. Comprar Ingresso| C[Escolher Sessão e Assento]
-    C -->|Validação de CPF| D[Confirmar Pagamento]
-    D -->|Pagamento aprovado| E[Emitir Ingresso]
-    B -->|2. Visualizar Assentos| F[Exibir Matriz de Assentos]
-    B -->|3. Relatórios| G[Gerar Relatório de Vendas]
-    B -->|4. Estatísticas| H[Exibir Estatísticas de Ocupação]
-    B -->|5. Lucro Total| I[Calcular Lucro]
-    B -->|6. Sair| J[Fim]
-
-    style A fill:#f9f,stroke:#333,stroke-width:4px
-    style J fill:#f66,stroke:#333,stroke-width:2px
-```
