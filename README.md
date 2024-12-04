@@ -22,7 +22,6 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
   ---
 
 ## Colaboradores:
-> - 🚨Atenção todos os colaboradores abaixo participaram efetivamente da parte de Desenvolvimento, Analise e Testador do Sistema
 - **Angelo Augusto**: Desenvolvedor
 - **Guilherme Xavier**: Auxiliar de projeto 
 - **Kalleb Mendes**: Projetista e Documentador
