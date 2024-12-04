@@ -32,7 +32,7 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
 ## Software
 
 - **IDE:** IntelliJ, Apache Netbeans, Visual Studio Code
-- **Linguagem:** Java 17
+- **Linguagem:** Java 23
 - **Interface Gráfica:** Swing
 - **Banco de Dados:** Excel
 - **Controle de Versão:** Git
