@@ -2,7 +2,9 @@ package com.mycompany.mavenproject3.login.view;
 
 import com.mycompany.mavenproject3.Main;
 import com.mycompany.mavenproject3.login.controller.LoginController;
-import com.mycompany.mavenproject3.usuario.view.TelaAreaUsuario;
+import com.mycompany.mavenproject3.usuario.model.Usuario;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
+import com.mycompany.mavenproject3.registro.view.TelaRegistro;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +16,7 @@ public class TelaLogin extends JFrame {
 
     public TelaLogin() {
         setTitle("Login de Usuário");
-        setSize(350, 220);
+        setSize(350, 250);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
@@ -33,15 +35,15 @@ public class TelaLogin extends JFrame {
         JButton loginButton = new JButton("Entrar");
         loginButton.addActionListener(e -> autenticar());
 
-        JButton voltarButton = new JButton("Menu Principal");
-        voltarButton.addActionListener(e -> {
-            new Main();
+        JButton registrarButton = new JButton("Registrar-se");
+        registrarButton.addActionListener(e -> {
+            new TelaRegistro();
             dispose();
         });
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(loginButton);
-        buttonPanel.add(voltarButton);
+        buttonPanel.add(registrarButton);
 
         add(statusLabel, BorderLayout.NORTH);
         add(formPanel, BorderLayout.CENTER);
@@ -54,11 +56,17 @@ public class TelaLogin extends JFrame {
         String email = emailField.getText();
         String senha = new String(senhaField.getPassword());
 
-        boolean sucesso = LoginController.login(email, senha);
-        if (sucesso) {
-            JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
-            new Main();
-            dispose();
+        String authId = LoginController.login(email, senha); // retorna o ID do usuário logado
+        if (authId != null) {
+            Usuario usuario = UsuarioRepositorySupabase.buscarPorIdAuth(authId);
+
+            if (usuario != null) {
+                JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
+                new Main(usuario); // redireciona para a tela principal
+                dispose();
+            } else {
+                statusLabel.setText("Falha ao buscar dados do usuário.");
+            }
         } else {
             statusLabel.setText("Credenciais inválidas.");
         }

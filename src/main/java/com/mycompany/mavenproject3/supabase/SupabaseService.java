@@ -87,6 +87,7 @@ public class SupabaseService {
             return false;
         }
     }
+
     public static String post(String endpoint, String jsonBody, boolean auth) throws IOException {
         URL url = new URL(SUPABASE_URL + endpoint);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -123,21 +124,19 @@ public class SupabaseService {
             return scanner.useDelimiter("\\A").hasNext() ? scanner.next() : null;
         }
     }
-    // SupabaseService.java
 
     public static String patch(String endpoint, String jsonBody, boolean auth, boolean preferReturn) throws IOException {
         URL url = new URL(SUPABASE_URL + endpoint);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        conn.setRequestMethod("POST"); // Override para PATCH
+        conn.setRequestMethod("POST"); // override PATCH
         conn.setRequestProperty("X-HTTP-Method-Override", "PATCH");
         conn.setRequestProperty("Content-Type", "application/json");
 
-        // Preferência de retorno
         if (preferReturn) {
-            conn.setRequestProperty("Prefer", "return=representation");
+            conn.setRequestProperty("Prefer", "return=representation, resolution=merge-duplicates");
         } else {
-            conn.setRequestProperty("Prefer", "return=minimal");
+            conn.setRequestProperty("Prefer", "resolution=merge-duplicates");
         }
 
         conn.setRequestProperty("apikey", API_KEY);
@@ -156,6 +155,18 @@ public class SupabaseService {
             return scanner.useDelimiter("\\A").hasNext() ? scanner.next() : null;
         }
     }
+
+    // ✅ Método simplificado para repositórios: PATCH com auth=true e preferReturn=false
+    public static boolean patch(String endpoint, String jsonBody) {
+        try {
+            String resposta = patch(endpoint, jsonBody, true, false);
+            return resposta != null && !resposta.toLowerCase().contains("error");
+        } catch (IOException e) {
+            System.err.println("Erro no patch simplificado: " + e.getMessage());
+            return false;
+        }
+    }
+
     public static String buscarAssinaturaId(String usuarioId) {
         try {
             String resposta = get("/rest/v1/usuarios?id=eq." + usuarioId + "&select=assinatura_id", true);
@@ -169,5 +180,4 @@ public class SupabaseService {
         }
         return null;
     }
-
 }

@@ -83,14 +83,13 @@ public class TelaAreaUsuario extends JFrame {
 
             new TelaPagamentoSimulado(novoPlanoId, () -> {
                 String userId = SessaoUsuario.getUserId();
-                boolean sucesso = UsuarioService.atualizarPlanoUsuario(userId, novoPlanoId);
+                boolean sucesso = UsuarioService.atualizarPlanoViaRPC(userId, novoPlanoId);
                 if (sucesso) {
-                    JOptionPane.showMessageDialog(this, "Plano atualizado com sucesso!");
-                    dispose();
-                    new TelaAreaUsuario();
+                    JOptionPane.showMessageDialog(null, "Plano alterado com sucesso!");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Erro ao atualizar o plano.");
+                    JOptionPane.showMessageDialog(null, "Erro ao alterar o plano.");
                 }
+
             });
         });
 
@@ -130,15 +129,18 @@ public class TelaAreaUsuario extends JFrame {
             descontoLabel.setText(String.valueOf(assinatura.optDouble("desconto_percentual", 0.0)));
             tipoPagamentoLabel.setText(tipoPagamentoToTexto(assinatura.optInt("tipo_pagamento", 0)));
 
-            String now = LocalDate.now().withDayOfMonth(1).toString();
-            String vendasJson = SupabaseService.get("/rest/v1/venda?usuario_id=eq." + userId + "&data_compra=gte." + now + "&select=data_compra,foi_ingresso_vip", true);
+            // 🔁 Corrigido: busca TODAS as vendas do usuário (não só do mês)
+            String filtro = "/rest/v1/venda?usuario_id=eq." + userId + "&select=data_compra,foi_ingresso_vip";
+            String vendasJson = SupabaseService.get(filtro, true);
             JSONArray vendas = new JSONArray(vendasJson);
 
             int usadosVip = 0;
             String ultimaData = "Nunca";
+
             for (int i = 0; i < vendas.length(); i++) {
                 JSONObject venda = vendas.getJSONObject(i);
                 if (venda.optBoolean("foi_ingresso_vip", false)) usadosVip++;
+
                 String data = venda.optString("data_compra", null);
                 if (data != null && !data.isEmpty()) {
                     LocalDateTime dt = LocalDateTime.parse(data);
@@ -154,6 +156,11 @@ public class TelaAreaUsuario extends JFrame {
             System.err.println("Erro ao carregar assinatura: " + e.getMessage());
         }
     }
+    public TelaAreaUsuario(Usuario usuario) {
+        SessaoUsuario.iniciar(usuario.getId());
+        new TelaAreaUsuario(); // reutiliza o construtor atual
+    }
+
 
     private String tipoPagamentoToTexto(int codigo) {
         return switch (codigo) {

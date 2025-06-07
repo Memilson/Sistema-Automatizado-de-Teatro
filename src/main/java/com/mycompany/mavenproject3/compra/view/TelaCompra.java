@@ -1,8 +1,8 @@
 package com.mycompany.mavenproject3.compra.view;
 
-import com.mycompany.mavenproject3.core.SessaoUsuario;
 import com.mycompany.mavenproject3.compra.controller.CompraController;
 import com.mycompany.mavenproject3.supabase.SupabaseService;
+import com.mycompany.mavenproject3.usuario.model.Usuario;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,6 +12,7 @@ import java.util.*;
 
 public class TelaCompra extends JFrame {
 
+    private final Usuario usuarioLogado;
     private JComboBox<String> comboPeca;
     private JComboBox<String> comboSessao;
     private JLabel precoLabel;
@@ -24,11 +25,12 @@ public class TelaCompra extends JFrame {
     private String poltronaSelecionadaId = null;
     private String poltronaSelecionadaNome = null;
 
-    private String assentoSelecionado = null;
+    public TelaCompra(Usuario usuario) {
+        this.usuarioLogado = usuario;
 
-    public TelaCompra() {
-        if (SessaoUsuario.getUserId() == null) {
+        if (usuarioLogado == null) {
             JOptionPane.showMessageDialog(null, "Você precisa estar logado.");
+            dispose();
             return;
         }
 
@@ -50,8 +52,7 @@ public class TelaCompra extends JFrame {
 
         add(topo, BorderLayout.NORTH);
 
-        painelAssentos = new JPanel();
-        painelAssentos.setLayout(new GridLayout(0, 10, 5, 5));
+        painelAssentos = new JPanel(new GridLayout(0, 10, 5, 5));
         JScrollPane scrollPane = new JScrollPane(painelAssentos);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -69,7 +70,6 @@ public class TelaCompra extends JFrame {
     private void carregarPecas() {
         try {
             String resposta = SupabaseService.get("/rest/v1/pecas?select=id,titulo", true);
-            assert resposta != null;
             JSONArray json = new JSONArray(resposta);
             comboPeca.removeAllItems();
             mapaPecas.clear();
@@ -96,7 +96,6 @@ public class TelaCompra extends JFrame {
         try {
             String pecaId = mapaPecas.get(peca);
             String resposta = SupabaseService.get("/rest/v1/sessoes?peca_id=eq." + pecaId + "&select=id,horario", true);
-            assert resposta != null;
             JSONArray json = new JSONArray(resposta);
 
             for (int i = 0; i < json.length(); i++) {
@@ -123,19 +122,12 @@ public class TelaCompra extends JFrame {
         if (peca == null || sessaoId == null) return;
 
         try {
-            // Buscar reservas existentes
-            String pecaId = mapaPecas.get(peca);
             String reservasJson = SupabaseService.get("/rest/v1/venda?sessao_id=eq." + sessaoId + "&select=poltrona_modelo_id", true);
-            System.out.println("DEBUG RESPOSTA reservasJson = " + reservasJson);
-            if (reservasJson == null || !reservasJson.trim().startsWith("[")) {
-                throw new RuntimeException("Resposta inesperada da API de reservas: " + reservasJson);
-            }
             JSONArray reservas = new JSONArray(reservasJson);
             for (int i = 0; i < reservas.length(); i++) {
                 ocupadas.add(reservas.getJSONObject(i).getString("poltrona_modelo_id"));
             }
 
-            // Buscar poltronas disponíveis (modelo fixo)
             String poltronasJson = SupabaseService.get("/rest/v1/poltrona_modelo?select=id,fileira,numero", true);
             JSONArray poltronas = new JSONArray(poltronasJson);
             mapaPoltronas.clear();
@@ -144,7 +136,6 @@ public class TelaCompra extends JFrame {
                 JSONObject poltrona = poltronas.getJSONObject(i);
                 String id = poltrona.getString("id");
                 String nome = poltrona.getString("fileira") + poltrona.getInt("numero");
-
                 mapaPoltronas.put(nome, id);
 
                 JButton botao = new JButton(nome);
@@ -167,19 +158,18 @@ public class TelaCompra extends JFrame {
             painelAssentos.repaint();
 
         } catch (Exception e) {
-            e.printStackTrace(); // <-- ESSENCIAL PRA VER O ERRO
             JOptionPane.showMessageDialog(this, "Erro ao carregar poltronas ou reservas.");
+            e.printStackTrace();
         }
     }
 
-        private void atualizarSelecaoVisual(String nomeSelecionado) {
+    private void atualizarSelecaoVisual(String nomeSelecionado) {
         for (Component comp : painelAssentos.getComponents()) {
-            if (comp instanceof JButton) {
-                JButton botao = (JButton) comp;
+            if (comp instanceof JButton botao) {
                 if (botao.getText().equals(nomeSelecionado)) {
                     botao.setBackground(Color.BLUE);
                     botao.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-                } else if (!ocupadas.contains(botao.getText())) {
+                } else if (!ocupadas.contains(mapaPoltronas.get(botao.getText()))) {
                     botao.setBackground(Color.GREEN);
                     botao.setBorder(UIManager.getBorder("Button.border"));
                 }
@@ -198,7 +188,7 @@ public class TelaCompra extends JFrame {
         }
 
         String pecaId = mapaPecas.get(peca);
-        String userId = SessaoUsuario.getUserId();
+        String userId = usuarioLogado.getId();
 
         boolean sucesso = CompraController.realizarCompra(
                 pecaId, sessaoId, userId, poltronaSelecionadaId, "50.00"
