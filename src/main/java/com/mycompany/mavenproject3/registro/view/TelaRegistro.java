@@ -1,7 +1,17 @@
 package com.mycompany.mavenproject3.registro.view;
 
 import com.mycompany.mavenproject3.Main;
+import com.mycompany.mavenproject3.core.SessaoUsuario;
+import com.mycompany.mavenproject3.dados.view.TelaDadosComplementares;
+import com.mycompany.mavenproject3.dados.view.TelaVerificacaoEmail;
+import com.mycompany.mavenproject3.login.controller.LoginController;
+import com.mycompany.mavenproject3.login.view.TelaLogin;
 import com.mycompany.mavenproject3.registro.controller.RegistroController;
+import com.mycompany.mavenproject3.supabase.SupabaseService;
+import com.mycompany.mavenproject3.usuario.model.Usuario;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
+import com.mycompany.mavenproject3.usuario.service.UsuarioService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +71,30 @@ public class TelaRegistro extends JFrame {
         }
 
         boolean sucesso = RegistroController.registrar("", "", email, senha, "", "");
-        statusLabel.setText(sucesso ? "Registro realizado! Verifique seu e-mail." : "Erro ao registrar.");
+        if (sucesso) {
+            JOptionPane.showMessageDialog(this, "Registro realizado com sucesso!");
+
+            // Realiza login automático após registro
+            String authId = LoginController.login(email, senha);
+            if (authId != null) {
+                UsuarioRepository repository = new UsuarioRepositorySupabase(new SupabaseService());
+                UsuarioService service = new UsuarioService(repository);
+                Usuario usuario = service.buscarUsuarioPorId(authId);
+
+                if (usuario == null || !repository.temDadosComplementares(authId)) {
+                    new TelaDadosComplementares().setVisible(true);
+                } else {
+                    new Main(usuario);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Confirme seu Email!!.");
+                new TelaVerificacaoEmail(email, senha);
+            }
+
+            dispose();
+        } else {
+            statusLabel.setText("Erro ao registrar.");
+        }
     }
 
     public static void main(String[] args) {

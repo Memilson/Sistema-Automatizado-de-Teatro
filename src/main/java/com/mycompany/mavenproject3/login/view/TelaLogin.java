@@ -55,27 +55,28 @@ public class TelaLogin extends JFrame {
 
         setVisible(true);
     }
+
     private void autenticar() {
         String email = emailField.getText();
         String senha = new String(senhaField.getPassword());
 
-        String authId = LoginController.login(email, senha); // retorna o ID do usuário logado
+        String authId = LoginController.login(email, senha);
         if (authId != null) {
             UsuarioRepository repository = new UsuarioRepositorySupabase(new SupabaseService());
             UsuarioService service = new UsuarioService(repository);
             Usuario usuario = service.buscarUsuarioPorId(authId);
-            UsuarioRepository repository2 = new UsuarioRepositorySupabase(new SupabaseService());
-            if (usuario == null || !repository2.temDadosComplementares(authId)) {
-                new TelaDadosComplementares().setVisible(true);
+
+            if (usuario == null || !repository.temDadosComplementares(authId)) {
+                new TelaDadosComplementares().setVisible(true); // Preenche dados faltantes
             } else {
-                new Main(usuario);
+                new Main(usuario); // Já pode ir pro menu principal
             }
+
             dispose();
         } else {
             statusLabel.setText("Credenciais inválidas.");
         }
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(TelaLogin::new);

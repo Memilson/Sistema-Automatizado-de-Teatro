@@ -5,6 +5,9 @@ import com.mycompany.mavenproject3.core.SessaoUsuario;
 import com.mycompany.mavenproject3.common.ValidadorCPF;
 import com.mycompany.mavenproject3.dados.controller.ValidadorUsuario;
 import com.mycompany.mavenproject3.supabase.SupabaseService;
+import com.mycompany.mavenproject3.usuario.model.Usuario;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
+import com.mycompany.mavenproject3.usuario.service.UsuarioService;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -20,7 +23,6 @@ public class TelaDadosComplementares extends JFrame {
     private final JFormattedTextField nascimentoField;
     private final JFormattedTextField telefoneField;
     private final JLabel statusLabel;
-
 
     public TelaDadosComplementares() {
         setTitle("Dados Complementares");
@@ -79,14 +81,31 @@ public class TelaDadosComplementares extends JFrame {
             String nascimentoFormatado = new SimpleDateFormat("yyyy-MM-dd").format(nascimento);
 
             String userId = SessaoUsuario.getUserId();
+            if (userId == null) {
+                statusLabel.setText("Usuário não autenticado.");
+                return;
+            }
+
             if (ValidadorUsuario.cpfJaExisteExceto(cpf, userId)) {
                 statusLabel.setText("Este CPF já está em uso por outro usuário.");
                 return;
             }
 
-
             boolean sucesso = SupabaseService.salvarDadosComplementares(userId, nome, cpf, nascimentoFormatado, telefone);
-            statusLabel.setText(sucesso ? "Dados salvos com sucesso!" : "Erro ao salvar dados.");
+            if (sucesso) {
+                JOptionPane.showMessageDialog(this, "Dados salvos com sucesso!");
+
+                // Recarrega o objeto Usuario com os dados atualizados
+                var repo = new UsuarioRepositorySupabase(new SupabaseService());
+                var usuario = new UsuarioService(repo).buscarUsuarioPorId(userId);
+
+                // Redireciona para a tela principal com o usuário
+                new Main(usuario);
+                dispose();
+            } else {
+                statusLabel.setText("Erro ao salvar dados.");
+            }
+
         } catch (ParseException ex) {
             statusLabel.setText("Data inválida.");
         }
