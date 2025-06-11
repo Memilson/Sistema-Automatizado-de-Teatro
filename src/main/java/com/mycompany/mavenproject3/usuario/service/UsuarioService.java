@@ -1,31 +1,30 @@
 package com.mycompany.mavenproject3.usuario.service;
 
-import com.mycompany.mavenproject3.supabase.SupabaseService;
-import org.json.JSONObject;
+
+import com.mycompany.mavenproject3.usuario.model.Usuario;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
 
 public class UsuarioService {
 
-    public static boolean atualizarPlanoViaRPC(String userId, String novoPlanoId) {
-        try {
-            System.out.println("🔁 Iniciando atualização via RPC...");
-            JSONObject json = new JSONObject();
-            json.put("uid", userId);
-            json.put("nova_assinatura", novoPlanoId);
+    private final UsuarioRepository usuarioRepository;
 
-            System.out.println("📦 Enviando corpo: " + json.toString(2));
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
-            String resposta = SupabaseService.post(
-                    "/rest/v1/rpc/atualizar_assinatura",
-                    json.toString(),
-                    true
-            );
+    public Usuario buscarUsuarioPorId(String id) {
+        return usuarioRepository.buscarPorId(id);
+    }
 
-            System.out.println("📤 RPC resposta: " + resposta);
-            return resposta == null || !resposta.toLowerCase().contains("error");
+    public boolean atualizarAssinatura(String userId, String novaAssinaturaId) {
+        return usuarioRepository.alterarAssinatura(userId, novaAssinaturaId);
+    }
 
-        } catch (Exception e) {
-            System.err.println("❌ Erro ao atualizar plano via RPC: " + e.getMessage());
-            return false;
-        }
+    public boolean promoverUsuarioParaAdmin(String userId) {
+        return usuarioRepository.promoverParaAdmin(userId);
+    }
+
+    public int contarUsuarios() {
+        return usuarioRepository.totalUsuariosCadastrados();
     }
 }

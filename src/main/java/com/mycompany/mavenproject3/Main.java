@@ -1,7 +1,14 @@
 package com.mycompany.mavenproject3;
 
+import com.mycompany.mavenproject3.core.SessaoUsuario;
+import com.mycompany.mavenproject3.supabase.SupabaseService;
+import com.mycompany.mavenproject3.usuario.controller.UsuarioController;
+import com.mycompany.mavenproject3.usuario.factory.UsuarioControllerFactory;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import com.mycompany.mavenproject3.admin.TelaAdmin;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
+import com.mycompany.mavenproject3.usuario.service.UsuarioService;
 import com.mycompany.mavenproject3.usuario.view.TelaAreaUsuario;
 import com.mycompany.mavenproject3.compra.view.TelaCompra;
 import com.mycompany.mavenproject3.login.view.TelaLogin;
@@ -53,7 +60,8 @@ public class Main extends JFrame {
         });
 
         usuarioBtn.addActionListener(e -> {
-            new TelaAreaUsuario(usuarioLogado);
+            SessaoUsuario.iniciar(usuarioLogado.getId()); // importante!
+            new TelaAreaUsuario(UsuarioControllerFactory.criar());
             dispose();
         });
 

@@ -2,9 +2,12 @@ package com.mycompany.mavenproject3.login.view;
 
 import com.mycompany.mavenproject3.Main;
 import com.mycompany.mavenproject3.login.controller.LoginController;
+import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
 import com.mycompany.mavenproject3.registro.view.TelaRegistro;
+import com.mycompany.mavenproject3.usuario.service.UsuarioService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,14 +54,15 @@ public class TelaLogin extends JFrame {
 
         setVisible(true);
     }
-
     private void autenticar() {
         String email = emailField.getText();
         String senha = new String(senhaField.getPassword());
 
         String authId = LoginController.login(email, senha); // retorna o ID do usuário logado
         if (authId != null) {
-            Usuario usuario = UsuarioRepositorySupabase.buscarPorIdAuth(authId);
+            UsuarioRepository repository = new UsuarioRepositorySupabase(new SupabaseService());
+            UsuarioService service = new UsuarioService(repository);
+            Usuario usuario = service.buscarUsuarioPorId(authId);
 
             if (usuario != null) {
                 JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
@@ -71,6 +75,7 @@ public class TelaLogin extends JFrame {
             statusLabel.setText("Credenciais inválidas.");
         }
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(TelaLogin::new);

@@ -1,6 +1,8 @@
 package com.mycompany.mavenproject3.admin;
 
+import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
+import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
 
 import javax.swing.*;
@@ -10,13 +12,15 @@ import java.util.List;
 
 public class PainelUsuarios extends JPanel {
 
-    private JTable tabela;
-    private DefaultTableModel modeloTabela;
+    private final JTable tabela;
+    private final DefaultTableModel modeloTabela;
+
+    // Novo: instância do repositório (não mais static)
+    private final UsuarioRepository usuarioRepository = new UsuarioRepositorySupabase(new SupabaseService());
 
     public PainelUsuarios() {
         setLayout(new BorderLayout());
 
-        // Adicionando a coluna de ID (interna) ao modelo
         modeloTabela = new DefaultTableModel(new Object[]{"Nome", "CPF", "Plano", "Admin?", "ID"}, 0);
         tabela = new JTable(modeloTabela);
         JScrollPane scrollPane = new JScrollPane(tabela);
@@ -41,7 +45,7 @@ public class PainelUsuarios extends JPanel {
             int linha = tabela.getSelectedRow();
             if (linha >= 0) {
                 String idUsuario = (String) modeloTabela.getValueAt(linha, 4);
-                boolean sucesso = UsuarioRepositorySupabase.promoverParaAdmin(idUsuario);
+                boolean sucesso = usuarioRepository.promoverParaAdmin(idUsuario);
                 JOptionPane.showMessageDialog(this,
                         sucesso ? "Usuário promovido para Admin." : "Erro ao promover usuário.");
                 if (sucesso) carregarUsuarios();
@@ -56,7 +60,7 @@ public class PainelUsuarios extends JPanel {
                 String idUsuario = (String) modeloTabela.getValueAt(linha, 4);
                 String novoPlano = JOptionPane.showInputDialog(this, "ID do novo plano:");
                 if (novoPlano != null && !novoPlano.isBlank()) {
-                    boolean sucesso = UsuarioRepositorySupabase.alterarAssinatura(idUsuario, novoPlano);
+                    boolean sucesso = usuarioRepository.alterarAssinatura(idUsuario, novoPlano);
                     JOptionPane.showMessageDialog(this,
                             sucesso ? "Plano alterado com sucesso." : "Erro ao alterar plano.");
                     if (sucesso) carregarUsuarios();
@@ -72,18 +76,18 @@ public class PainelUsuarios extends JPanel {
     private void carregarUsuarios() {
         modeloTabela.setRowCount(0); // limpa a tabela
 
-        List<Usuario> usuarios = UsuarioRepositorySupabase.buscarTodosUsuarios();
+        List<Usuario> usuarios = usuarioRepository.buscarTodos();
         for (Usuario u : usuarios) {
             modeloTabela.addRow(new Object[]{
                     u.getNome(),
                     u.getCpf(),
                     u.getAssinaturaNome(),
                     u.isAdmin() ? "Sim" : "Não",
-                    u.getId() // usado internamente (coluna oculta)
+                    u.getId()
             });
         }
 
-        // Esconde a coluna do ID
+        // Oculta a coluna do ID
         if (tabela.getColumnModel().getColumnCount() > 4) {
             tabela.getColumnModel().getColumn(4).setMinWidth(0);
             tabela.getColumnModel().getColumn(4).setMaxWidth(0);
