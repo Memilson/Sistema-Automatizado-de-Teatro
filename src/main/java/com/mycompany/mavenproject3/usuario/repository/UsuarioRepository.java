@@ -10,4 +10,5 @@ public interface UsuarioRepository {
     boolean alterarAssinatura(String id, String novaAssinaturaId);
     boolean alterarPlanoAssinatura(String usuarioId, String novaAssinaturaId);
     int totalUsuariosCadastrados();
+    boolean temDadosComplementares(String authId);
 }

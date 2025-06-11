@@ -85,4 +85,22 @@ public class UsuarioRepositorySupabase implements UsuarioRepository {
             return 0;
         }
     }
+
+    @Override
+    public boolean temDadosComplementares(String usuarioId) {
+        try {
+            String url = "/rest/v1/usuarios?id=eq." + usuarioId + "&select=nome";
+            String json = SupabaseService.get(url, true);
+            if (json != null) {
+                JSONArray array = new JSONArray(json);
+                if (!array.isEmpty()) {
+                    JSONObject obj = array.getJSONObject(0);
+                    return obj.has("nome") && !obj.isNull("nome") && !obj.getString("nome").isEmpty();
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao verificar dados complementares: " + e.getMessage());
+        }
+        return false;
+    }
 }

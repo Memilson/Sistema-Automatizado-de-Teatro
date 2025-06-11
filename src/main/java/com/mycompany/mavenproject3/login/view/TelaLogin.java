@@ -1,6 +1,7 @@
 package com.mycompany.mavenproject3.login.view;
 
 import com.mycompany.mavenproject3.Main;
+import com.mycompany.mavenproject3.dados.view.TelaDadosComplementares;
 import com.mycompany.mavenproject3.login.controller.LoginController;
 import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
@@ -63,14 +64,13 @@ public class TelaLogin extends JFrame {
             UsuarioRepository repository = new UsuarioRepositorySupabase(new SupabaseService());
             UsuarioService service = new UsuarioService(repository);
             Usuario usuario = service.buscarUsuarioPorId(authId);
-
-            if (usuario != null) {
-                JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
-                new Main(usuario); // redireciona para a tela principal
-                dispose();
+            UsuarioRepository repository2 = new UsuarioRepositorySupabase(new SupabaseService());
+            if (usuario == null || !repository2.temDadosComplementares(authId)) {
+                new TelaDadosComplementares().setVisible(true);
             } else {
-                statusLabel.setText("Falha ao buscar dados do usuário.");
+                new Main(usuario);
             }
+            dispose();
         } else {
             statusLabel.setText("Credenciais inválidas.");
         }
