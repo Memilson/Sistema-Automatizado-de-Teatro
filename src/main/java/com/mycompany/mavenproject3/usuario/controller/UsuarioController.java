@@ -5,18 +5,41 @@ import java.time.format.DateTimeFormatter;
 import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.dto.UsuarioDashboardDTO;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
+import com.mycompany.mavenproject3.usuario.service.SupabaseAssinaturaClient;
 import com.mycompany.mavenproject3.usuario.service.UsuarioService;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final SupabaseService supabase;
+    private final SupabaseAssinaturaClient assinaturaClient;
+    private boolean cartaoVerificado = false;
 
     public UsuarioController(UsuarioService usuarioService, SupabaseService supabase) {
         this.usuarioService = usuarioService;
         this.supabase = supabase;
+        this.assinaturaClient = new SupabaseAssinaturaClient(supabase);
+    }
+
+    public boolean isCartaoVerificado() {
+        return cartaoVerificado;
+    }
+
+    public void setCartaoVerificado(boolean verificado) {
+        this.cartaoVerificado = verificado;
+    }
+
+    public SupabaseAssinaturaClient getAssinaturaClient() {
+        return this.assinaturaClient;
+    }
+
+    public SupabaseService getSupabase() {
+        return this.supabase;
     }
 
     public Usuario carregarUsuario(String id) {
@@ -25,6 +48,35 @@ public class UsuarioController {
 
     public boolean atualizarPlanoRPC(String userId, String novoPlanoId) {
         return usuarioService.atualizarAssinatura(userId, novoPlanoId);
+    }
+
+    public boolean alterarPlano(String usuarioId, String novaAssinaturaId) {
+        return usuarioService.atualizarAssinatura(usuarioId, novaAssinaturaId);
+    }
+
+    public boolean cadastrarCartao(Component parent) {
+        JTextField campoNumero = new JTextField();
+        JTextField campoValidade = new JTextField();
+        JTextField campoCVV = new JTextField();
+        JTextField campoNome = new JTextField();
+
+        JPanel painel = new JPanel(new GridLayout(0, 1));
+        painel.add(new JLabel("Número do cartão:"));
+        painel.add(campoNumero);
+        painel.add(new JLabel("Validade (MM/AA):"));
+        painel.add(campoValidade);
+        painel.add(new JLabel("CVV:"));
+        painel.add(campoCVV);
+        painel.add(new JLabel("Nome no cartão:"));
+        painel.add(campoNome);
+
+        int resposta = JOptionPane.showConfirmDialog(parent, painel, "Cadastrar Cartão", JOptionPane.OK_CANCEL_OPTION);
+        if (resposta == JOptionPane.OK_OPTION) {
+            // Aqui você pode validar os campos futuramente.
+            cartaoVerificado = true;
+            return true;
+        }
+        return false;
     }
 
     private String tipoPagamentoToTexto(int codigo) {
@@ -51,15 +103,10 @@ public class UsuarioController {
             String assinaturaJson = supabase.get("/rest/v1/assinaturas?id=eq." + usuario.getAssinaturaId(), true);
             JSONObject assinatura = new JSONArray(assinaturaJson).getJSONObject(0);
 
-            int vipMes = assinatura.optInt("ingressos_vip_mes", 0);
-            int prioridade = assinatura.optInt("prioridade_reserva_horas", 0);
-            double desconto = assinatura.optDouble("desconto_percentual", 0);
-            String tipo = tipoPagamentoToTexto(assinatura.optInt("tipo_pagamento", 0));
-
-            dto.setIngressosVipMes(vipMes);
-            dto.setPrioridadeReservaHoras(prioridade);
-            dto.setDescontoPercentual(desconto);
-            dto.setTipoPagamento(tipo);
+            dto.setIngressosVipMes(assinatura.optInt("ingressos_vip_mes", 0));
+            dto.setPrioridadeReservaHoras(assinatura.optInt("prioridade_reserva_horas", 0));
+            dto.setDescontoPercentual(assinatura.optDouble("desconto_percentual", 0));
+            dto.setTipoPagamento(tipoPagamentoToTexto(assinatura.optInt("tipo_pagamento", 0)));
 
             String vendasJson = supabase.get("/rest/v1/venda?usuario_id=eq." + userId + "&select=data_compra,foi_ingresso_vip", true);
             JSONArray vendas = new JSONArray(vendasJson);
@@ -77,7 +124,7 @@ public class UsuarioController {
             }
 
             dto.setUsadosVip(usados);
-            dto.setRestantesVip(Math.max(0, vipMes - usados));
+            dto.setRestantesVip(Math.max(0, dto.getIngressosVipMes() - usados));
             dto.setUltimaCompra(ultima);
 
         } catch (Exception e) {
@@ -86,4 +133,5 @@ public class UsuarioController {
 
         return dto;
     }
+
 }

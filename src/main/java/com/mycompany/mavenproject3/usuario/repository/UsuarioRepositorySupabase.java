@@ -20,7 +20,8 @@ public class UsuarioRepositorySupabase implements UsuarioRepository {
     public Usuario buscarPorId(String idAuth) {
         try {
             String url = "/rest/v1/usuarios?id=eq." + idAuth + "&select=id,nome,cpf,nascimento,assinatura_id,is_admin,telefone,assinaturas(nome)";
-            String json = supabase.get(url, true);
+            String json = SupabaseService.get(url, true);
+            assert json != null;
             JSONArray array = new JSONArray(json);
             if (!array.isEmpty()) {
                 return UsuarioAdapter.fromJson(array.getJSONObject(0));
@@ -36,7 +37,8 @@ public class UsuarioRepositorySupabase implements UsuarioRepository {
         List<Usuario> lista = new ArrayList<>();
         try {
             String url = "/rest/v1/usuarios?select=id,nome,cpf,nascimento,telefone,assinatura_id,is_admin,assinaturas(nome)";
-            String json = supabase.get(url, true);
+            String json = SupabaseService.get(url, true);
+            assert json != null;
             JSONArray array = new JSONArray(json);
             for (int i = 0; i < array.length(); i++) {
                 lista.add(UsuarioAdapter.fromJson(array.getJSONObject(i)));
@@ -50,19 +52,33 @@ public class UsuarioRepositorySupabase implements UsuarioRepository {
     @Override
     public boolean promoverParaAdmin(String id) {
         String body = "{\"is_admin\": true}";
-        return supabase.patch("/rest/v1/usuarios?id=eq." + id, body);
+        return SupabaseService.patch("/rest/v1/usuarios?id=eq." + id, body);
     }
 
     @Override
     public boolean alterarAssinatura(String id, String novaAssinaturaId) {
         String body = "{\"assinatura_id\": \"" + novaAssinaturaId + "\"}";
-        return supabase.patch("/rest/v1/usuarios?id=eq." + id, body);
+        return SupabaseService.patch("/rest/v1/usuarios?id=eq." + id, body);
+    }
+    @Override
+    public boolean alterarPlanoAssinatura(String usuarioId, String novaAssinaturaId) {
+        try {
+            JSONObject update = new JSONObject();
+            update.put("assinatura_id", novaAssinaturaId);
+
+            String filtro = "?id=eq." + usuarioId;
+            SupabaseService.patch("/rest/v1/usuarios" + filtro, update.toString());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public int totalUsuariosCadastrados() {
         try {
-            String json = supabase.get("/rest/v1/usuarios?select=id", true);
+            String json = SupabaseService.get("/rest/v1/usuarios?select=id", true);
             JSONArray array = new JSONArray(json);
             return array.length();
         } catch (Exception e) {

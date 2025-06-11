@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
+        <javafx.version>21</javafx.version>
     </properties>
 
     <dependencies>
@@ -27,6 +28,23 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.2</version>
+        </dependency>
+
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
         </dependency>
 
         <!-- JSON -->
@@ -47,20 +65,17 @@
     <build>
         <finalName>teatro-app</finalName>
         <plugins>
-            <!-- Plugin de compilação -->
+            <!-- Compilação com Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
                     <release>21</release>
-                    <source>21</source>
-                    <target>21</target>
-                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
 
-            <!-- Plugin para empacotar tudo num único JAR -->
+            <!-- Empacotar em um único JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -68,7 +83,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.mycompany.mavenproject3.TelaPrincipal</mainClass>
+                            <!-- CLASSE PRINCIPAL JAVAFX -->
+                            <mainClass>com.mycompany.mavenproject3.AppFX</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -85,7 +101,16 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Plugin para rodar JavaFX -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>com.mycompany.mavenproject3.Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
 </project>

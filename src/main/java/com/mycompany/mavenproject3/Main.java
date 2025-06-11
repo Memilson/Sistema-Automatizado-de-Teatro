@@ -2,6 +2,7 @@ package com.mycompany.mavenproject3;
 
 import com.mycompany.mavenproject3.core.SessaoUsuario;
 import com.mycompany.mavenproject3.supabase.SupabaseService;
+import com.mycompany.mavenproject3.usuario.controller.AreaUsuarioController;
 import com.mycompany.mavenproject3.usuario.controller.UsuarioController;
 import com.mycompany.mavenproject3.usuario.factory.UsuarioControllerFactory;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
@@ -60,8 +61,10 @@ public class Main extends JFrame {
         });
 
         usuarioBtn.addActionListener(e -> {
-            SessaoUsuario.iniciar(usuarioLogado.getId()); // importante!
-            new TelaAreaUsuario(UsuarioControllerFactory.criar());
+            SessaoUsuario.iniciar(usuarioLogado.getId());
+            UsuarioController usuarioController = UsuarioControllerFactory.criar();
+            AreaUsuarioController areaController = new AreaUsuarioController(usuarioController);
+            new TelaAreaUsuario(areaController);
             dispose();
         });
 
