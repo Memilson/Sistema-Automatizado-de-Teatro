@@ -33,7 +33,7 @@ O projeto tem como objetivo desenvolver um sistema computacional que automatize 
 - **IDE:** IntelliJ, Apache Netbeans, Visual Studio Code
 - **Linguagem:** Java 21
 - **Interface Gráfica:** Swing
-- **Banco de Dados:** Excel
+- **Banco de Dados:** Supabase
 - **Controle de Versão:** Git
 - **Repositório:** GitHub
 - **Gerenciamento de Projeto:** Discord
