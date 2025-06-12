@@ -95,6 +95,10 @@ public class TelaRegistro extends Application {
         stage.centerOnScreen();
         stage.show();
     }
+    private boolean emailValido(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
 
     private void estilizarBotao(Button btn) {
         btn.setFont(Font.font("Georgia", 16));
@@ -109,25 +113,54 @@ public class TelaRegistro extends Application {
     }
 
     private void registrarUsuario(Stage stage) {
-        String email = emailField.getText();
+        String email = emailField.getText().trim();
         String senha = senhaField.getText();
         String senhaConfirmacao = confirmarSenhaField.getText();
 
+        // 🛑 Campos vazios
+        if (email.isEmpty() || senha.isEmpty() || senhaConfirmacao.isEmpty()) {
+            statusLabel.setText("Preencha todos os campos.");
+            return;
+        }
+
+        // 🛑 Formato de e-mail inválido
+        if (!emailValido(email)) {
+            statusLabel.setText("Digite um e-mail válido.");
+            return;
+        }
+
+        // 🛑 Senhas diferentes
         if (!senha.equals(senhaConfirmacao)) {
             statusLabel.setText("As senhas não coincidem.");
             return;
         }
 
+        // 🛑 E-mail já existe no auth
         if (SupabaseService.emailJaExiste(email)) {
             statusLabel.setText("Email já está registrado.");
             return;
         }
 
+        // ✅ Tudo ok, tenta registrar
         boolean sucesso = RegistroController.registrar("", "", email, senha, "", "");
         if (sucesso) {
-            Platform.runLater(() -> statusLabel.setText("Conta criada! Verifique seu email."));
+            Platform.runLater(() -> {
+                statusLabel.setText("Conta criada! Verifique seu e-mail para ativar sua conta.\nVocê será redirecionado para o login em 5 segundos...");
+
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(5000);
+                        Platform.runLater(() -> {
+                            new TelaLogin().start(new Stage());
+                            stage.close();
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            });
         } else {
-            statusLabel.setText("Erro ao registrar.");
+            statusLabel.setText("Erro ao registrar. Tente novamente.");
         }
     }
 
