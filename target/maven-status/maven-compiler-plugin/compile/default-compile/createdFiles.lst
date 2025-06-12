@@ -3,13 +3,14 @@ com\mycompany\mavenproject3\dados\view\TelaVerificacaoEmail.class
 com\mycompany\mavenproject3\usuario\dto\UsuarioDashboardDTO.class
 com\mycompany\mavenproject3\login\service\LoginService.class
 com\mycompany\mavenproject3\dados\view\TelaDadosComplementares.class
+com\mycompany\mavenproject3\compra\view\TelaCompraFX.class
 com\mycompany\mavenproject3\usuario\model\Usuario.class
 com\mycompany\mavenproject3\admin\PainelCriarPeca.class
 com\mycompany\legacy\ValidadorCPF.class
 com\mycompany\legacy\Ingresso.class
 com\mycompany\legacy\Teatro.class
 com\mycompany\mavenproject3\compra\model\Venda.class
-com\mycompany\mavenproject3\compra\view\TelaCompra.class
+com\mycompany\mavenproject3\compra\helper\CompraViewHelper.class
 com\mycompany\mavenproject3\dados\controller\ValidadorUsuario.class
 com\mycompany\mavenproject3\registro\controller\RegistroController.class
 com\mycompany\mavenproject3\login\view\TelaLogin.class

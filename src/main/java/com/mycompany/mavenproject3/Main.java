@@ -1,7 +1,7 @@
 package com.mycompany.mavenproject3;
 
 import com.mycompany.mavenproject3.admin.TelaAdmin;
-import com.mycompany.mavenproject3.compra.view.TelaCompra;
+import com.mycompany.mavenproject3.compra.view.TelaCompraFX;
 import com.mycompany.mavenproject3.core.SessaoUsuario;
 import com.mycompany.mavenproject3.usuario.controller.AreaUsuarioController;
 import com.mycompany.mavenproject3.usuario.controller.UsuarioController;
@@ -58,7 +58,7 @@ public class Main extends Application {
         estilizarBotao(usuarioBtn);
 
         comprarBtn.setOnAction(e -> {
-            new TelaCompra(usuarioLogado);
+            new TelaCompraFX(usuarioLogado).start(new Stage());
             stage.close();
         });
 
