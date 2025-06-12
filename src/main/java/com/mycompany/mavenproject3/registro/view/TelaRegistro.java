@@ -1,8 +1,10 @@
 package com.mycompany.mavenproject3.registro.view;
 
 import com.mycompany.mavenproject3.login.view.TelaLogin;
-import com.mycompany.mavenproject3.registro.controller.RegistroFlowHandler;
+import com.mycompany.mavenproject3.registro.controller.RegistroController;
+import com.mycompany.mavenproject3.supabase.SupabaseService;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -62,20 +64,10 @@ public class TelaRegistro extends Application {
 
         Button registrarBtn = new Button("✒️ Registrar");
         Button voltarBtn = new Button("↩️ Voltar");
+        estilizarBotao(registrarBtn);
+        estilizarBotao(voltarBtn);
 
-        RegistroFlowHandler.estilizarBotao(registrarBtn);
-        RegistroFlowHandler.estilizarBotao(voltarBtn);
-
-        registrarBtn.setOnAction(e ->
-                RegistroFlowHandler.registrarUsuario(
-                        emailField.getText(),
-                        senhaField.getText(),
-                        confirmarSenhaField.getText(),
-                        statusLabel,
-                        stage
-                )
-        );
-
+        registrarBtn.setOnAction(e -> registrarUsuario(stage));
         voltarBtn.setOnAction(e -> {
             new TelaLogin().start(new Stage());
             stage.close();
@@ -102,6 +94,41 @@ public class TelaRegistro extends Application {
         stage.setMinHeight(600);
         stage.centerOnScreen();
         stage.show();
+    }
+
+    private void estilizarBotao(Button btn) {
+        btn.setFont(Font.font("Georgia", 16));
+        btn.setStyle(
+                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
+                        " -fx-text-fill: black;" +
+                        " -fx-font-weight: bold;" +
+                        " -fx-background-radius: 10px;"
+        );
+        btn.setPrefWidth(160);
+        btn.setPrefHeight(45);
+    }
+
+    private void registrarUsuario(Stage stage) {
+        String email = emailField.getText();
+        String senha = senhaField.getText();
+        String senhaConfirmacao = confirmarSenhaField.getText();
+
+        if (!senha.equals(senhaConfirmacao)) {
+            statusLabel.setText("As senhas não coincidem.");
+            return;
+        }
+
+        if (SupabaseService.emailJaExiste(email)) {
+            statusLabel.setText("Email já está registrado.");
+            return;
+        }
+
+        boolean sucesso = RegistroController.registrar("", "", email, senha, "", "");
+        if (sucesso) {
+            Platform.runLater(() -> statusLabel.setText("Conta criada! Verifique seu email."));
+        } else {
+            statusLabel.setText("Erro ao registrar.");
+        }
     }
 
     public static void main(String[] args) {

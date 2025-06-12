@@ -180,4 +180,30 @@ public class SupabaseService {
         }
         return null;
     }
-}
+    public static boolean emailJaExiste(String email) {
+        try {
+            String url = SUPABASE_URL + "/rest/v1/rpc/get_user_id_by_email";
+            URL obj = new URL(url);
+
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("apikey", API_KEY);
+            con.setRequestProperty("Authorization", "Bearer " + API_KEY);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+
+            String jsonInputString = "{\"p_email\": \"" + email + "\"}";
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == 200) {
+                String response = new Scanner(con.getInputStream()).useDelimiter("\\A").next();
+                return response != null && !response.equals("null") && response.contains("-");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;}}
