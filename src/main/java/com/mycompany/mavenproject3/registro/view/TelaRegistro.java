@@ -1,19 +1,8 @@
 package com.mycompany.mavenproject3.registro.view;
 
-import com.mycompany.mavenproject3.Main;
-import com.mycompany.mavenproject3.core.SessaoUsuario;
-import com.mycompany.mavenproject3.dados.view.TelaDadosComplementares;
-import com.mycompany.mavenproject3.dados.view.TelaVerificacaoEmail;
-import com.mycompany.mavenproject3.login.controller.LoginController;
 import com.mycompany.mavenproject3.login.view.TelaLogin;
-import com.mycompany.mavenproject3.supabase.SupabaseService;
-import com.mycompany.mavenproject3.usuario.model.Usuario;
-import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
-import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
-import com.mycompany.mavenproject3.usuario.service.UsuarioService;
-import com.mycompany.mavenproject3.registro.controller.RegistroController;
+import com.mycompany.mavenproject3.registro.controller.RegistroFlowHandler;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -48,7 +37,6 @@ public class TelaRegistro extends Application {
         senhaLabel.setTextFill(Color.web("#e0dcbf"));
         confirmarLabel.setTextFill(Color.web("#e0dcbf"));
 
-        // Cabeçalho
         Text titulo = new Text("🎭 DramaCore Theatre");
         titulo.setFont(Font.font("Georgia", 36));
         titulo.setFill(Color.web("#d4af37"));
@@ -74,10 +62,20 @@ public class TelaRegistro extends Application {
 
         Button registrarBtn = new Button("✒️ Registrar");
         Button voltarBtn = new Button("↩️ Voltar");
-        estilizarBotao(registrarBtn);
-        estilizarBotao(voltarBtn);
 
-        registrarBtn.setOnAction(e -> registrarUsuario(stage));
+        RegistroFlowHandler.estilizarBotao(registrarBtn);
+        RegistroFlowHandler.estilizarBotao(voltarBtn);
+
+        registrarBtn.setOnAction(e ->
+                RegistroFlowHandler.registrarUsuario(
+                        emailField.getText(),
+                        senhaField.getText(),
+                        confirmarSenhaField.getText(),
+                        statusLabel,
+                        stage
+                )
+        );
+
         voltarBtn.setOnAction(e -> {
             new TelaLogin().start(new Stage());
             stage.close();
@@ -104,58 +102,6 @@ public class TelaRegistro extends Application {
         stage.setMinHeight(600);
         stage.centerOnScreen();
         stage.show();
-    }
-
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 16));
-        btn.setStyle(
-                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
-                        " -fx-text-fill: black;" +
-                        " -fx-font-weight: bold;" +
-                        " -fx-background-radius: 10px;"
-        );
-        btn.setPrefWidth(160);
-        btn.setPrefHeight(45);
-    }
-
-    private void registrarUsuario(Stage stage) {
-        String email = emailField.getText();
-        String senha = senhaField.getText();
-        String senhaConfirmacao = confirmarSenhaField.getText();
-
-        if (!senha.equals(senhaConfirmacao)) {
-            statusLabel.setText("As senhas não coincidem.");
-            return;
-        }
-
-        boolean sucesso = RegistroController.registrar("", "", email, senha, "", "");
-        if (sucesso) {
-            Platform.runLater(() -> {
-                String authId = LoginController.login(email, senha);
-                if (authId != null) {
-                    UsuarioRepository repository = new UsuarioRepositorySupabase(new SupabaseService());
-                    UsuarioService service = new UsuarioService(repository);
-                    Usuario usuario = service.buscarUsuarioPorId(authId);
-
-                    if (usuario == null || !repository.temDadosComplementares(authId)) {
-                        new TelaDadosComplementares().start(new Stage());
-                    } else {
-                        Main mainApp = new Main(usuario);
-                        try {
-                            mainApp.start(new Stage());
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                } else {
-                    TelaVerificacaoEmail.abrir(email, senha);
-                }
-
-                stage.close();
-            });
-        } else {
-            statusLabel.setText("Erro ao registrar.");
-        }
     }
 
     public static void main(String[] args) {

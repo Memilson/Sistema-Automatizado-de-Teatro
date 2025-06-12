@@ -17,12 +17,14 @@ import javafx.stage.Stage;
 public class TelaVerificacaoEmail extends Application {
     private final String email;
     private final String senha;
+    private final Runnable aoConfirmar;
 
     private Label statusLabel;
 
-    public TelaVerificacaoEmail(String email, String senha) {
+    public TelaVerificacaoEmail(String email, String senha, Runnable aoConfirmar) {
         this.email = email;
         this.senha = senha;
+        this.aoConfirmar = aoConfirmar;
     }
 
     @Override
@@ -69,8 +71,13 @@ public class TelaVerificacaoEmail extends Application {
     private void verificar(Stage stage) {
         String authId = LoginController.login(email, senha);
         if (authId != null) {
-            statusLabel.setText("Email verificado! Faça login.");
-            Platform.runLater(stage::close);
+            statusLabel.setText("Email verificado!");
+            Platform.runLater(() -> {
+                stage.close();
+                if (aoConfirmar != null) {
+                    aoConfirmar.run();
+                }
+            });
         } else {
             statusLabel.setText("Ainda não confirmado.");
         }
@@ -88,10 +95,10 @@ public class TelaVerificacaoEmail extends Application {
         btn.setPrefHeight(45);
     }
 
-    public static void abrir(String email, String senha) {
+    public static void abrir(String email, String senha, Runnable aoConfirmar) {
         Platform.runLater(() -> {
             try {
-                new TelaVerificacaoEmail(email, senha).start(new Stage());
+                new TelaVerificacaoEmail(email, senha, aoConfirmar).start(new Stage());
             } catch (Exception e) {
                 e.printStackTrace();
             }
