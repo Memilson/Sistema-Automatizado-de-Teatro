@@ -22,7 +22,6 @@ com\mycompany\mavenproject3\usuario\repository\UsuarioAdapter.class
 com\mycompany\mavenproject3\admin\PainelRelatorios.class
 com\mycompany\mavenproject3\supabase\SupabaseService.class
 com\mycompany\mavenproject3\common\ValidadorCPF.class
-com\mycompany\mavenproject3\AppFX.class
 com\mycompany\legacy\SistemaTeatro.class
 com\mycompany\mavenproject3\usuario\view\TelaAreaUsuario.class
 com\mycompany\mavenproject3\core\SessaoUsuario.class

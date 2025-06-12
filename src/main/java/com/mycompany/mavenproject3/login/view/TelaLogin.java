@@ -3,62 +3,120 @@ package com.mycompany.mavenproject3.login.view;
 import com.mycompany.mavenproject3.Main;
 import com.mycompany.mavenproject3.dados.view.TelaDadosComplementares;
 import com.mycompany.mavenproject3.login.controller.LoginController;
+import com.mycompany.mavenproject3.registro.view.TelaRegistro;
 import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
-import com.mycompany.mavenproject3.registro.view.TelaRegistro;
 import com.mycompany.mavenproject3.usuario.service.UsuarioService;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.*;
+public class TelaLogin extends Application {
+    private TextField emailField;
+    private PasswordField senhaField;
+    private Label statusLabel;
 
-public class TelaLogin extends JFrame {
-    private final JTextField emailField;
-    private final JPasswordField senhaField;
-    private final JLabel statusLabel;
+    @Override
+    public void start(Stage stage) {
+        stage.setTitle("DramaCore Theatre - Login");
 
-    public TelaLogin() {
-        setTitle("Login de Usuário");
-        setSize(350, 250);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+        emailField = new TextField();
+        senhaField = new PasswordField();
+        statusLabel = new Label();
+        statusLabel.setTextFill(Color.web("#d4af37"));
 
-        JPanel formPanel = new JPanel(new GridLayout(2, 2, 5, 5));
-        emailField = new JTextField();
-        senhaField = new JPasswordField();
+        Label emailLabel = new Label("Email:");
+        Label senhaLabel = new Label("Senha:");
+        emailLabel.setTextFill(Color.web("#e0dcbf"));
+        senhaLabel.setTextFill(Color.web("#e0dcbf"));
 
-        formPanel.add(new JLabel("Email:"));
-        formPanel.add(emailField);
-        formPanel.add(new JLabel("Senha:"));
-        formPanel.add(senhaField);
+        // Cabeçalho Estilizado
+        Text titulo = new Text("🎭 DramaCore Theatre");
+        titulo.setFont(Font.font("Georgia", 36));
+        titulo.setFill(Color.web("#d4af37"));
+        titulo.setEffect(new DropShadow(5, Color.web("#a6762d")));
 
-        statusLabel = new JLabel("", SwingConstants.CENTER);
+        Label subtitulo = new Label("Arte. Engrenagens. E Segredos.");
+        subtitulo.setFont(Font.font("Georgia", 16));
+        subtitulo.setTextFill(Color.web("#aaa"));
 
-        JButton loginButton = new JButton("Entrar");
-        loginButton.addActionListener(e -> autenticar());
+        VBox header = new VBox(5, titulo, subtitulo);
+        header.setAlignment(Pos.CENTER);
 
-        JButton registrarButton = new JButton("Registrar-se");
-        registrarButton.addActionListener(e -> {
-            new TelaRegistro();
-            dispose();
+        // Formulário
+        GridPane formGrid = new GridPane();
+        formGrid.setVgap(20);
+        formGrid.setHgap(20);
+        formGrid.add(emailLabel, 0, 0);
+        formGrid.add(emailField, 1, 0);
+        formGrid.add(senhaLabel, 0, 1);
+        formGrid.add(senhaField, 1, 1);
+        formGrid.setAlignment(Pos.CENTER);
+
+        Button loginBtn = new Button("🎫 Entrar");
+        Button registrarBtn = new Button("✒️ Registrar-se");
+        estilizarBotao(loginBtn);
+        estilizarBotao(registrarBtn);
+
+        loginBtn.setOnAction(e -> autenticar(stage));
+        registrarBtn.setOnAction(e -> {
+            try {
+                new TelaRegistro().start(new Stage());
+                stage.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(loginButton);
-        buttonPanel.add(registrarButton);
+        HBox buttonBox = new HBox(20, loginBtn, registrarBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        add(statusLabel, BorderLayout.NORTH);
-        add(formPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+        VBox content = new VBox(30, header, statusLabel, formGrid, buttonBox);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(60));
+        content.setMaxWidth(550);
+        content.setStyle("-fx-background-color: rgba(30,30,30,0.92); -fx-background-radius: 20;");
+        content.setEffect(new DropShadow(25, Color.web("#d4af37")));
 
-        setVisible(true);
+        StackPane root = new StackPane(content);
+        root.setStyle("-fx-background-color: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);");
+
+        Scene scene = new Scene(root, 1280, 720);
+        scene.setFill(Color.web("#121212"));
+
+        stage.setScene(scene);
+        stage.setMinWidth(960);
+        stage.setMinHeight(600);
+        stage.centerOnScreen();
+        stage.show();
     }
 
-    private void autenticar() {
+    private void estilizarBotao(Button btn) {
+        btn.setFont(Font.font("Georgia", 16));
+        btn.setStyle(
+                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
+                        " -fx-text-fill: black;" +
+                        " -fx-font-weight: bold;" +
+                        " -fx-background-radius: 10px;"
+        );
+        btn.setPrefWidth(160);
+        btn.setPrefHeight(45);
+    }
+
+    private void autenticar(Stage currentStage) {
         String email = emailField.getText();
-        String senha = new String(senhaField.getPassword());
+        String senha = senhaField.getText();
 
         String authId = LoginController.login(email, senha);
         if (authId != null) {
@@ -67,18 +125,29 @@ public class TelaLogin extends JFrame {
             Usuario usuario = service.buscarUsuarioPorId(authId);
 
             if (usuario == null || !repository.temDadosComplementares(authId)) {
-                new TelaDadosComplementares().setVisible(true); // Preenche dados faltantes
+                try {
+                    new TelaDadosComplementares().start(new Stage());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             } else {
-                new Main(usuario); // Já pode ir pro menu principal
+                Platform.runLater(() -> {
+                    Main mainApp = new Main(usuario);
+                    try {
+                        mainApp.start(new Stage());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
 
-            dispose();
+            currentStage.close();
         } else {
             statusLabel.setText("Credenciais inválidas.");
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TelaLogin::new);
+        launch(args);
     }
 }

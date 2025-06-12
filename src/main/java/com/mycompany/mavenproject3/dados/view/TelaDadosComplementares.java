@@ -8,64 +8,127 @@ import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
 import com.mycompany.mavenproject3.usuario.service.UsuarioService;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-import javax.swing.*;
-import javax.swing.text.MaskFormatter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TelaDadosComplementares extends JFrame {
-    private final JTextField nomeField;
-    private final JFormattedTextField cpfField;
-    private final JFormattedTextField nascimentoField;
-    private final JFormattedTextField telefoneField;
-    private final JLabel statusLabel;
+public class TelaDadosComplementares extends Application {
+    private TextField nomeField;
+    private TextField cpfField;
+    private TextField nascimentoField;
+    private TextField telefoneField;
+    private Label statusLabel;
 
-    public TelaDadosComplementares() {
-        setTitle("Dados Complementares");
-        setSize(350, 300);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+    @Override
+    public void start(Stage stage) {
+        stage.setTitle("DramaCore Theatre - Dados Complementares");
 
-        JPanel formPanel = new JPanel(new GridLayout(4, 2, 5, 5));
+        nomeField = new TextField();
+        cpfField = new TextField();
+        nascimentoField = new TextField();
+        telefoneField = new TextField();
+        statusLabel = new Label();
+        statusLabel.setTextFill(Color.web("#d4af37"));
 
-        nomeField = new JTextField();
-        cpfField = createFormattedField("###.###.###-##");
-        nascimentoField = createFormattedField("##/##/####");
-        telefoneField = createFormattedField("(##) #####-####");
+        Label nomeLabel = new Label("Nome:");
+        Label cpfLabel = new Label("CPF:");
+        Label nascimentoLabel = new Label("Nascimento:");
+        Label telefoneLabel = new Label("Telefone:");
 
-        formPanel.add(new JLabel("Nome:"));        formPanel.add(nomeField);
-        formPanel.add(new JLabel("CPF:"));         formPanel.add(cpfField);
-        formPanel.add(new JLabel("Nascimento:"));  formPanel.add(nascimentoField);
-        formPanel.add(new JLabel("Telefone:"));    formPanel.add(telefoneField);
+        nomeLabel.setTextFill(Color.web("#e0dcbf"));
+        cpfLabel.setTextFill(Color.web("#e0dcbf"));
+        nascimentoLabel.setTextFill(Color.web("#e0dcbf"));
+        telefoneLabel.setTextFill(Color.web("#e0dcbf"));
 
-        statusLabel = new JLabel("", SwingConstants.CENTER);
+        Text titulo = new Text("🎭 DramaCore Theatre");
+        titulo.setFont(Font.font("Georgia", 36));
+        titulo.setFill(Color.web("#d4af37"));
+        titulo.setEffect(new DropShadow(5, Color.web("#a6762d")));
 
-        JButton salvarButton = new JButton("Salvar");
-        JButton voltarButton = new JButton("Menu Principal");
+        Label subtitulo = new Label("Complete sua identidade teatral.");
+        subtitulo.setFont(Font.font("Georgia", 16));
+        subtitulo.setTextFill(Color.web("#aaa"));
 
-        salvarButton.addActionListener(this::salvarDados);
-        voltarButton.addActionListener(e -> {
-            new Main();
-            dispose();
+        VBox header = new VBox(5, titulo, subtitulo);
+        header.setAlignment(Pos.CENTER);
+
+        GridPane formGrid = new GridPane();
+        formGrid.setVgap(15);
+        formGrid.setHgap(20);
+        formGrid.add(nomeLabel, 0, 0);
+        formGrid.add(nomeField, 1, 0);
+        formGrid.add(cpfLabel, 0, 1);
+        formGrid.add(cpfField, 1, 1);
+        formGrid.add(nascimentoLabel, 0, 2);
+        formGrid.add(nascimentoField, 1, 2);
+        formGrid.add(telefoneLabel, 0, 3);
+        formGrid.add(telefoneField, 1, 3);
+        formGrid.setAlignment(Pos.CENTER);
+
+        Button salvarBtn = new Button("Salvar");
+        Button voltarBtn = new Button("↩️ Menu Principal");
+        estilizarBotao(salvarBtn);
+        estilizarBotao(voltarBtn);
+
+        salvarBtn.setOnAction(e -> salvarDados());
+        voltarBtn.setOnAction(e -> {
+            Main mainApp = new Main();
+            try {
+                mainApp.start(new Stage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            stage.close();
         });
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(salvarButton);
-        buttonPanel.add(voltarButton);
+        HBox buttonBox = new HBox(20, salvarBtn, voltarBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        add(statusLabel, BorderLayout.NORTH);
-        add(formPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+        VBox content = new VBox(30, header, statusLabel, formGrid, buttonBox);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(60));
+        content.setMaxWidth(650);
+        content.setStyle("-fx-background-color: rgba(30,30,30,0.94); -fx-background-radius: 20;");
+        content.setEffect(new DropShadow(25, Color.web("#d4af37")));
 
-        setVisible(true);
+        StackPane root = new StackPane(content);
+        root.setStyle("-fx-background-color: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);");
+
+        Scene scene = new Scene(root, 1280, 720);
+        scene.setFill(Color.web("#121212"));
+
+        stage.setScene(scene);
+        stage.setMinWidth(960);
+        stage.setMinHeight(600);
+        stage.centerOnScreen();
+        stage.show();
     }
 
-    private void salvarDados(ActionEvent e) {
+    private void estilizarBotao(Button btn) {
+        btn.setFont(Font.font("Georgia", 16));
+        btn.setStyle(
+                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
+                        " -fx-text-fill: black;" +
+                        " -fx-font-weight: bold;" +
+                        " -fx-background-radius: 10px;"
+        );
+        btn.setPrefWidth(160);
+        btn.setPrefHeight(45);
+    }
+
+    private void salvarDados() {
         String nome = nomeField.getText();
         String cpf = cpfField.getText();
         String telefone = telefoneField.getText();
@@ -93,35 +156,25 @@ public class TelaDadosComplementares extends JFrame {
 
             boolean sucesso = SupabaseService.salvarDadosComplementares(userId, nome, cpf, nascimentoFormatado, telefone);
             if (sucesso) {
-                JOptionPane.showMessageDialog(this, "Dados salvos com sucesso!");
+                UsuarioRepositorySupabase repo = new UsuarioRepositorySupabase(new SupabaseService());
+                Usuario usuario = new UsuarioService(repo).buscarUsuarioPorId(userId);
 
-                // Recarrega o objeto Usuario com os dados atualizados
-                var repo = new UsuarioRepositorySupabase(new SupabaseService());
-                var usuario = new UsuarioService(repo).buscarUsuarioPorId(userId);
+                Main mainApp = new Main(usuario);
+                mainApp.start(new Stage());
 
-                // Redireciona para a tela principal com o usuário
-                new Main(usuario);
-                dispose();
+                Stage stage = (Stage) nomeField.getScene().getWindow();
+                stage.close();
             } else {
                 statusLabel.setText("Erro ao salvar dados.");
             }
-
-        } catch (ParseException ex) {
+        } catch (ParseException | RuntimeException ex) {
             statusLabel.setText("Data inválida.");
-        }
-    }
-
-    private JFormattedTextField createFormattedField(String mask) {
-        try {
-            MaskFormatter formatter = new MaskFormatter(mask);
-            formatter.setPlaceholderCharacter('_');
-            return new JFormattedTextField(formatter);
-        } catch (ParseException e) {
-            return new JFormattedTextField();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TelaDadosComplementares::new);
+        launch(args);
     }
 }
