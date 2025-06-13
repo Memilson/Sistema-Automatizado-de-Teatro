@@ -16,6 +16,7 @@ com\mycompany\mavenproject3\core\SessaoUsuario.class
 com\mycompany\mavenproject3\compra\controller\CompraController.class
 com\mycompany\mavenproject3\registro\view\TelaRegistro.class
 com\mycompany\mavenproject3\usuario\factory\UsuarioControllerFactory.class
+com\mycompany\mavenproject3\usuario\service\SupabaseAdminClient.class
 com\mycompany\legacy\Assento.class
 com\mycompany\legacy\Setor.class
 com\mycompany\mavenproject3\usuario\controller\UsuarioController.class

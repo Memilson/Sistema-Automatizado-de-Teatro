@@ -16,14 +16,10 @@ public class SelecaoVisualHelper {
                     String nome = botao.getText();
                     String id = tela.getMapaPoltronas().get(nome);
                     if (id == null) continue;
-
                     boolean selecionada = tela.getSelecionadas().contains(id);
                     boolean ocupada = tela.getOcupadas().contains(id);
-
-                    // Remove bordas antigas
                     String baseStyle = botao.getStyle().replaceAll("-fx-border-color:.*?;", "")
                             .replaceAll("-fx-border-width:.*?;", "");
-
                     if (selecionada) {
                         botao.setStyle(baseStyle + "-fx-border-color: black; -fx-border-width: 3;");
                     } else if (!ocupada) {

@@ -4,10 +4,12 @@ import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
+import com.mycompany.mavenproject3.usuario.service.SupabaseAdminClient;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -74,5 +76,31 @@ public class UsuarioAdminControllerFX {
         adminCol.setCellValueFactory(new PropertyValueFactory<>("admin"));
 
         tabela.getColumns().addAll(nomeCol, cpfCol, planoCol, adminCol);
+    }
+    private static void showAlert(String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Aviso");
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
+    }
+
+    public static void alternarAdminStatus(TableView<Usuario> tabela) {
+        Usuario usuario = tabela.getSelectionModel().getSelectedItem();
+        if (usuario == null) {
+            showAlert("Selecione um usuário para alternar admin.");
+            return;
+        }
+
+        SupabaseAdminClient client = new SupabaseAdminClient(new SupabaseService());
+        boolean sucesso = client.alternarAdmin(usuario.getId());
+
+        showAlert(sucesso ? "Permissão de admin alterada com sucesso!" : "Erro ao alterar permissão.");
+        if (sucesso) carregarUsuarios(tabela);
+    }
+
+    private static void alerta(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
+        alert.showAndWait();
     }
 }

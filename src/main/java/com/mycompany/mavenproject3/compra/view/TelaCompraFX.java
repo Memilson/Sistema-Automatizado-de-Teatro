@@ -51,13 +51,16 @@ public class TelaCompraFX {
 
         stage.setTitle("DramaCore Theatre - Compra de Ingressos");
 
-        Label titulo = new Label("\uD83C\uDFAD Escolha seu Lugar no Teatro");
-        titulo.setFont(Font.font("Georgia", 36));
+        Label titulo = new Label("🎭 Escolha seu Lugar no Teatro");
+        titulo.setFont(Font.font("Georgia", 34));
         titulo.setTextFill(Color.web("#ffd700"));
 
-        HBox topo = new HBox(15, new Label("Peça:"), comboPeca, new Label("Sessão:"), comboSessao);
+        HBox topo = new HBox(15,
+                estilizarLabel("Peça:"), comboPeca,
+                estilizarLabel("Sessão:"), comboSessao
+        );
         topo.setAlignment(Pos.CENTER);
-        topo.setPadding(new Insets(20));
+        topo.setPadding(new Insets(10));
 
         configurarSetor(plateiaA, "#4e342e");
         configurarSetor(plateiaB, "#6d4c41");
@@ -66,28 +69,35 @@ public class TelaCompraFX {
         configurarSetor(camarotes, "#a1887f");
         configurarSetor(balcaoNobre, "#d7ccc8");
 
-        VBox centro = new VBox(20);
-        centro.setAlignment(Pos.CENTER);
+        VBox centroLayout = new VBox(20,
+                criarPalco(),
+                new HBox(40,
+                        criarSetorComTitulo("FRISAS ESQUERDA", frisasEsquerda),
+                        criarSetorComTitulo("PLATEIA A", plateiaA),
+                        criarSetorComTitulo("PLATEIA B", plateiaB),
+                        criarSetorComTitulo("FRISAS DIREITA", frisasDireita)
+                ),
+                criarSetorComTitulo("CAMAROTES", camarotes),
+                criarSetorComTitulo("BALCÃO NOBRE", balcaoNobre)
+        );
+        centroLayout.setAlignment(Pos.CENTER);
 
-        Label palcoLabel = new Label("PALCO");
-        palcoLabel.setFont(Font.font("Georgia", 18));
-        palcoLabel.setTextFill(Color.WHITE);
-        VBox palco = new VBox(palcoLabel);
-        palco.setAlignment(Pos.CENTER);
-        palco.setStyle("-fx-background-color: #2c2c2c; -fx-padding: 10px; -fx-background-radius: 8px;");
-
-        HBox frisas = new HBox(50, frisasEsquerda, plateiaA, plateiaB, frisasDireita);
-        frisas.setAlignment(Pos.CENTER);
-
-        centro.getChildren().addAll(palco, frisas, camarotes, balcaoNobre);
-
-        ScrollPane scrollPane = new ScrollPane(centro);
+        ScrollPane scrollPane = new ScrollPane(centroLayout);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(480);
+        scrollPane.setPrefHeight(500);
         scrollPane.setStyle("-fx-background: transparent; -fx-padding: 10px;");
 
-        Button confirmar = new Button("✅ Confirmar Compra");
-        Button voltar = new Button("↩ Voltar ao Menu Principal");
+        precoLabel.setFont(Font.font("Georgia", 18));
+        precoLabel.setTextFill(Color.web("#ffcc00"));
+
+        Button confirmar = new Button();
+        confirmar.setText("");
+        confirmar.setGraphic(new Label("✔ Confirmar Compra"));
+
+        Button voltar = new Button();
+        voltar.setText("");
+        voltar.setGraphic(new Label("↩ Voltar ao Menu Principal"));
+
         estilizarBotao(confirmar);
         estilizarBotao(voltar);
 
@@ -101,15 +111,12 @@ public class TelaCompraFX {
             }
         });
 
-        precoLabel.setFont(Font.font("Georgia", 18));
-        precoLabel.setTextFill(Color.web("#ffcc00"));
-
         HBox botoes = new HBox(20, confirmar, voltar);
         botoes.setAlignment(Pos.CENTER);
-        botoes.setPadding(new Insets(20));
+        botoes.setPadding(new Insets(10));
 
-        VBox layout = new VBox(30, titulo, topo, scrollPane, precoLabel, botoes);
-        layout.setAlignment(Pos.CENTER);
+        VBox layout = new VBox(25, titulo, topo, scrollPane, precoLabel, botoes);
+        layout.setAlignment(Pos.TOP_CENTER);
         layout.setPadding(new Insets(30));
         layout.setStyle("-fx-background-color: linear-gradient(to bottom right, #000000, #1c1c1c);");
 
@@ -121,6 +128,25 @@ public class TelaCompraFX {
         CompraViewHelper.carregarPecas(this);
         comboPeca.setOnAction(e -> CompraViewHelper.carregarSessoes(this));
         comboSessao.setOnAction(e -> CompraViewHelper.carregarAssentos(this));
+    }
+
+    private VBox criarSetorComTitulo(String titulo, GridPane grid) {
+        Label label = new Label(titulo);
+        label.setFont(Font.font("Georgia", 16));
+        label.setTextFill(Color.web("#ffd700"));
+        VBox box = new VBox(6, label, grid);
+        box.setAlignment(Pos.CENTER);
+        return box;
+    }
+
+    private VBox criarPalco() {
+        Label palcoLabel = new Label("PALCO");
+        palcoLabel.setFont(Font.font("Georgia", 18));
+        palcoLabel.setTextFill(Color.WHITE);
+        VBox palco = new VBox(palcoLabel);
+        palco.setAlignment(Pos.CENTER);
+        palco.setStyle("-fx-background-color: #2c2c2c; -fx-padding: 10px; -fx-background-radius: 8px;");
+        return palco;
     }
 
     private void configurarSetor(GridPane grid, String cor) {
@@ -136,6 +162,13 @@ public class TelaCompraFX {
         btn.setPrefHeight(45);
         btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
                 " -fx-text-fill: black; -fx-background-radius: 10px;");
+    }
+
+    private Label estilizarLabel(String texto) {
+        Label label = new Label(texto);
+        label.setFont(Font.font("Georgia", 14));
+        label.setTextFill(Color.web("#cccccc"));
+        return label;
     }
 
     public ComboBox<String> getComboPeca() { return comboPeca; }
@@ -159,5 +192,5 @@ public class TelaCompraFX {
     public void setPoltronaSelecionadaNome(String nome) { this.poltronaSelecionadaNome = nome; }
     public Usuario getUsuarioLogado() { return usuarioLogado; }
     public void atualizarSelecaoVisual(String nome) { SelecaoVisualHelper.atualizarSelecaoVisualFX(this); }
-    public void setPreco(String preco) { precoLabel.setText("Preço: R$" + preco); }
+    public void setPreco(String preco) { precoLabel.setText("Preço: " + preco); }
 }

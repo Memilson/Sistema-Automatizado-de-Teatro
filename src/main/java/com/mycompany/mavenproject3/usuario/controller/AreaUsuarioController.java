@@ -3,6 +3,7 @@ package com.mycompany.mavenproject3.usuario.controller;
 import com.mycompany.mavenproject3.core.SessaoUsuario;
 import com.mycompany.mavenproject3.usuario.controller.UsuarioController;
 import com.mycompany.mavenproject3.usuario.dto.UsuarioDashboardDTO;
+import com.mycompany.mavenproject3.usuario.model.Usuario;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -43,6 +44,10 @@ public class AreaUsuarioController {
     public void marcarCartaoComoVerificado() {
         this.cartaoVerificado = true;
     }
+    public Usuario getUsuarioLogado() {
+        return controller.carregarUsuario(getUserIdLogado());
+    }
+
 
     public String[] extrairNomesPlanos(JSONArray planos) {
         String[] nomes = new String[planos.length()];

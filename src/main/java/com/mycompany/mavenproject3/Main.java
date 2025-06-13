@@ -79,7 +79,6 @@ public class Main extends Application {
             adminBtn.setOnAction(e -> {
                 TelaAdmin adminTela = new TelaAdmin(usuarioLogado);
                 adminTela.start(new Stage());
-                stage.close();
             });
             botoes.getChildren().add(adminBtn);
         }
