@@ -99,6 +99,7 @@ public class TelaLogin extends Application {
         stage.setMinWidth(960);
         stage.setMinHeight(600);
         stage.centerOnScreen();
+        stage.setMaximized(true);
         stage.show();
     }
 

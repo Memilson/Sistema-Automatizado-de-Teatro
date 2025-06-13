@@ -1,5 +1,4 @@
 package com.mycompany.mavenproject3;
-
 import com.mycompany.mavenproject3.admin.view.TelaAdmin;
 import com.mycompany.mavenproject3.compra.view.TelaCompraFX;
 import com.mycompany.mavenproject3.core.SessaoUsuario;
@@ -19,49 +18,35 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 public class Main extends Application {
     private Usuario usuarioLogado;
-
     public Main() {}
-
     public Main(Usuario usuario) {
         this.usuarioLogado = usuario;
     }
-
     @Override
     public void start(Stage stage) {
         if (usuarioLogado == null) {
             System.err.println("Usuário não logado.");
-            return;
-        }
-
+            return;}
         stage.setTitle("DramaCore Theatre - Menu Principal");
-
-        // Título estilizado
         Text titulo = new Text("🎭 DramaCore Theatre");
         titulo.setFont(Font.font("Georgia", 36));
         titulo.setFill(Color.web("#d4af37"));
         titulo.setEffect(new DropShadow(5, Color.web("#a6762d")));
-
         Text subtitulo = new Text("Bem-vindo, " + usuarioLogado.getNome());
         subtitulo.setFont(Font.font("Georgia", 18));
         subtitulo.setFill(Color.web("#f0e6d2"));
-
         VBox header = new VBox(5, titulo, subtitulo);
         header.setAlignment(Pos.CENTER);
-
-        // Botões principais
         Button comprarBtn = new Button("🛒 Comprar Ingressos");
         Button usuarioBtn = new Button("👤 Área do Usuário");
         estilizarBotao(comprarBtn);
         estilizarBotao(usuarioBtn);
-
         comprarBtn.setOnAction(e -> {
             new TelaCompraFX(usuarioLogado).start(new Stage());
             stage.close();
         });
-
         usuarioBtn.setOnAction(e -> {
             SessaoUsuario.iniciar(usuarioLogado.getId());
             UsuarioController usuarioController = UsuarioControllerFactory.criar();
@@ -69,11 +54,8 @@ public class Main extends Application {
             new TelaAreaUsuario(areaController);
             stage.close();
         });
-
         VBox botoes = new VBox(20, comprarBtn, usuarioBtn);
         botoes.setAlignment(Pos.CENTER);
-
-        // Botão admin
         if (usuarioLogado.isAdmin()) {
             Button adminBtn = new Button("🛠️ Painel Admin");
             estilizarBotao(adminBtn);
@@ -83,7 +65,6 @@ public class Main extends Application {
             });
             botoes.getChildren().add(adminBtn);
         }
-
         VBox content = new VBox(40, header, botoes);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(60));
@@ -101,9 +82,8 @@ public class Main extends Application {
         stage.setMinWidth(960);
         stage.setMinHeight(600);
         stage.centerOnScreen();
-        stage.show();
-    }
-
+        stage.setMaximized(true);
+        stage.show();}
     private void estilizarBotao(Button btn) {
         btn.setFont(Font.font("Georgia", 16));
         btn.setStyle(

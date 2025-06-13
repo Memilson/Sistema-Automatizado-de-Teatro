@@ -51,39 +51,45 @@ public class TelaCompraFX {
 
         stage.setTitle("DramaCore Theatre - Compra de Ingressos");
 
-        Label titulo = new Label("\uD83E\uDE91 Mapa do Teatro Riachuelo");
-        titulo.setFont(Font.font("Georgia", 28));
-        titulo.setTextFill(Color.web("#d4af37"));
+        Label titulo = new Label("\uD83C\uDFAD Escolha seu Lugar no Teatro");
+        titulo.setFont(Font.font("Georgia", 36));
+        titulo.setTextFill(Color.web("#ffd700"));
 
-        HBox topo = new HBox(20, new Label("Peça:"), comboPeca, new Label("Sessão:"), comboSessao);
+        HBox topo = new HBox(15, new Label("Peça:"), comboPeca, new Label("Sessão:"), comboSessao);
         topo.setAlignment(Pos.CENTER);
-        topo.setPadding(new Insets(10));
+        topo.setPadding(new Insets(20));
 
-        configurarSetor(plateiaA, "#d4af37");
-        configurarSetor(plateiaB, "#b6e0a5");
-        configurarSetor(frisasEsquerda, "#f4d03f");
-        configurarSetor(frisasDireita, "#f4d03f");
-        configurarSetor(camarotes, "#d7bde2");
-        configurarSetor(balcaoNobre, "#f9c0cb");
+        configurarSetor(plateiaA, "#4e342e");
+        configurarSetor(plateiaB, "#6d4c41");
+        configurarSetor(frisasEsquerda, "#8d6e63");
+        configurarSetor(frisasDireita, "#8d6e63");
+        configurarSetor(camarotes, "#a1887f");
+        configurarSetor(balcaoNobre, "#d7ccc8");
 
-        VBox centro = new VBox(15);
+        VBox centro = new VBox(20);
         centro.setAlignment(Pos.CENTER);
 
-        VBox palco = new VBox(new Label("PALCO"));
+        Label palcoLabel = new Label("PALCO");
+        palcoLabel.setFont(Font.font("Georgia", 18));
+        palcoLabel.setTextFill(Color.WHITE);
+        VBox palco = new VBox(palcoLabel);
         palco.setAlignment(Pos.CENTER);
-        palco.setStyle("-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 5px;");
+        palco.setStyle("-fx-background-color: #2c2c2c; -fx-padding: 10px; -fx-background-radius: 8px;");
 
-        HBox frisas = new HBox(40, frisasEsquerda, plateiaA, plateiaB, frisasDireita);
+        HBox frisas = new HBox(50, frisasEsquerda, plateiaA, plateiaB, frisasDireita);
         frisas.setAlignment(Pos.CENTER);
 
         centro.getChildren().addAll(palco, frisas, camarotes, balcaoNobre);
 
         ScrollPane scrollPane = new ScrollPane(centro);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(500);
+        scrollPane.setPrefHeight(480);
+        scrollPane.setStyle("-fx-background: transparent; -fx-padding: 10px;");
 
-        Button confirmar = new Button("Confirmar Compra");
-        Button voltar = new Button("Voltar ao Menu Principal");
+        Button confirmar = new Button("✅ Confirmar Compra");
+        Button voltar = new Button("↩ Voltar ao Menu Principal");
+        estilizarBotao(confirmar);
+        estilizarBotao(voltar);
 
         confirmar.setOnAction(e -> CompraViewHelper.finalizarCompra(this));
         voltar.setOnAction(e -> {
@@ -95,15 +101,21 @@ public class TelaCompraFX {
             }
         });
 
+        precoLabel.setFont(Font.font("Georgia", 18));
+        precoLabel.setTextFill(Color.web("#ffcc00"));
+
         HBox botoes = new HBox(20, confirmar, voltar);
         botoes.setAlignment(Pos.CENTER);
+        botoes.setPadding(new Insets(20));
 
-        VBox layout = new VBox(20, titulo, topo, scrollPane, precoLabel, botoes);
+        VBox layout = new VBox(30, titulo, topo, scrollPane, precoLabel, botoes);
         layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);");
+        layout.setPadding(new Insets(30));
+        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, #000000, #1c1c1c);");
 
-        stage.setScene(new Scene(layout, 1280, 768));
+        Scene cena = new Scene(layout, 1280, 768);
+        stage.setScene(cena);
+        stage.setMaximized(true);
         stage.show();
 
         CompraViewHelper.carregarPecas(this);
@@ -112,10 +124,18 @@ public class TelaCompraFX {
     }
 
     private void configurarSetor(GridPane grid, String cor) {
-        grid.setHgap(5);
-        grid.setVgap(5);
+        grid.setHgap(6);
+        grid.setVgap(6);
         grid.setAlignment(Pos.CENTER);
-        grid.setStyle("-fx-background-color: " + cor + "; -fx-padding: 10px; -fx-border-radius: 10px;");
+        grid.setStyle("-fx-background-color: " + cor + "; -fx-padding: 12px; -fx-border-radius: 12px; -fx-background-radius: 12px;");
+    }
+
+    private void estilizarBotao(Button btn) {
+        btn.setFont(Font.font("Georgia", 15));
+        btn.setPrefWidth(200);
+        btn.setPrefHeight(45);
+        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
+                " -fx-text-fill: black; -fx-background-radius: 10px;");
     }
 
     public ComboBox<String> getComboPeca() { return comboPeca; }

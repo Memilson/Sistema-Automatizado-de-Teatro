@@ -76,6 +76,7 @@ public class TelaRegistro extends Application {
         stage.setMinWidth(960);
         stage.setMinHeight(600);
         stage.centerOnScreen();
+        stage.setMaximized(true);
         stage.show();}
     private boolean emailValido(String email) {
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$");}
