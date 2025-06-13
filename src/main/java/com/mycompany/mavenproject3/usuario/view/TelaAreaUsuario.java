@@ -1,114 +1,108 @@
 package com.mycompany.mavenproject3.usuario.view;
-
 import com.mycompany.mavenproject3.login.view.TelaLogin;
 import com.mycompany.mavenproject3.usuario.controller.AreaUsuarioController;
+import com.mycompany.mavenproject3.usuario.controller.UsuarioViewController;
 import com.mycompany.mavenproject3.usuario.dto.UsuarioDashboardDTO;
-import org.json.JSONArray;
-
-import javax.swing.*;
-import java.awt.*;
-
-public class TelaAreaUsuario extends JFrame {
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import com.mycompany.mavenproject3.usuario.controller.UsuarioViewController;
+public class TelaAreaUsuario {
 
     private final AreaUsuarioController controller;
-
+    private final UsuarioViewController viewController;
     public TelaAreaUsuario(AreaUsuarioController controller) {
         this.controller = controller;
+        this.viewController = new UsuarioViewController(controller); // instância correta
+    }
 
+    public void start(Stage stage) {
         String userId = controller.getUserIdLogado();
         if (userId == null) {
-            JOptionPane.showMessageDialog(null, "Você precisa estar logado.");
-            new TelaLogin();
-            dispose();
+            new TelaLogin().start(new Stage());
+            stage.close();
             return;
         }
 
         UsuarioDashboardDTO dto = controller.carregarDashboard(userId);
         if (dto == null) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar dados.");
-            dispose();
+            Alert alerta = new Alert(Alert.AlertType.ERROR, "Erro ao carregar dados.");
+            alerta.showAndWait();
+            stage.close();
             return;
         }
 
-        setTitle("Área do Usuário");
-        setSize(600, 750);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new GridLayout(0, 1, 8, 8));
+        stage.setTitle("DramaCore Theatre - Área do Usuário");
 
-        add(new JLabel("👤 Nome:"));                 add(new JLabel(dto.getNome()));
-        add(new JLabel("📄 CPF:"));                  add(new JLabel(dto.getCpf()));
-        add(new JLabel("📅 Nascimento:"));           add(new JLabel(dto.getNascimento()));
-        add(new JLabel("📌 Assinatura:"));           add(new JLabel(dto.getAssinaturaNome()));
-        add(new JLabel("⭐ Ingressos VIP/mês:"));     add(new JLabel(String.valueOf(dto.getIngressosVipMes())));
-        add(new JLabel("⏱️ Prioridade reserva (h):")); add(new JLabel(String.valueOf(dto.getPrioridadeReservaHoras())));
-        add(new JLabel("💸 Desconto (%):"));         add(new JLabel(String.valueOf(dto.getDescontoPercentual())));
-        add(new JLabel("📆 Tipo de pagamento:"));    add(new JLabel(dto.getTipoPagamento()));
-        add(new JLabel("🕓 Última compra:"));        add(new JLabel(dto.getUltimaCompra()));
-        add(new JLabel("✅ VIPs usados este mês:")); add(new JLabel(String.valueOf(dto.getUsadosVip())));
-        add(new JLabel("🎟️ VIPs restantes:"));      add(new JLabel(String.valueOf(dto.getRestantesVip())));
+        Text titulo = new Text("👤 Área do Usuário");
+        titulo.setFont(Font.font("Georgia", 28));
+        titulo.setFill(Color.web("#d4af37"));
+        titulo.setEffect(new DropShadow(4, Color.web("#a6762d")));
 
-        JButton botaoCartao = new JButton("💳 Cadastrar Cartão");
-        JButton botaoPlano = new JButton("📦 Mudar Plano");
+        VBox dados = new VBox(10,
+                criarInfo("👤 Nome:", dto.getNome()),
+                criarInfo("📄 CPF:", dto.getCpf()),
+                criarInfo("📅 Nascimento:", dto.getNascimento()),
+                criarInfo("📌 Assinatura:", dto.getAssinaturaNome()),
+                criarInfo("⭐ Ingressos VIP/mês:", String.valueOf(dto.getIngressosVipMes())),
+                criarInfo("⏱️ Prioridade reserva (h):", String.valueOf(dto.getPrioridadeReservaHoras())),
+                criarInfo("💸 Desconto (%):", String.valueOf(dto.getDescontoPercentual())),
+                criarInfo("📆 Tipo de pagamento:", dto.getTipoPagamento()),
+                criarInfo("🕓 Última compra:", dto.getUltimaCompra()),
+                criarInfo("✅ VIPs usados este mês:", String.valueOf(dto.getUsadosVip())),
+                criarInfo("🎟️ VIPs restantes:", String.valueOf(dto.getRestantesVip()))
+        );
 
-        botaoCartao.addActionListener(e -> {
-            JTextField campoNumero = new JTextField();
-            JTextField campoValidade = new JTextField();
-            JTextField campoCVV = new JTextField();
-            JTextField campoNome = new JTextField();
+        dados.setAlignment(Pos.CENTER_LEFT);
 
-            JPanel painel = new JPanel(new GridLayout(0, 1));
-            painel.add(new JLabel("Número do cartão:"));
-            painel.add(campoNumero);
-            painel.add(new JLabel("Validade (MM/AA):"));
-            painel.add(campoValidade);
-            painel.add(new JLabel("CVV:"));
-            painel.add(campoCVV);
-            painel.add(new JLabel("Nome no cartão:"));
-            painel.add(campoNome);
+        Button btnCartao = new Button("💳 Cadastrar Cartão");
+        Button btnPlano = new Button("📦 Mudar Plano");
+        estilizarBotao(btnCartao);
+        estilizarBotao(btnPlano);
 
-            int resposta = JOptionPane.showConfirmDialog(this, painel, "Cadastrar Cartão", JOptionPane.OK_CANCEL_OPTION);
-            if (resposta == JOptionPane.OK_OPTION) {
-                controller.marcarCartaoComoVerificado();
-                JOptionPane.showMessageDialog(this, "Cartão salvo com sucesso! Plano liberado.");
-            }
-        });
+        btnCartao.setOnAction(e -> viewController.cadastrarCartao(stage));
+        btnPlano.setOnAction(e -> viewController.mudarPlano(stage));
 
-        botaoPlano.addActionListener(e -> {
-            if (!controller.isCartaoVerificado()) {
-                JOptionPane.showMessageDialog(this, "Você precisa cadastrar um cartão antes de mudar o plano.");
-                return;
-            }
+        HBox botoes = new HBox(20, btnCartao, btnPlano);
+        botoes.setAlignment(Pos.CENTER);
 
-            try {
-                JSONArray planos = controller.buscarPlanos();
+        VBox layout = new VBox(30, titulo, dados, botoes);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(30));
+        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);");
 
-                if (planos.length() == 0) {
-                    JOptionPane.showMessageDialog(this, "Nenhum plano disponível.");
-                    return;
-                }
+        Scene cena = new Scene(layout, 800, 700);
+        stage.setScene(cena);
+        stage.setMaximized(true);
+        stage.show();
+    }
 
-                String[] nomes = controller.extrairNomesPlanos(planos);
-                JComboBox<String> combo = new JComboBox<>(nomes);
+    private HBox criarInfo(String titulo, String valor) {
+        Label labelTitulo = new Label(titulo);
+        labelTitulo.setTextFill(Color.GOLD);
+        labelTitulo.setFont(Font.font("Georgia", 16));
 
-                int resultado = JOptionPane.showConfirmDialog(this, combo, "Selecione o novo plano", JOptionPane.OK_CANCEL_OPTION);
-                if (resultado == JOptionPane.OK_OPTION) {
-                    String nomeSelecionado = (String) combo.getSelectedItem();
-                    String idSelecionado = controller.encontrarIdPlano(planos, nomeSelecionado);
+        Label labelValor = new Label(valor);
+        labelValor.setTextFill(Color.WHITE);
+        labelValor.setFont(Font.font("Georgia", 16));
 
-                    boolean sucesso = controller.atualizarPlano(userId, idSelecionado);
-                    JOptionPane.showMessageDialog(this, sucesso ? "Plano atualizado com sucesso!" : "Erro ao atualizar plano.");
-                }
+        HBox box = new HBox(10, labelTitulo, labelValor);
+        box.setAlignment(Pos.CENTER_LEFT);
+        return box;
+    }
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Erro ao carregar os planos.");
-            }
-        });
-
-        add(botaoCartao);
-        add(botaoPlano);
-
-        setVisible(true);
+    private void estilizarBotao(Button btn) {
+        btn.setFont(Font.font("Georgia", 15));
+        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
+                " -fx-text-fill: black; -fx-background-radius: 10px;");
+        btn.setPrefWidth(220);
+        btn.setPrefHeight(45);
     }
 }

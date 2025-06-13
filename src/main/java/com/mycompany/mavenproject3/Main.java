@@ -1,4 +1,5 @@
 package com.mycompany.mavenproject3;
+
 import com.mycompany.mavenproject3.admin.view.TelaAdmin;
 import com.mycompany.mavenproject3.compra.view.TelaCompraFX;
 import com.mycompany.mavenproject3.core.SessaoUsuario;
@@ -18,53 +19,71 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 public class Main extends Application {
+
     private Usuario usuarioLogado;
+
     public Main() {}
+
     public Main(Usuario usuario) {
         this.usuarioLogado = usuario;
     }
+
     @Override
     public void start(Stage stage) {
         if (usuarioLogado == null) {
             System.err.println("Usuário não logado.");
-            return;}
+            return;
+        }
+
         stage.setTitle("DramaCore Theatre - Menu Principal");
+
         Text titulo = new Text("🎭 DramaCore Theatre");
         titulo.setFont(Font.font("Georgia", 36));
         titulo.setFill(Color.web("#d4af37"));
         titulo.setEffect(new DropShadow(5, Color.web("#a6762d")));
+
         Text subtitulo = new Text("Bem-vindo, " + usuarioLogado.getNome());
         subtitulo.setFont(Font.font("Georgia", 18));
         subtitulo.setFill(Color.web("#f0e6d2"));
+
         VBox header = new VBox(5, titulo, subtitulo);
         header.setAlignment(Pos.CENTER);
+
         Button comprarBtn = new Button("🛒 Comprar Ingressos");
         Button usuarioBtn = new Button("👤 Área do Usuário");
         estilizarBotao(comprarBtn);
         estilizarBotao(usuarioBtn);
+
         comprarBtn.setOnAction(e -> {
             new TelaCompraFX(usuarioLogado).start(new Stage());
             stage.close();
         });
+
         usuarioBtn.setOnAction(e -> {
             SessaoUsuario.iniciar(usuarioLogado.getId());
             UsuarioController usuarioController = UsuarioControllerFactory.criar();
             AreaUsuarioController areaController = new AreaUsuarioController(usuarioController);
-            new TelaAreaUsuario(areaController);
+            TelaAreaUsuario tela = new TelaAreaUsuario(areaController);
+            tela.start(new Stage());
             stage.close();
         });
+
         VBox botoes = new VBox(20, comprarBtn, usuarioBtn);
         botoes.setAlignment(Pos.CENTER);
+
         if (usuarioLogado.isAdmin()) {
             Button adminBtn = new Button("🛠️ Painel Admin");
             estilizarBotao(adminBtn);
             adminBtn.setOnAction(e -> {
-                Stage adminStage = new Stage();
-                new TelaAdmin(usuarioLogado).start(adminStage);
+                TelaAdmin adminTela = new TelaAdmin(usuarioLogado);
+                adminTela.start(new Stage());
+                stage.close();
             });
             botoes.getChildren().add(adminBtn);
         }
+
         VBox content = new VBox(40, header, botoes);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(60));
@@ -81,9 +100,10 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setMinWidth(960);
         stage.setMinHeight(600);
-        stage.centerOnScreen();
-        stage.setMaximized(true);
-        stage.show();}
+        stage.setMaximized(true);  // sempre maximiza
+        stage.show();
+    }
+
     private void estilizarBotao(Button btn) {
         btn.setFont(Font.font("Georgia", 16));
         btn.setStyle(
@@ -91,8 +111,7 @@ public class Main extends Application {
                         " -fx-text-fill: black;" +
                         " -fx-background-radius: 10px;" +
                         " -fx-border-color: transparent;" +
-                        " -fx-border-width: 0;" +
-                        " -fx-effect: null;"
+                        " -fx-border-width: 0;"
         );
         btn.setPrefWidth(250);
         btn.setPrefHeight(50);

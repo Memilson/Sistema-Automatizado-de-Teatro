@@ -41,6 +41,7 @@ com\mycompany\mavenproject3\pagamentos\view\TelaPagamentoSimulado.class
 com\mycompany\mavenproject3\usuario\repository\UsuarioAdapter.class
 com\mycompany\mavenproject3\supabase\SupabaseService.class
 com\mycompany\mavenproject3\common\ValidadorCPF.class
+com\mycompany\mavenproject3\usuario\controller\UsuarioViewController.class
 com\mycompany\mavenproject3\compra\helper\ComprovanteCompra.class
 com\mycompany\mavenproject3\usuario\view\TelaAreaUsuario.class
 com\mycompany\mavenproject3\compra\repository\CompraRepository.class
