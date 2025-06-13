@@ -36,6 +36,4 @@ public class PainelUsuarios extends VBox {
     private void configurarTabela() {
         tabela.setItems(dadosUsuarios);
         tabela.setPrefHeight(450);
-        tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    }
-}
+        tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);}}

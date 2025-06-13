@@ -34,14 +34,13 @@ public class TelaLogin extends Application {
         emailField = new TextField();
         senhaField = new PasswordField();
         statusLabel = new Label();
-        statusLabel.setTextFill(Color.web("#d4af37"));
+        statusLabel.setTextFill(Color.web("#ffd700"));
 
         Label emailLabel = new Label("Email:");
         Label senhaLabel = new Label("Senha:");
-        emailLabel.setTextFill(Color.web("#e0dcbf"));
-        senhaLabel.setTextFill(Color.web("#e0dcbf"));
+        emailLabel.setTextFill(Color.web("#ffd700"));
+        senhaLabel.setTextFill(Color.web("#ffd700"));
 
-        // Cabeçalho Estilizado
         Text titulo = new Text("🎭 DramaCore Theatre");
         titulo.setFont(Font.font("Georgia", 36));
         titulo.setFill(Color.web("#d4af37"));
@@ -54,7 +53,6 @@ public class TelaLogin extends Application {
         VBox header = new VBox(5, titulo, subtitulo);
         header.setAlignment(Pos.CENTER);
 
-        // Formulário
         GridPane formGrid = new GridPane();
         formGrid.setVgap(20);
         formGrid.setHgap(20);
@@ -106,7 +104,7 @@ public class TelaLogin extends Application {
     private void estilizarBotao(Button btn) {
         btn.setFont(Font.font("Georgia", 16));
         btn.setStyle(
-                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
+                "-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
                         " -fx-text-fill: black;" +
                         " -fx-font-weight: bold;" +
                         " -fx-background-radius: 10px;"

@@ -8,6 +8,7 @@ com\mycompany\mavenproject3\admin\view\PainelRelatorios.class
 com\mycompany\mavenproject3\registro\controller\RegistroController.class
 com\mycompany\legacy\Relatorio.class
 com\mycompany\mavenproject3\usuario\repository\UsuarioRepository.class
+com\mycompany\mavenproject3\usuario\view\TelaCartaoCadastro.class
 com\mycompany\mavenproject3\compra\helper\ConfirmarCompra.class
 com\mycompany\mavenproject3\usuario\controller\AreaUsuarioController.class
 com\mycompany\legacy\SistemaTeatro.class
@@ -22,6 +23,7 @@ com\mycompany\legacy\Setor.class
 com\mycompany\mavenproject3\usuario\controller\UsuarioController.class
 com\mycompany\mavenproject3\usuario\service\SupabaseAssinaturaClient.class
 com\mycompany\legacy\Peca.class
+com\mycompany\mavenproject3\compra\helper\PrecoDinamicoHelper.class
 com\mycompany\mavenproject3\dados\view\TelaVerificacaoEmail.class
 com\mycompany\mavenproject3\compra\helper\SelecaoVisualHelper.class
 com\mycompany\mavenproject3\compra\view\TelaCompraFX.class
@@ -38,7 +40,6 @@ com\mycompany\mavenproject3\compra\model\CarregarSessoes.class
 com\mycompany\mavenproject3\admin\view\TelaAdmin.class
 com\mycompany\mavenproject3\compra\loader\AssentoLoader.class
 com\mycompany\mavenproject3\admin\controller\TelaAdminController.class
-com\mycompany\mavenproject3\pagamentos\view\TelaPagamentoSimulado.class
 com\mycompany\mavenproject3\usuario\repository\UsuarioAdapter.class
 com\mycompany\mavenproject3\supabase\SupabaseService.class
 com\mycompany\mavenproject3\common\ValidadorCPF.class

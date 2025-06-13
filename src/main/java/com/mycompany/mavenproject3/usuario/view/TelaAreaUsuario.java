@@ -72,7 +72,7 @@ public class TelaAreaUsuario {
         estilizarBotao(btnPlano);
         estilizarBotao(btnVoltar);
 
-        btnCartao.setOnAction(e -> viewController.cadastrarCartao(stage));
+        btnCartao.setOnAction(e -> TelaCartaoCadastro.exibir(controller, stage));
         btnPlano.setOnAction(e -> viewController.mudarPlano(stage));
         btnVoltar.setOnAction(e -> {
             try {

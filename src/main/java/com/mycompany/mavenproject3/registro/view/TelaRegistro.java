@@ -1,4 +1,5 @@
 package com.mycompany.mavenproject3.registro.view;
+
 import com.mycompany.mavenproject3.login.view.TelaLogin;
 import com.mycompany.mavenproject3.registro.controller.RegistroController;
 import com.mycompany.mavenproject3.supabase.SupabaseService;
@@ -30,9 +31,12 @@ public class TelaRegistro extends Application {
         Label emailLabel = new Label("Email:");
         Label senhaLabel = new Label("Senha:");
         Label confirmarLabel = new Label("Confirmar Senha:");
-        emailLabel.setTextFill(Color.web("#e0dcbf"));
-        senhaLabel.setTextFill(Color.web("#e0dcbf"));
-        confirmarLabel.setTextFill(Color.web("#e0dcbf"));
+        emailLabel.setTextFill(Color.web("#ffd700"));
+        senhaLabel.setTextFill(Color.web("#ffd700"));
+        confirmarLabel.setTextFill(Color.web("#ffd700"));
+        emailLabel.setFont(Font.font("Georgia", 14));
+        senhaLabel.setFont(Font.font("Georgia", 14));
+        confirmarLabel.setFont(Font.font("Georgia", 14));
         Text titulo = new Text("🎭 DramaCore Theatre");
         titulo.setFont(Font.font("Georgia", 36));
         titulo.setFill(Color.web("#d4af37"));
@@ -83,11 +87,10 @@ public class TelaRegistro extends Application {
     private void estilizarBotao(Button btn) {
         btn.setFont(Font.font("Georgia", 16));
         btn.setStyle(
-                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
+                "-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
                         " -fx-text-fill: black;" +
                         " -fx-font-weight: bold;" +
-                        " -fx-background-radius: 10px;"
-        );
+                        " -fx-background-radius: 10px;");
         btn.setPrefWidth(160);
         btn.setPrefHeight(45);}
     private void registrarUsuario(Stage stage) {
@@ -120,10 +123,8 @@ public class TelaRegistro extends Application {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }).start();
-            });
-        } else {statusLabel.setText("Erro ao registrar. Tente novamente.");}}
-    public static void main(String[] args) {
+                }).start();});
+        } else {statusLabel.setText("Erro ao registrar. Tente novamente.");
+        }}public static void main(String[] args) {
         launch(args);
-    }
-}
+    }}

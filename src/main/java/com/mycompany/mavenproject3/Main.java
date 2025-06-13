@@ -46,7 +46,7 @@ public class Main extends Application {
 
         Text subtitulo = new Text("Bem-vindo, " + usuarioLogado.getNome());
         subtitulo.setFont(Font.font("Georgia", 18));
-        subtitulo.setFill(Color.web("#f0e6d2"));
+        subtitulo.setFill(Color.WHITE);
 
         VBox header = new VBox(5, titulo, subtitulo);
         header.setAlignment(Pos.CENTER);
@@ -106,11 +106,9 @@ public class Main extends Application {
     private void estilizarBotao(Button btn) {
         btn.setFont(Font.font("Georgia", 16));
         btn.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #d4af37, #a6762d);" +
+                "-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
                         " -fx-text-fill: black;" +
-                        " -fx-background-radius: 10px;" +
-                        " -fx-border-color: transparent;" +
-                        " -fx-border-width: 0;"
+                        " -fx-background-radius: 10px;"
         );
         btn.setPrefWidth(250);
         btn.setPrefHeight(50);

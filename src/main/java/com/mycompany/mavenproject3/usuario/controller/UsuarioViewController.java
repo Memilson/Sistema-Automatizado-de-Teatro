@@ -3,7 +3,6 @@ package com.mycompany.mavenproject3.usuario.controller;
 import com.mycompany.mavenproject3.login.view.TelaLogin;
 import com.mycompany.mavenproject3.usuario.dto.UsuarioDashboardDTO;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -32,44 +31,11 @@ public class UsuarioViewController {
             stage.close();
         }
 
-        return dto;
-    }
-
-    public void cadastrarCartao(Stage stage) {
-        TextField campoNumero = new TextField();
-        TextField campoValidade = new TextField();
-        TextField campoCVV = new TextField();
-        TextField campoNome = new TextField();
-
-        GridPane painel = new GridPane();
-        painel.setHgap(10);
-        painel.setVgap(10);
-        painel.setPadding(new Insets(10));
-
-        painel.addRow(0, new Label("Número do cartão:"), campoNumero);
-        painel.addRow(1, new Label("Validade (MM/AA):"), campoValidade);
-        painel.addRow(2, new Label("CVV:"), campoCVV);
-        painel.addRow(3, new Label("Nome no cartão:"), campoNome);
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Cadastrar Cartão");
-        dialog.getDialogPane().setContent(painel);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                controller.marcarCartaoComoVerificado();
-                new Alert(Alert.AlertType.INFORMATION, "Cartão salvo com sucesso! Plano liberado.").showAndWait();
-            }
-        });
-    }
-
+        return dto;}
     public void mudarPlano(Stage stage) {
         if (!controller.isCartaoVerificado()) {
             new Alert(Alert.AlertType.WARNING, "Você precisa cadastrar um cartão antes de mudar o plano.").showAndWait();
-            return;
-        }
-
+            return;}
         try {
             JSONArray planos = controller.buscarPlanos();
 
