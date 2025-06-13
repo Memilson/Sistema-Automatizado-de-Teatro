@@ -1,6 +1,6 @@
 package com.mycompany.mavenproject3;
 
-import com.mycompany.mavenproject3.admin.TelaAdmin;
+import com.mycompany.mavenproject3.admin.view.TelaAdmin;
 import com.mycompany.mavenproject3.compra.view.TelaCompraFX;
 import com.mycompany.mavenproject3.core.SessaoUsuario;
 import com.mycompany.mavenproject3.usuario.controller.AreaUsuarioController;
@@ -78,8 +78,8 @@ public class Main extends Application {
             Button adminBtn = new Button("🛠️ Painel Admin");
             estilizarBotao(adminBtn);
             adminBtn.setOnAction(e -> {
-                new TelaAdmin(usuarioLogado);
-                stage.close();
+                Stage adminStage = new Stage();
+                new TelaAdmin(usuarioLogado).start(adminStage);
             });
             botoes.getChildren().add(adminBtn);
         }

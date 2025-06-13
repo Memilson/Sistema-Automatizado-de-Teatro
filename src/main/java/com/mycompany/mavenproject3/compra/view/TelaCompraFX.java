@@ -2,6 +2,7 @@ package com.mycompany.mavenproject3.compra.view;
 
 import com.mycompany.mavenproject3.Main;
 import com.mycompany.mavenproject3.compra.helper.CompraViewHelper;
+import com.mycompany.mavenproject3.compra.helper.SelecaoVisualHelper;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,10 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TelaCompraFX {
 
@@ -24,18 +22,19 @@ public class TelaCompraFX {
     private final ComboBox<String> comboSessao = new ComboBox<>();
     private final Label precoLabel = new Label("Preço: R$--");
 
+    private final Set<String> selecionadas = new HashSet<>();
+    private final Set<String> ocupadas = new HashSet<>();
+    private final HashMap<String, String> mapaPecas = new HashMap<>();
+    private final HashMap<String, String> mapaSessoes = new HashMap<>();
+    private final Map<String, String> mapaPoltronas = new HashMap<>();
+    private final Map<String, String> mapaPrecos = new HashMap<>();
+
     private final GridPane plateiaA = new GridPane();
     private final GridPane plateiaB = new GridPane();
     private final GridPane frisasEsquerda = new GridPane();
     private final GridPane frisasDireita = new GridPane();
     private final GridPane camarotes = new GridPane();
     private final GridPane balcaoNobre = new GridPane();
-
-    private final HashMap<String, String> mapaPecas = new HashMap<>();
-    private final HashMap<String, String> mapaSessoes = new HashMap<>();
-    private final Set<String> ocupadas = new HashSet<>();
-    private final Map<String, String> mapaPoltronas = new HashMap<>();
-    private final Map<String, String> mapaPrecos = new HashMap<>();
 
     private String poltronaSelecionadaId = null;
     private String poltronaSelecionadaNome = null;
@@ -46,14 +45,13 @@ public class TelaCompraFX {
 
     public void start(Stage stage) {
         if (usuarioLogado == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Você precisa estar logado.");
-            alert.showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Você precisa estar logado.").showAndWait();
             return;
         }
 
         stage.setTitle("DramaCore Theatre - Compra de Ingressos");
 
-        Label titulo = new Label("🪑 Mapa do Teatro Riachuelo");
+        Label titulo = new Label("\uD83E\uDE91 Mapa do Teatro Riachuelo");
         titulo.setFont(Font.font("Georgia", 28));
         titulo.setTextFill(Color.web("#d4af37"));
 
@@ -71,12 +69,12 @@ public class TelaCompraFX {
         VBox centro = new VBox(15);
         centro.setAlignment(Pos.CENTER);
 
-        HBox frisas = new HBox(40, frisasEsquerda, plateiaA, plateiaB, frisasDireita);
-        frisas.setAlignment(Pos.CENTER);
-
         VBox palco = new VBox(new Label("PALCO"));
         palco.setAlignment(Pos.CENTER);
         palco.setStyle("-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 5px;");
+
+        HBox frisas = new HBox(40, frisasEsquerda, plateiaA, plateiaB, frisasDireita);
+        frisas.setAlignment(Pos.CENTER);
 
         centro.getChildren().addAll(palco, frisas, camarotes, balcaoNobre);
 
@@ -87,11 +85,10 @@ public class TelaCompraFX {
         Button confirmar = new Button("Confirmar Compra");
         Button voltar = new Button("Voltar ao Menu Principal");
 
-        confirmar.setOnAction(e -> CompraViewHelper.confirmarCompraFX(this));
+        confirmar.setOnAction(e -> CompraViewHelper.finalizarCompra(this));
         voltar.setOnAction(e -> {
-            Main main = new Main(usuarioLogado);
             try {
-                main.start(new Stage());
+                new Main(usuarioLogado).start(new Stage());
                 stage.close();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -106,13 +103,12 @@ public class TelaCompraFX {
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);");
 
-        Scene scene = new Scene(layout, 1280, 768);
-        stage.setScene(scene);
+        stage.setScene(new Scene(layout, 1280, 768));
         stage.show();
 
-        CompraViewHelper.carregarPecasFX(this);
-        comboPeca.setOnAction(e -> CompraViewHelper.carregarSessoesFX(this));
-        comboSessao.setOnAction(e -> CompraViewHelper.carregarAssentosFX(this));
+        CompraViewHelper.carregarPecas(this);
+        comboPeca.setOnAction(e -> CompraViewHelper.carregarSessoes(this));
+        comboSessao.setOnAction(e -> CompraViewHelper.carregarAssentos(this));
     }
 
     private void configurarSetor(GridPane grid, String cor) {
@@ -124,8 +120,9 @@ public class TelaCompraFX {
 
     public ComboBox<String> getComboPeca() { return comboPeca; }
     public ComboBox<String> getComboSessao() { return comboSessao; }
-    public GridPane getPainelAssentos() { return plateiaB; } // fallback visual principal
+    public GridPane getPainelAssentos() { return plateiaB; }
     public GridPane getPlateiaA() { return plateiaA; }
+    public GridPane getPlateiaB() { return plateiaB; }
     public GridPane getFrisasEsquerda() { return frisasEsquerda; }
     public GridPane getFrisasDireita() { return frisasDireita; }
     public GridPane getCamarotes() { return camarotes; }
@@ -135,11 +132,12 @@ public class TelaCompraFX {
     public Set<String> getOcupadas() { return ocupadas; }
     public Map<String, String> getMapaPoltronas() { return mapaPoltronas; }
     public Map<String, String> getMapaPrecos() { return mapaPrecos; }
+    public Set<String> getSelecionadas() { return selecionadas; }
     public String getPoltronaSelecionadaId() { return poltronaSelecionadaId; }
     public void setPoltronaSelecionadaId(String id) { this.poltronaSelecionadaId = id; }
     public String getPoltronaSelecionadaNome() { return poltronaSelecionadaNome; }
     public void setPoltronaSelecionadaNome(String nome) { this.poltronaSelecionadaNome = nome; }
     public Usuario getUsuarioLogado() { return usuarioLogado; }
-    public void atualizarSelecaoVisual(String nome) { CompraViewHelper.atualizarSelecaoVisualFX(this, nome); }
+    public void atualizarSelecaoVisual(String nome) { SelecaoVisualHelper.atualizarSelecaoVisualFX(this); }
     public void setPreco(String preco) { precoLabel.setText("Preço: R$" + preco); }
 }
