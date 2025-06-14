@@ -1,6 +1,8 @@
 package com.mycompany.mavenproject3.compra.helper;
 
+import com.mycompany.mavenproject3.compra.repository.CompraRepository;
 import com.mycompany.mavenproject3.compra.view.TelaCompraFX;
+import com.mycompany.mavenproject3.supabase.SupabaseService;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -28,12 +30,25 @@ public class SelecaoVisualHelper {
                 }
             }
         }
-        double total = tela.getSelecionadas().stream()
+
+        double totalBruto = tela.getSelecionadas().stream()
                 .mapToDouble(id -> Double.parseDouble(tela.getMapaPrecos().getOrDefault(id, "0")))
                 .sum();
+
+        double desconto = 0.0;
+        try {
+            String assinaturaId = SupabaseService.buscarAssinaturaId(tela.getUsuarioLogado().getId());
+            desconto = CompraRepository.buscarDescontoAssinatura(assinaturaId);
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar desconto: " + e.getMessage());
+        }
+
+        double totalComDesconto = totalBruto * (1 - (desconto / 100.0));
         String texto = tela.getSelecionadas().isEmpty()
                 ? "R$--"
-                : String.format("R$%.2f (%d poltrona(s))", total, tela.getSelecionadas().size());
+                : String.format("R$%.2f (com %.0f%% de desconto) - %d poltrona(s)",
+                totalComDesconto, desconto, tela.getSelecionadas().size());
+
         tela.setPreco(texto);
     }
 }

@@ -20,5 +20,25 @@ public class CompraRepository {
             return resposta != null && !resposta.contains("error");
         } catch (Exception e) {
             System.err.println("Erro ao salvar venda: " + e.getMessage());
-            return false;}}}
+
+            return false;}
+    }
+    public static double buscarDescontoAssinatura(String assinaturaId) {
+        try {
+            String filtro = "?id=eq." + assinaturaId + "&select=desconto_percentual";
+            String resposta = SupabaseService.get("/rest/v1/assinaturas" + filtro, true);
+
+            if (resposta != null && resposta.startsWith("[")) {
+                org.json.JSONArray array = new org.json.JSONArray(resposta);
+                if (!array.isEmpty()) {
+                    JSONObject obj = array.getJSONObject(0);
+                    return obj.optDouble("desconto_percentual", 0.0);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar desconto da assinatura: " + e.getMessage());
+        }
+        return 0.0;
+    }
+}
 
