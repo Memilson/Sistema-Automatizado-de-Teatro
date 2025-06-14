@@ -1,7 +1,9 @@
 package com.mycompany.mavenproject3.compra.helper;
 
 import com.mycompany.mavenproject3.compra.controller.CompraController;
+import com.mycompany.mavenproject3.compra.repository.CompraRepository;
 import com.mycompany.mavenproject3.compra.view.TelaCompraFX;
+import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import javafx.scene.control.Alert;
 
@@ -30,7 +32,7 @@ public class ConfirmarCompra {
         String userId = usuario.getId();
 
         List<String> poltronasCompradas = new ArrayList<>();
-        double totalPago = 0.0;
+        double totalBruto = 0.0;
         boolean erro = false;
 
         for (String poltronaId : tela.getSelecionadas()) {
@@ -46,11 +48,24 @@ public class ConfirmarCompra {
                         .orElse("Poltrona");
 
                 poltronasCompradas.add(nomePoltrona);
-                totalPago += preco;
+                totalBruto += preco;
             } else {
                 erro = true;
             }
         }
+
+        // Buscar o desconto
+        double descontoPercentual = 0.0;
+        try {
+            String assinaturaId = SupabaseService.buscarAssinaturaId(userId);
+            if (assinaturaId != null) {
+                descontoPercentual = CompraRepository.buscarDescontoAssinatura(assinaturaId);
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar desconto para comprovante: " + e.getMessage());
+        }
+
+        double totalComDesconto = totalBruto * (1 - descontoPercentual / 100.0);
 
         if (!erro && !poltronasCompradas.isEmpty()) {
             ComprovanteCompra.gerarComprovante(
@@ -59,7 +74,8 @@ public class ConfirmarCompra {
                     peca,
                     horario,
                     poltronasCompradas,
-                    totalPago
+                    totalComDesconto,
+                    descontoPercentual
             );
             new Alert(Alert.AlertType.INFORMATION, "Compra finalizada com sucesso! Comprovante gerado.").showAndWait();
         } else if (erro) {
