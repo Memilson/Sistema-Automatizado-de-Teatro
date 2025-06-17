@@ -1,14 +1,12 @@
 package com.mycompany.mavenproject3.login.service;
 
-import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
 
 public class LoginService {
 
-    private final SupabaseService supabaseService = new SupabaseService();
-    private final UsuarioRepository usuarioRepository = new UsuarioRepositorySupabase(supabaseService);
+    private final UsuarioRepository usuarioRepository = new UsuarioRepositorySupabase();
 
 
     public Usuario autenticar(String email, String senha) {

@@ -1,6 +1,5 @@
 package com.mycompany.mavenproject3.admin.controller;
 
-import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepository;
 import com.mycompany.mavenproject3.usuario.repository.UsuarioRepositorySupabase;
@@ -16,7 +15,7 @@ import java.util.List;
 public class UsuarioAdminControllerFX {
 
     private static final UsuarioRepository usuarioRepository =
-            new UsuarioRepositorySupabase(new SupabaseService());
+            new UsuarioRepositorySupabase();
 
     public static void carregarUsuarios(TableView<Usuario> tabela) {
         List<Usuario> usuarios = usuarioRepository.buscarTodos();
@@ -92,7 +91,7 @@ public class UsuarioAdminControllerFX {
             return;
         }
 
-        SupabaseAdminClient client = new SupabaseAdminClient(new SupabaseService());
+        SupabaseAdminClient client = new SupabaseAdminClient();
         boolean sucesso = client.alternarAdmin(usuario.getId());
 
         showAlert(sucesso ? "Permissão de admin alterada com sucesso!" : "Erro ao alterar permissão.");

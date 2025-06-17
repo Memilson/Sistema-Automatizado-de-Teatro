@@ -2,6 +2,7 @@ package com.mycompany.mavenproject3.usuario.controller;
 
 import com.mycompany.mavenproject3.core.SessaoUsuario;
 import com.mycompany.mavenproject3.usuario.controller.UsuarioController;
+import com.mycompany.mavenproject3.supabase.SupabaseService;
 import com.mycompany.mavenproject3.usuario.dto.UsuarioDashboardDTO;
 import com.mycompany.mavenproject3.usuario.model.Usuario;
 import org.json.JSONArray;
@@ -25,7 +26,7 @@ public class AreaUsuarioController {
     }
 
     public JSONArray buscarPlanos() throws Exception {
-        String json = controller.getSupabase().get("/rest/v1/assinaturas?select=id,nome", true);
+        String json = SupabaseService.get("/rest/v1/assinaturas?select=id,nome", true);
         return new JSONArray(json);
     }
 

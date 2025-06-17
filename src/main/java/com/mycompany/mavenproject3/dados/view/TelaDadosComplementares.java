@@ -156,7 +156,7 @@ public class TelaDadosComplementares extends Application {
 
             boolean sucesso = SupabaseService.salvarDadosComplementares(userId, nome, cpf, nascimentoFormatado, telefone);
             if (sucesso) {
-                UsuarioRepositorySupabase repo = new UsuarioRepositorySupabase(new SupabaseService());
+                UsuarioRepositorySupabase repo = new UsuarioRepositorySupabase();
                 Usuario usuario = new UsuarioService(repo).buscarUsuarioPorId(userId);
 
                 Main mainApp = new Main(usuario);

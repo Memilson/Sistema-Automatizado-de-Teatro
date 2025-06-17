@@ -119,7 +119,7 @@ public class TelaLogin extends Application {
 
         String authId = LoginController.login(email, senha);
         if (authId != null) {
-            UsuarioRepository repository = new UsuarioRepositorySupabase(new SupabaseService());
+            UsuarioRepository repository = new UsuarioRepositorySupabase();
             UsuarioService service = new UsuarioService(repository);
             Usuario usuario = service.buscarUsuarioPorId(authId);
 
