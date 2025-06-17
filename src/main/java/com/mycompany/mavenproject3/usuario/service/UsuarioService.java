@@ -19,9 +19,6 @@ public class UsuarioService {
     public boolean atualizarAssinatura(String userId, String novaAssinaturaId) {
         return usuarioRepository.alterarAssinatura(userId, novaAssinaturaId);
     }
-    public boolean alterarPlanoDoUsuario(String usuarioId, String novaAssinaturaId) {
-        return usuarioRepository.alterarPlanoAssinatura(usuarioId, novaAssinaturaId);
-    }
 
     public boolean promoverUsuarioParaAdmin(String userId) {
         return usuarioRepository.promoverParaAdmin(userId);
