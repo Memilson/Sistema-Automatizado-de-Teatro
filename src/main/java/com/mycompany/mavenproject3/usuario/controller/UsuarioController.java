@@ -16,14 +16,12 @@ import java.awt.*;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final SupabaseService supabase;
     private final SupabaseAssinaturaClient assinaturaClient;
     private boolean cartaoVerificado = false;
 
-    public UsuarioController(UsuarioService usuarioService, SupabaseService supabase) {
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        this.supabase = supabase;
-        this.assinaturaClient = new SupabaseAssinaturaClient(supabase);
+        this.assinaturaClient = new SupabaseAssinaturaClient();
     }
 
     public boolean isCartaoVerificado() {
@@ -38,9 +36,6 @@ public class UsuarioController {
         return this.assinaturaClient;
     }
 
-    public SupabaseService getSupabase() {
-        return this.supabase;
-    }
 
     public Usuario carregarUsuario(String id) {
         return usuarioService.buscarUsuarioPorId(id);
@@ -100,7 +95,7 @@ public class UsuarioController {
         dto.setAssinaturaNome(usuario.getAssinaturaNome());
 
         try {
-            String assinaturaJson = supabase.get("/rest/v1/assinaturas?id=eq." + usuario.getAssinaturaId(), true);
+            String assinaturaJson = SupabaseService.get("/rest/v1/assinaturas?id=eq." + usuario.getAssinaturaId(), true);
             JSONObject assinatura = new JSONArray(assinaturaJson).getJSONObject(0);
 
             dto.setIngressosVipMes(assinatura.optInt("ingressos_vip_mes", 0));
@@ -108,7 +103,7 @@ public class UsuarioController {
             dto.setDescontoPercentual(assinatura.optDouble("desconto_percentual", 0));
             dto.setTipoPagamento(tipoPagamentoToTexto(assinatura.optInt("tipo_pagamento", 0)));
 
-            String vendasJson = supabase.get("/rest/v1/venda?usuario_id=eq." + userId + "&select=data_compra,foi_ingresso_vip", true);
+            String vendasJson = SupabaseService.get("/rest/v1/venda?usuario_id=eq." + userId + "&select=data_compra,foi_ingresso_vip", true);
             JSONArray vendas = new JSONArray(vendasJson);
 
             int usados = 0;

@@ -5,10 +5,7 @@ import org.json.JSONObject;
 
 public class SupabaseAssinaturaClient {
 
-    private final SupabaseService supabase;
-
-    public SupabaseAssinaturaClient(SupabaseService supabase) {
-        this.supabase = supabase;
+    public SupabaseAssinaturaClient() {
     }
 
     public boolean atualizarAssinaturaViaRPC(String userId, String novaAssinaturaId) {
@@ -17,7 +14,7 @@ public class SupabaseAssinaturaClient {
             json.put("uid", userId);
             json.put("nova_assinatura", novaAssinaturaId);
 
-            String resposta = supabase.post(
+            String resposta = SupabaseService.post(
                     "/rest/v1/rpc/atualizar_assinatura",
                     json.toString(),
                     true

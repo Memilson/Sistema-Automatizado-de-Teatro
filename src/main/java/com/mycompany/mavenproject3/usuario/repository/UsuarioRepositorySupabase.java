@@ -10,10 +10,7 @@ import java.util.List;
 
 public class UsuarioRepositorySupabase implements UsuarioRepository {
 
-    private final SupabaseService supabase;
-
-    public UsuarioRepositorySupabase(SupabaseService supabase) {
-        this.supabase = supabase;
+    public UsuarioRepositorySupabase() {
     }
 
     @Override
@@ -120,7 +117,4 @@ public class UsuarioRepositorySupabase implements UsuarioRepository {
         return null;
     }
 
-    public SupabaseService getSupabase() {
-        return supabase;
-    }
 }
