@@ -104,21 +104,6 @@ public class UsuarioRepositorySupabase implements UsuarioRepository {
         }
         return false;
     }
-    @Override
-    public Usuario findByEmailAndSenha(String email, String senha) {
-        try {
-            String url = "/rest/v1/usuarios?email=eq." + email + "&senha=eq." + senha + "&select=*";
-            String json = SupabaseService.get(url, true);
-            assert json != null;
-            JSONArray array = new JSONArray(json);
-            if (!array.isEmpty()) {
-                return UsuarioAdapter.fromJson(array.getJSONObject(0));
-            }
-        } catch (Exception e) {
-            System.err.println("Erro ao autenticar usuário: " + e.getMessage());
-        }
-        return null;
-    }
 
     public SupabaseService getSupabase() {
         return supabase;
