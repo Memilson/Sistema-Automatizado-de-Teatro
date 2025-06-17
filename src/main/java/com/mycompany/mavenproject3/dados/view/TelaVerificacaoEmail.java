@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import com.mycompany.mavenproject3.view.UIUtils;
 
 public class TelaVerificacaoEmail extends Application {
     private final String email;
@@ -48,7 +49,7 @@ public class TelaVerificacaoEmail extends Application {
         statusLabel.setTextFill(Color.web("#d4af37"));
 
         Button verificarBtn = new Button("🔍 Verificar Email");
-        estilizarBotao(verificarBtn);
+        UIUtils.estilizarBotao(verificarBtn);
 
         verificarBtn.setOnAction(e -> verificar(stage));
 
@@ -76,17 +77,6 @@ public class TelaVerificacaoEmail extends Application {
         }
     }
 
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 16));
-        btn.setStyle(
-                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
-                        "-fx-text-fill: black;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 10px;"
-        );
-        btn.setPrefWidth(200);
-        btn.setPrefHeight(45);
-    }
 
     public static void abrir(String email, String senha) {
         Platform.runLater(() -> {

@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import com.mycompany.mavenproject3.view.UIUtils;
 
 public class TelaLogin extends Application {
     private TextField emailField;
@@ -64,8 +65,8 @@ public class TelaLogin extends Application {
 
         Button loginBtn = new Button("🎫 Entrar");
         Button registrarBtn = new Button("✒️ Registrar-se");
-        estilizarBotao(loginBtn);
-        estilizarBotao(registrarBtn);
+        UIUtils.estilizarBotao(loginBtn);
+        UIUtils.estilizarBotao(registrarBtn);
 
         loginBtn.setOnAction(e -> autenticar(stage));
         registrarBtn.setOnAction(e -> {
@@ -101,17 +102,6 @@ public class TelaLogin extends Application {
         stage.show();
     }
 
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 16));
-        btn.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
-                        " -fx-text-fill: black;" +
-                        " -fx-font-weight: bold;" +
-                        " -fx-background-radius: 10px;"
-        );
-        btn.setPrefWidth(160);
-        btn.setPrefHeight(45);
-    }
 
     private void autenticar(Stage currentStage) {
         String email = emailField.getText();

@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import com.mycompany.mavenproject3.view.UIUtils;
 
 public class TelaCartaoCadastro {
 
@@ -33,7 +34,7 @@ public class TelaCartaoCadastro {
         campoNumeroVisivel.textProperty().bindBidirectional(campoNumeroOculto.textProperty());
 
         Button botaoMostrar = new Button("👁");
-        estilizarBotao(botaoMostrar);
+        UIUtils.estilizarBotao(botaoMostrar);
         botaoMostrar.setPrefWidth(40);
 
         botaoMostrar.setOnAction(e -> {
@@ -83,8 +84,8 @@ public class TelaCartaoCadastro {
 
         Button btnSalvar = new Button("Salvar");
         Button btnCancelar = new Button("Cancelar");
-        estilizarBotao(btnSalvar);
-        estilizarBotao(btnCancelar);
+        UIUtils.estilizarBotao(btnSalvar);
+        UIUtils.estilizarBotao(btnCancelar);
 
         btnSalvar.setOnAction(e -> {
             String numero = campoNumeroOculto.getText();
@@ -135,10 +136,4 @@ public class TelaCartaoCadastro {
         return label;
     }
 
-    private static void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 14));
-        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
-                " -fx-text-fill: black; -fx-background-radius: 10px;");
-        btn.setPrefHeight(40);
-    }
 }

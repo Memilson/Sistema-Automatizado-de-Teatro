@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import com.mycompany.mavenproject3.view.UIUtils;
 
 public class PainelRelatorios extends BorderPane {
 
@@ -35,8 +36,8 @@ public class PainelRelatorios extends BorderPane {
         botaoGerar.setOnAction(e -> RelatorioController.gerar(conteudo));
         botaoExportar.setOnAction(e -> RelatorioController.exportarPDF(conteudo));
 
-        estilizarBotao(botaoGerar);
-        estilizarBotao(botaoExportar);
+        UIUtils.estilizarBotao(botaoGerar);
+        UIUtils.estilizarBotao(botaoExportar);
 
         VBox topo = new VBox(10, titulo);
         topo.setAlignment(Pos.CENTER);
@@ -52,11 +53,4 @@ public class PainelRelatorios extends BorderPane {
         this.setStyle("-fx-background-color: linear-gradient(to bottom, #0d0d0d, #1a1a1a);");
     }
 
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 15));
-        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b); " +
-                "-fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 10px;");
-        btn.setPrefWidth(250);
-        btn.setPrefHeight(40);
-    }
 }

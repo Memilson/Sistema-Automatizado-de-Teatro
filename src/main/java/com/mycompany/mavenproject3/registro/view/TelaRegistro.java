@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import com.mycompany.mavenproject3.view.UIUtils;
 public class TelaRegistro extends Application {
     private TextField emailField;
     private PasswordField senhaField;
@@ -58,8 +59,8 @@ public class TelaRegistro extends Application {
         formGrid.setAlignment(Pos.CENTER);
         Button registrarBtn = new Button("✒️ Registrar");
         Button voltarBtn = new Button("↩️ Voltar");
-        estilizarBotao(registrarBtn);
-        estilizarBotao(voltarBtn);
+        UIUtils.estilizarBotao(registrarBtn);
+        UIUtils.estilizarBotao(voltarBtn);
         registrarBtn.setOnAction(e -> registrarUsuario(stage));
         voltarBtn.setOnAction(e -> {
             new TelaLogin().start(new Stage());
@@ -81,18 +82,13 @@ public class TelaRegistro extends Application {
         stage.setMinHeight(600);
         stage.centerOnScreen();
         stage.setMaximized(true);
-        stage.show();}
+        stage.show();
+    }
+
     private boolean emailValido(String email) {
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$");}
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 16));
-        btn.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
-                        " -fx-text-fill: black;" +
-                        " -fx-font-weight: bold;" +
-                        " -fx-background-radius: 10px;");
-        btn.setPrefWidth(160);
-        btn.setPrefHeight(45);}
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
     private void registrarUsuario(Stage stage) {
         String email = emailField.getText().trim();
         String senha = senhaField.getText();

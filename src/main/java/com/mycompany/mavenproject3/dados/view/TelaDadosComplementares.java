@@ -18,6 +18,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import com.mycompany.mavenproject3.view.UIUtils;
 import javafx.stage.Stage;
 
 import java.text.ParseException;
@@ -79,8 +80,8 @@ public class TelaDadosComplementares extends Application {
 
         Button salvarBtn = new Button("Salvar");
         Button voltarBtn = new Button("↩️ Menu Principal");
-        estilizarBotao(salvarBtn);
-        estilizarBotao(voltarBtn);
+        UIUtils.estilizarBotao(salvarBtn);
+        UIUtils.estilizarBotao(voltarBtn);
 
         salvarBtn.setOnAction(e -> salvarDados());
         voltarBtn.setOnAction(e -> {
@@ -116,17 +117,6 @@ public class TelaDadosComplementares extends Application {
         stage.show();
     }
 
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 16));
-        btn.setStyle(
-                "-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #d4af37, #a6762d);" +
-                        " -fx-text-fill: black;" +
-                        " -fx-font-weight: bold;" +
-                        " -fx-background-radius: 10px;"
-        );
-        btn.setPrefWidth(160);
-        btn.setPrefHeight(45);
-    }
 
     private void salvarDados() {
         String nome = nomeField.getText();

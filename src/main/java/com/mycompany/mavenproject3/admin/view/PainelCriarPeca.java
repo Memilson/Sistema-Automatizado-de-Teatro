@@ -7,6 +7,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import com.mycompany.mavenproject3.view.UIUtils;
 public class PainelCriarPeca extends VBox {
     public PainelCriarPeca() {
         setSpacing(20);
@@ -26,7 +27,7 @@ public class PainelCriarPeca extends VBox {
         TextField campoHorario = new TextField();
         campoHorario.setPromptText("Ex: 20:00");
         Button botaoSalvar = new Button("Salvar Peça");
-        estilizarBotao(botaoSalvar);
+        UIUtils.estilizarBotao(botaoSalvar);
         botaoSalvar.setOnAction(e -> {
             String tituloTexto = campoTitulo.getText();
             String horarioTexto = campoHorario.getText();
@@ -37,10 +38,6 @@ public class PainelCriarPeca extends VBox {
         getChildren().addAll(titulo, formulario);}
     private void estilizarLabel(Label label) {
         label.setFont(Font.font("Georgia", 14));
-        label.setTextFill(Color.GOLD);}
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 14));
-        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
-                " -fx-text-fill: black; -fx-background-radius: 10px;");
-        btn.setPrefWidth(200);
-        btn.setPrefHeight(40);}}
+        label.setTextFill(Color.GOLD);
+    }
+}
