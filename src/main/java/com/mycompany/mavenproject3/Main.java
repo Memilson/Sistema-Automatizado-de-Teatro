@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import com.mycompany.mavenproject3.view.UIUtils;
 
 public class Main extends Application {
 
@@ -53,8 +54,8 @@ public class Main extends Application {
 
         Button comprarBtn = new Button("🛒 Comprar Ingressos");
         Button usuarioBtn = new Button("👤 Área do Usuário");
-        estilizarBotao(comprarBtn);
-        estilizarBotao(usuarioBtn);
+        UIUtils.estilizarBotao(comprarBtn);
+        UIUtils.estilizarBotao(usuarioBtn);
 
         comprarBtn.setOnAction(e -> {
             new TelaCompraFX(usuarioLogado).start(new Stage());
@@ -75,7 +76,7 @@ public class Main extends Application {
 
         if (usuarioLogado.isAdmin()) {
             Button adminBtn = new Button("🛠️ Painel Admin");
-            estilizarBotao(adminBtn);
+            UIUtils.estilizarBotao(adminBtn);
             adminBtn.setOnAction(e -> {
                 TelaAdmin adminTela = new TelaAdmin(usuarioLogado);
                 adminTela.start(new Stage());
@@ -103,16 +104,6 @@ public class Main extends Application {
         stage.show();
     }
 
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 16));
-        btn.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
-                        " -fx-text-fill: black;" +
-                        " -fx-background-radius: 10px;"
-        );
-        btn.setPrefWidth(250);
-        btn.setPrefHeight(50);
-    }
 
     public static void main(String[] args) {
         launch(args);

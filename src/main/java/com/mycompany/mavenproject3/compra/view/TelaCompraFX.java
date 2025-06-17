@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import com.mycompany.mavenproject3.view.UIUtils;
 
 import java.util.*;
 
@@ -98,8 +99,8 @@ public class TelaCompraFX {
         voltar.setText("");
         voltar.setGraphic(new Label("↩ Voltar ao Menu Principal"));
 
-        estilizarBotao(confirmar);
-        estilizarBotao(voltar);
+        UIUtils.estilizarBotao(confirmar);
+        UIUtils.estilizarBotao(voltar);
 
         confirmar.setOnAction(e -> CompraViewHelper.finalizarCompra(this));
         voltar.setOnAction(e -> {
@@ -156,13 +157,7 @@ public class TelaCompraFX {
         grid.setStyle("-fx-background-color: " + cor + "; -fx-padding: 12px; -fx-border-radius: 12px; -fx-background-radius: 12px;");
     }
 
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 15));
-        btn.setPrefWidth(200);
-        btn.setPrefHeight(45);
-        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
-                " -fx-text-fill: black; -fx-background-radius: 10px;");
-    }
+
 
     private Label estilizarLabel(String texto) {
         Label label = new Label(texto);

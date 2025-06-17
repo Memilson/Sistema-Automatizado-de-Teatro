@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import com.mycompany.mavenproject3.view.UIUtils;
 
 public class TelaAreaUsuario {
 
@@ -68,9 +69,9 @@ public class TelaAreaUsuario {
         Button btnPlano = new Button("📦 Mudar Plano");
         Button btnVoltar = new Button("↩ Voltar ao Menu Principal");
 
-        estilizarBotao(btnCartao);
-        estilizarBotao(btnPlano);
-        estilizarBotao(btnVoltar);
+        UIUtils.estilizarBotao(btnCartao);
+        UIUtils.estilizarBotao(btnPlano);
+        UIUtils.estilizarBotao(btnVoltar);
 
         btnCartao.setOnAction(e -> TelaCartaoCadastro.exibir(controller, stage));
         btnPlano.setOnAction(e -> viewController.mudarPlano(stage));
@@ -112,11 +113,4 @@ public class TelaAreaUsuario {
         return box;
     }
 
-    private void estilizarBotao(Button btn) {
-        btn.setFont(Font.font("Georgia", 15));
-        btn.setStyle("-fx-background-color: linear-gradient(to bottom, #ffcc00, #b8860b);" +
-                " -fx-text-fill: black; -fx-background-radius: 10px;");
-        btn.setPrefWidth(220);
-        btn.setPrefHeight(45);
-    }
 }
