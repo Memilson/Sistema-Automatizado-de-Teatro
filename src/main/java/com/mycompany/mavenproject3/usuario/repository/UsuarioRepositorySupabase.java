@@ -60,20 +60,6 @@ public class UsuarioRepositorySupabase implements UsuarioRepository {
         String body = "{\"assinatura_id\": \"" + novaAssinaturaId + "\"}";
         return SupabaseService.patch("/rest/v1/usuarios?id=eq." + id, body);
     }
-    @Override
-    public boolean alterarPlanoAssinatura(String usuarioId, String novaAssinaturaId) {
-        try {
-            JSONObject update = new JSONObject();
-            update.put("assinatura_id", novaAssinaturaId);
-
-            String filtro = "?id=eq." + usuarioId;
-            SupabaseService.patch("/rest/v1/usuarios" + filtro, update.toString());
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     @Override
     public int totalUsuariosCadastrados() {

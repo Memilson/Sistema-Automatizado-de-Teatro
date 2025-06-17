@@ -8,7 +8,6 @@ public interface UsuarioRepository {
     List<Usuario> buscarTodos();
     boolean promoverParaAdmin(String id);
     boolean alterarAssinatura(String id, String novaAssinaturaId);
-    boolean alterarPlanoAssinatura(String usuarioId, String novaAssinaturaId);
     int totalUsuariosCadastrados();
     boolean temDadosComplementares(String authId);
     Usuario findByEmailAndSenha(String email, String senha);
